@@ -5,7 +5,7 @@
 
 Raw material for the legal and technical documentation. Sections follow the evaluation criteria in the course syllabus.
 
-_State as of commit `96564c3` (2026-11-07 16:42)._
+_State as of commit `c66455b` (2026-11-07 16:48)._
 
 ## 1. Functionality and prototype quality
 
@@ -156,6 +156,8 @@ _1 element(s) in the model have no article reference (template demo or still to 
 | 2026-11-07 | Remaining costs of the parents are always costs minus contribution, also before the start date (no contribution yet) | Matches the revised catalogue (X10) and Art. 12 Abs. 2 KiBG | Art. 12 Abs. 2 KiBG; challenge/szenarien.md, X10 | `96564c3` | Benjamin Pfister |
 | 2026-11-07 | Remaining costs without entitlement are the full costs (confirms the provisional decision; catalogue part 3 now says the same) | Art. 12 Abs. 2 KiBG: nothing is deducted without a contribution | Art. 12 Abs. 2 KiBG; challenge/szenarien.md, Teil 3 | `96564c3` | Benjamin Pfister |
 | 2026-11-07 | The other parent of separated parents is not part of the applicant's household and is not entered (G44) | Follows the household convention and the decision on O8 | Art. 4 Abs. 1 KiBG; Art. 2 KiBV (Entwurf) | `96564c3` | Benjamin Pfister |
+| 2026-11-07 | Time limits in days start on the day after the event; time limits in months end on the day with the same number (by analogy to Art. 77 OR); a request on 2028-11-01 is still within the transition period | KiBG and KiBV do not regulate how time limits are counted | Art. 9 Abs. 2 KiBG; Art. 25 Abs. 1 KiBV (Entwurf); Art. 77 OR; team decision | `4f83ca2` | Karla Ruggaber |
+| 2026-11-07 | A child counts as eingeschult from entry into the compulsory Kindergarten | Art. 16 Abs. 1 KiBV links to the year in which the child becomes schulpflichtig; in St. Gallen compulsory schooling starts with Kindergarten. Only relevant for schulergaenzende Betreuung, since Kita and Tagesfamilie rates are the same before and after school entry | Art. 14 Abs. 2 und 3, Art. 16 Abs. 1 KiBV (Entwurf); team decision | `4f83ca2` | Karla Ruggaber |
 
 ## 4. Responsible and ethical technology design
 
@@ -207,7 +209,7 @@ _Syllabus: each member's contribution, and disclosure of AI tools, open-source c
 
 | Member | Commits | First | Last | Files changed per area |
 |---|---|---|---|---|
-| Karla Ruggaber | 15 | 2026-11-04 | 2026-11-07 | other (62), rules (60), tests (45), docs (22), tooling (18), materials (4) |
+| Karla Ruggaber | 17 | 2026-11-04 | 2026-11-07 | other (62), rules (60), tests (45), docs (24), tooling (18), materials (4) |
 | Benjamin Pfister | 14 | 2026-10-10 | 2026-11-07 | docs (65), rules (34), tests (19), other (18), tooling (11) |
 
 _Add contributions that don't show in git (legal analysis, testing by hand, pitch, ...) by hand in the report._
@@ -239,6 +241,12 @@ _Add contributions that don't show in git (legal analysis, testing by hand, pitc
 
 ### 2026-11-07
 
+- **List G49 among the cases that depend on assumption A1** (`c66455b`, Karla Ruggaber, 16:48)
+  - Files: `challenge/szenarien.md` (changed)
+- **Confirm assumptions on time limits and school entry in scenario catalogue** (`4f83ca2`, Karla Ruggaber, 16:29)
+  - Decision: Time limits in days start on the day after the event; time limits in months end on the day with the same number (by analogy to Art. 77 OR); a request on 2028-11-01 is still within the transition period
+  - Decision: A child counts as eingeschult from entry into the compulsory Kindergarten
+  - Files: `challenge/szenarien.md` (changed)
 - **Align tests with revised scenario catalogue (G1-G51, X1-X10)** (`96564c3`, Benjamin Pfister, 16:42)
   - Decision: Remaining costs of the parents are always costs minus contribution, also before the start date (no contribution yet)
   - Decision: Remaining costs without entitlement are the full costs (confirms the provisional decision; catalogue part 3 now says the same)
