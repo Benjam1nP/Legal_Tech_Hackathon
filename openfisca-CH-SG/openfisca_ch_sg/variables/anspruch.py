@@ -1,6 +1,6 @@
 """Anspruchsberechtigung (Art. 4 KiBG): jede Bedingung als eigene Variable."""
 
-from numpy import logical_not as not_
+from numpy import logical_not as not_, where
 from openfisca_core.indexed_enums import Enum
 from openfisca_core.periods import MONTH
 from openfisca_core.variables import Variable
@@ -209,7 +209,12 @@ class kibg_anspruch(Variable):
     entity = Person
     definition_period = MONTH
     label = "Anspruch auf Beiträge für dieses Kind"
-    reference = ("Art. 3 Abs. 1 KiBG", "Art. 4 Abs. 1 bis 3 KiBG")
+    reference = (
+        "Art. 3 Abs. 1 KiBG",
+        "Art. 4 Abs. 1 bis 3 KiBG",
+        "Art. 9 Abs. 2 KiBG",
+        "Art. 25 Abs. 1 KiBV (Entwurf)",
+    )
 
     def formula_2028_08(person, period, parameters):
         wohnsitz = person.household("kibg_wohnsitz_erfuellt", period)
@@ -217,4 +222,17 @@ class kibg_anspruch(Variable):
         ausnahme = person.household("kibg_ausnahme_bewilligt", period)
         alter = person("kibg_alter_erfuellt", period)
         einrichtung = person("kibg_einrichtung_berechtigt", period)
-        return wohnsitz * (beschaeftigung + ausnahme) * alter * einrichtung
+        # Art. 9 Abs. 2 KiBG und Art. 25 KiBV: vor dem Beitragsbeginn werden
+        # keine Beiträge ausgerichtet (Teamentscheid: wirkt auf den Betrag).
+        # Nur für Kinder geprüft, damit für Eltern keine Daten nötig sind.
+        ist_kind = person.has_role(Household.KIND)
+        beitragsbeginn = where(
+            ist_kind, person("kibg_beitragsbeginn_erreicht", period), False
+        )
+        return (
+            wohnsitz
+            * (beschaeftigung + ausnahme)
+            * alter
+            * einrichtung
+            * beitragsbeginn
+        )

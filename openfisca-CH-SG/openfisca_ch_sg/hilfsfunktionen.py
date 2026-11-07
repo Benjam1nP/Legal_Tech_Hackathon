@@ -5,10 +5,28 @@ from datetime import date
 from numpy import asarray, floor, round as runden
 from openfisca_core.errors import SituationParsingError
 
-# Standardwert für ein nicht angegebenes Geburtsdatum. Für Kinder ist das
-# Geburtsdatum Pflicht; fehlt es, bricht die Berechnung ab (siehe
-# kibg_alter_monate).
-GEBURTSDATUM_FEHLT = date(9999, 12, 31)
+# Standardwert für ein nicht angegebenes Datum. Für Kinder sind Geburtsdatum,
+# Betreuungsbeginn und Gesuchsdatum Pflicht; fehlt eines, bricht die
+# Berechnung ab (kibg_alter_monate, kibg_beitragsbeginn).
+DATUM_FEHLT = date(9999, 12, 31)
+GEBURTSDATUM_FEHLT = DATUM_FEHLT
+
+# Vollzugsbeginn von KiBG und KiBV: «ab ●●» (Ziff. IV KiBG und KiBV, Entwurf).
+# Platzhalter nach Entscheid O1; muss mit formula_2028_08 und den Daten der
+# Parameter übereinstimmen.
+VOLLZUGSBEGINN = date(2028, 8, 1)
+
+
+def plus_monate(datum, monate):
+    """Ende einer Frist in Monaten (Annahme A7, sinngemäss Art. 77 OR).
+
+    Die Frist endet am Tag mit derselben Zahl; gibt es diesen Tag im letzten
+    Monat nicht, am letzten Tag dieses Monats.
+    """
+    jahr, monat = divmod(datum.month - 1 + monate, 12)
+    jahr, monat = datum.year + jahr, monat + 1
+    letzter_tag = (date(jahr + monat // 12, monat % 12 + 1, 1) - date.resolution).day
+    return date(jahr, monat, min(datum.day, letzter_tag))
 
 
 def formel_anhang(max_v, z1, z2, faktor):

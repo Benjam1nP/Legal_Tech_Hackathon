@@ -13,8 +13,23 @@ const ERGEBNISSE_KIND = [
 	'kibg_subventionierte_stunden',
 	'kibg_mindestbeitrag',
 	'kibg_beitrag_total',
-	'kibg_restkosten_eltern'
+	'kibg_restkosten_eltern',
+	'kibg_gesuch_innert_frist',
+	'kibg_gesuch_in_uebergangsfrist',
+	'kibg_beitragsbeginn',
+	'kibg_beitragsbeginn_erreicht',
+	'kibg_einrichtung_teilnahmebeginn'
 ];
+
+// Datumsergebnisse: Die Web-API liefert sie als HTTP-Datum
+// («Tue, 01 Aug 2028 00:00:00 GMT»); angezeigt wird JJJJ-MM-TT.
+// 9999-12-31 heisst in OpenFisca «keine Angabe».
+const DATUMSERGEBNISSE = ['kibg_beitragsbeginn', 'kibg_einrichtung_teilnahmebeginn'];
+const isoDatum = (wert) => {
+	if (!wert) return null;
+	const iso = new Date(wert).toISOString().slice(0, 10);
+	return iso === '9999-12-31' ? null : iso;
+};
 
 // Werte, die OpenFisca für den Haushalt berechnen soll.
 const ERGEBNISSE_HAUSHALT = [
@@ -70,6 +85,9 @@ export function situation(angaben) {
 		const einrichtung = kind.typ !== 'keine';
 		persons[idKind(index)] = {
 			geburtsdatum: { ETERNITY: kind.geburtsdatum },
+			// Art. 9 Abs. 2 KiBG, Art. 25 KiBV: Pflichtangaben (A10: Eingang bei der Gemeinde)
+			betreuungsbeginn: { ETERNITY: kind.betreuungsbeginn },
+			kibg_gesuchsdatum: { ETERNITY: kind.gesuchsdatum },
 			eingeschult: { [monat]: kind.eingeschult === true },
 			primarschule_abgeschlossen: { [monat]: kind.primarschuleAbgeschlossen === true },
 			kibg_einrichtungstyp: { [monat]: kind.typ },
@@ -80,6 +98,10 @@ export function situation(angaben) {
 			kibg_betreuungskosten: { [monat]: zahl(kind.kosten) },
 			...ergebnisse
 		};
+		// Art. 6 KiBV: freiwillig; hat Vorrang vor «angemeldet».
+		if (einrichtung && kind.bestaetigtAm) {
+			persons[idKind(index)].kibg_einrichtung_bestaetigt_am = { ETERNITY: kind.bestaetigtAm };
+		}
 	});
 
 	const familie = {
@@ -110,7 +132,12 @@ export function ergebnisse(antwort, angaben) {
 	const haushalt = Object.fromEntries(ERGEBNISSE_HAUSHALT.map((n) => [n, wert(familie, n)]));
 	const kinder = angaben.kinder.map((_, index) => {
 		const person = antwort.persons[idKind(index)];
-		return Object.fromEntries(ERGEBNISSE_KIND.map((n) => [n, wert(person, n)]));
+		return Object.fromEntries(
+			ERGEBNISSE_KIND.map((n) => [
+				n,
+				DATUMSERGEBNISSE.includes(n) ? isoDatum(wert(person, n)) : wert(person, n)
+			])
+		);
 	});
 	const partner = antwort.persons[ID_PARTNER];
 	return {

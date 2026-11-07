@@ -1,0 +1,347 @@
+# Datumsregeln D1 bis D11 aus challenge/szenarien.md, Teil 6.
+# Familie P1 (Paar, Lina geboren 2027-09-01, Kita, 80 Stunden an 8 Tagen,
+# Kosten 1'040, Einkommen 97'000, Faktor 0.5). Geändert werden nur die Daten.
+#
+# Art. 9 Abs. 2 KiBG: rückwirkend ab Betreuungsbeginn, wenn das Gesuch innert
+# 30 Tagen eintrifft, sonst ab dem Gesuch. Art. 25 Abs. 1 KiBV: Gesuche bis
+# 2028-11-01 rückwirkend ab Vollzugsbeginn 2028-08-01 (A7). Art. 6 KiBV:
+# Teilnahme der Einrichtung ab dem Ersten des Folgemonats nach der Bestätigung.
+
+- name: D1 Gesuch 30 Tage nach Betreuungsbeginn, rückwirkend (Art. 9 Abs. 2 KiBG, A7)
+  period: 2029-03
+  absolute_error_margin: 0.01
+  input:
+    household: &haushalt
+      erziehungsberechtigte: [mutter, vater]
+      kinder: [lina]
+      gemeinsamer_haushalt: true
+    persons:
+      mutter: &mutter
+        wohnsitz_kanton_sg: true
+        beschaeftigungsgrad: 1.0
+        kibg_gesuchstellend: true
+        me_steuerveranlagung: {2028: 60000, 2029: 60000}
+      vater: &vater
+        wohnsitz_kanton_sg: true
+        beschaeftigungsgrad: 0.4
+        me_steuerveranlagung: {2028: 37000, 2029: 37000}
+      lina: &lina
+        geburtsdatum: 2027-09-01
+        kibg_einrichtungstyp: kita
+        kibg_einrichtung_anerkannt: true
+        kibg_einrichtung_angemeldet: true
+        betreuungsstunden: 80
+        betreuungstage_mit_obhut: 8
+        kibg_betreuungskosten: 1040
+        betreuungsbeginn: 2029-03-01
+        kibg_gesuchsdatum: 2029-03-31
+  output:
+    persons:
+      lina:
+        kibg_gesuch_innert_frist: true
+        kibg_gesuch_in_uebergangsfrist: false
+        kibg_beitragsbeginn: 2029-03-01
+        kibg_anspruch: true
+        # Lina ist 18 Monate alt: Ansatz über 18 Monaten 7.50 × 0.5 × 80
+        kibg_beitrag_total: 300
+
+- name: D2 Gesuch 31 Tage nach Betreuungsbeginn, im März kein Beitrag (Art. 9 Abs. 2 KiBG)
+  period: 2029-03
+  absolute_error_margin: 0.01
+  input:
+    household: *haushalt
+    persons:
+      mutter: *mutter
+      vater: *vater
+      lina: &lina_d2
+        <<: *lina
+        betreuungsbeginn: 2029-03-01
+        kibg_gesuchsdatum: 2029-04-01
+  output:
+    persons:
+      lina:
+        kibg_gesuch_innert_frist: false
+        kibg_beitragsbeginn: 2029-04-01
+        kibg_beitragsbeginn_erreicht: false
+        kibg_anspruch: false
+        kibg_beitrag_total: 0
+        kibg_restkosten_eltern: 1040
+
+- name: D2 Gesuch 31 Tage nach Betreuungsbeginn, ab April Beitrag (Art. 9 Abs. 2 KiBG)
+  period: 2029-04
+  absolute_error_margin: 0.01
+  input:
+    household: *haushalt
+    persons:
+      mutter: *mutter
+      vater: *vater
+      lina: *lina_d2
+  output:
+    persons:
+      lina:
+        kibg_beitragsbeginn: 2029-04-01
+        kibg_anspruch: true
+        kibg_beitrag_total: 300
+
+- name: D3 Gesuch in der Übergangsfrist, rückwirkend ab Vollzugsbeginn (Art. 25 Abs. 1 KiBV)
+  period: 2028-08
+  absolute_error_margin: 0.01
+  input:
+    household: *haushalt
+    persons:
+      mutter: *mutter
+      vater: *vater
+      lina:
+        <<: *lina
+        betreuungsbeginn: 2028-08-01
+        kibg_gesuchsdatum: 2028-10-15
+  output:
+    persons:
+      lina:
+        kibg_gesuch_innert_frist: false
+        kibg_gesuch_in_uebergangsfrist: true
+        kibg_beitragsbeginn: 2028-08-01
+        kibg_anspruch: true
+        kibg_beitrag_total: 440
+
+- name: D4 Gesuch nach der Übergangsfrist, im Oktober kein Beitrag (Art. 9 Abs. 2 KiBG, Art. 25 KiBV)
+  period: 2028-10
+  absolute_error_margin: 0.01
+  input:
+    household: *haushalt
+    persons:
+      mutter: *mutter
+      vater: *vater
+      lina: &lina_d4
+        <<: *lina
+        betreuungsbeginn: 2028-08-01
+        kibg_gesuchsdatum: 2028-11-15
+  output:
+    persons:
+      lina:
+        kibg_gesuch_innert_frist: false
+        kibg_gesuch_in_uebergangsfrist: false
+        kibg_beitragsbeginn: 2028-11-15
+        kibg_anspruch: false
+        kibg_beitrag_total: 0
+        kibg_restkosten_eltern: 1040
+
+- name: D4 Beitragsbeginn am 15. November, nur Stunden ab dem Stichtag (Art. 9 Abs. 2 KiBG, A9)
+  period: 2028-11
+  absolute_error_margin: 0.01
+  input:
+    household: *haushalt
+    persons:
+      mutter: *mutter
+      vater: *vater
+      lina:
+        <<: *lina_d4
+        betreuungstage_mit_obhut: 4
+        betreuungsstunden: 40
+        kibg_betreuungskosten: 520
+  output:
+    persons:
+      lina:
+        kibg_beitragsbeginn: 2028-11-15
+        kibg_anspruch: true
+        # 11.00 × 0.5 × 40
+        kibg_beitrag_total: 220
+        kibg_restkosten_eltern: 300
+
+- name: D5 Betreuungsbeginn in der Übergangsfrist, Beiträge ab Betreuungsbeginn (Art. 25 Abs. 1 KiBV)
+  period: 2028-09
+  absolute_error_margin: 0.01
+  input:
+    household: *haushalt
+    persons:
+      mutter: *mutter
+      vater: *vater
+      lina:
+        <<: *lina
+        betreuungsbeginn: 2028-09-15
+        kibg_gesuchsdatum: 2028-10-31
+        betreuungstage_mit_obhut: 4
+        betreuungsstunden: 40
+        kibg_betreuungskosten: 520
+  output:
+    persons:
+      lina:
+        kibg_gesuch_innert_frist: false
+        kibg_gesuch_in_uebergangsfrist: true
+        kibg_beitragsbeginn: 2028-09-15
+        kibg_anspruch: true
+        kibg_beitrag_total: 220
+
+- name: D6 Betreuung seit 2026, rückwirkend höchstens bis Vollzugsbeginn (Art. 25 Abs. 1 KiBV)
+  period: 2028-08
+  absolute_error_margin: 0.01
+  input:
+    household: *haushalt
+    persons:
+      mutter: *mutter
+      vater: *vater
+      lina:
+        <<: *lina
+        betreuungsbeginn: 2026-01-01
+        kibg_gesuchsdatum: 2028-09-10
+  output:
+    persons:
+      lina:
+        kibg_gesuch_in_uebergangsfrist: true
+        kibg_beitragsbeginn: 2028-08-01
+        kibg_anspruch: true
+        kibg_beitrag_total: 440
+
+- name: D7 Gesuch am letzten Tag der Übergangsfrist (Art. 25 Abs. 1 KiBV, A7)
+  period: 2028-08
+  absolute_error_margin: 0.01
+  input:
+    household: *haushalt
+    persons:
+      mutter: *mutter
+      vater: *vater
+      lina:
+        <<: *lina
+        betreuungsbeginn: 2028-08-01
+        kibg_gesuchsdatum: 2028-11-01
+  output:
+    persons:
+      lina:
+        kibg_gesuch_in_uebergangsfrist: true
+        kibg_beitragsbeginn: 2028-08-01
+        kibg_anspruch: true
+
+- name: D8 Kita am 20. August bestätigt, im August keine Teilnahme (Art. 6 KiBV)
+  period: 2028-08
+  absolute_error_margin: 0.01
+  input:
+    household: *haushalt
+    persons:
+      mutter: *mutter
+      vater: *vater
+      lina: &lina_d8
+        <<: *lina
+        betreuungsbeginn: 2028-08-01
+        kibg_gesuchsdatum: 2028-08-15
+        kibg_einrichtung_angemeldet: false
+        kibg_einrichtung_bestaetigt_am: 2028-08-20
+  output:
+    persons:
+      lina:
+        kibg_einrichtung_teilnahmebeginn: 2028-09-01
+        kibg_einrichtung_berechtigt: false
+        kibg_anspruch: false
+        kibg_beitrag_total: 0
+
+- name: D8 Kita am 20. August bestätigt, Teilnahme ab September (Art. 6 KiBV)
+  period: 2028-09
+  absolute_error_margin: 0.01
+  input:
+    household: *haushalt
+    persons:
+      mutter: *mutter
+      vater: *vater
+      lina: *lina_d8
+  output:
+    persons:
+      lina:
+        kibg_einrichtung_teilnahmebeginn: 2028-09-01
+        # Das Datum hat Vorrang vor der Angabe «angemeldet» (Teamentscheid).
+        kibg_einrichtung_berechtigt: true
+        kibg_anspruch: true
+        kibg_beitrag_total: 440
+
+- name: D9 Kita am 1. September bestätigt, Teilnahme erst ab Oktober (Art. 6 KiBV)
+  period: 2028-09
+  absolute_error_margin: 0.01
+  input:
+    household: *haushalt
+    persons:
+      mutter: *mutter
+      vater: *vater
+      lina:
+        <<: *lina
+        betreuungsbeginn: 2028-08-01
+        kibg_gesuchsdatum: 2028-08-15
+        kibg_einrichtung_angemeldet: false
+        kibg_einrichtung_bestaetigt_am: 2028-09-01
+  output:
+    persons:
+      lina:
+        kibg_einrichtung_teilnahmebeginn: 2028-10-01
+        kibg_einrichtung_berechtigt: false
+        kibg_beitrag_total: 0
+
+- name: D10 Gesuch vor dem Betreuungsbeginn, im Februar noch kein Beitrag (Art. 9 Abs. 2 KiBG)
+  period: 2029-02
+  absolute_error_margin: 0.01
+  input:
+    household: *haushalt
+    persons:
+      mutter: *mutter
+      vater: *vater
+      lina: &lina_d10
+        <<: *lina
+        betreuungsbeginn: 2029-03-01
+        kibg_gesuchsdatum: 2029-02-10
+  output:
+    persons:
+      lina:
+        kibg_gesuch_innert_frist: true
+        kibg_beitragsbeginn: 2029-03-01
+        kibg_anspruch: false
+        kibg_beitrag_total: 0
+
+- name: D10 Gesuch vor dem Betreuungsbeginn, Beiträge ab Betreuungsbeginn (Art. 9 Abs. 2 KiBG)
+  period: 2029-03
+  absolute_error_margin: 0.01
+  input:
+    household: *haushalt
+    persons:
+      mutter: *mutter
+      vater: *vater
+      lina: *lina_d10
+  output:
+    persons:
+      lina:
+        kibg_beitragsbeginn: 2029-03-01
+        kibg_anspruch: true
+        kibg_beitrag_total: 300
+
+- name: D11 Gesuch in der Übergangsfrist, Kita erst am 10. August bestätigt, im August kein Beitrag (Art. 6 KiBV, Art. 25 KiBV)
+  period: 2028-08
+  absolute_error_margin: 0.01
+  input:
+    household: *haushalt
+    persons:
+      mutter: *mutter
+      vater: *vater
+      lina: &lina_d11
+        <<: *lina
+        betreuungsbeginn: 2028-08-01
+        kibg_gesuchsdatum: 2028-08-20
+        kibg_einrichtung_angemeldet: false
+        kibg_einrichtung_bestaetigt_am: 2028-08-10
+  output:
+    persons:
+      lina:
+        kibg_beitragsbeginn: 2028-08-01
+        kibg_einrichtung_teilnahmebeginn: 2028-09-01
+        kibg_anspruch: false
+        kibg_beitrag_total: 0
+        kibg_restkosten_eltern: 1040
+
+- name: D11 Gesuch in der Übergangsfrist, Kita erst am 10. August bestätigt, ab September Beitrag (Art. 6 KiBV)
+  period: 2028-09
+  absolute_error_margin: 0.01
+  input:
+    household: *haushalt
+    persons:
+      mutter: *mutter
+      vater: *vater
+      lina: *lina_d11
+  output:
+    persons:
+      lina:
+        kibg_anspruch: true
+        kibg_beitrag_total: 440

@@ -1,4 +1,4 @@
-"""Eingabefehler F1 bis F9 aus challenge/szenarien.md (Teil 3b).
+"""Eingabefehler F1 bis F13 aus challenge/szenarien.md (Teil 3b).
 
 Ohne diese Angaben kann der Text nicht angewendet werden. Die Berechnung muss
 abbrechen, statt einen Betrag zu liefern. YAML-Tests können nur Werte prüfen,
@@ -31,6 +31,8 @@ def p1(mutter=None, vater=None, lina=None, partner=False, gemeinsam=True):
         },
         "lina": {
             "geburtsdatum": {"ETERNITY": "2027-09-01"},
+            "betreuungsbeginn": {"ETERNITY": "2028-08-01"},
+            "kibg_gesuchsdatum": {"ETERNITY": "2028-08-15"},
             "kibg_einrichtungstyp": {MONAT: "kita"},
             "kibg_einrichtung_anerkannt": {MONAT: True},
             "kibg_einrichtung_angemeldet": {MONAT: True},
@@ -110,6 +112,8 @@ def test_f6_gemeinsamer_haushalt_mit_einer_person():
         },
         "lina": {
             "geburtsdatum": {"ETERNITY": "2027-09-01"},
+            "betreuungsbeginn": {"ETERNITY": "2028-08-01"},
+            "kibg_gesuchsdatum": {"ETERNITY": "2028-08-15"},
             "kibg_einrichtungstyp": {MONAT: "kita"},
             "kibg_einrichtung_anerkannt": {MONAT: True},
             "kibg_einrichtung_angemeldet": {MONAT: True},
@@ -149,3 +153,54 @@ def test_f9_negatives_aktuelles_einkommen():
     simulation = p1(mutter=lambda m: {**m, "me_aktuell": {"2028": -5000}})
     with pytest.raises(SituationParsingError, match="nicht negativ"):
         simulation.calculate("kibg_beitrag_total", MONAT)
+
+
+def test_f10_ohne_betreuungsbeginn():
+    simulation = p1(lina=ohne("betreuungsbeginn"))
+    with pytest.raises(
+        SituationParsingError, match="Betreuungsbeginn des Kindes fehlt"
+    ):
+        simulation.calculate("kibg_beitrag_total", MONAT)
+
+
+def test_f11_ohne_gesuchsdatum():
+    simulation = p1(lina=ohne("kibg_gesuchsdatum"))
+    with pytest.raises(SituationParsingError, match="Gesuchsdatum fehlt"):
+        simulation.calculate("kibg_beitrag_total", MONAT)
+
+
+def test_f12_angemeldet_vor_teilnahmebeginn():
+    # Bestätigt am 1. September: Teilnahme erst ab 1. Oktober (Art. 6 KiBV),
+    # im September aber als angemeldet angegeben.
+    simulation = p1(
+        lina=lambda k: {
+            **k,
+            "kibg_einrichtung_bestaetigt_am": {"ETERNITY": "2028-09-01"},
+        }
+    )
+    with pytest.raises(SituationParsingError, match="noch nicht teil"):
+        simulation.calculate("kibg_beitrag_total", MONAT)
+
+
+def test_f13_mehr_tage_als_ab_beitragsbeginn():
+    # Beitragsbeginn 15. November: im November bleiben 16 Tage (A9).
+    simulation = p1(
+        lina=lambda k: {
+            **k,
+            "kibg_gesuchsdatum": {"ETERNITY": "2028-11-15"},
+            "betreuungstage_mit_obhut": {"2028-11": 20},
+        }
+    )
+    with pytest.raises(SituationParsingError, match="ab diesem Tag"):
+        simulation.calculate("kibg_beitragsbeginn_erreicht", "2028-11")
+
+
+def test_f13_grenze_genau_die_verbleibenden_tage():
+    simulation = p1(
+        lina=lambda k: {
+            **k,
+            "kibg_gesuchsdatum": {"ETERNITY": "2028-11-15"},
+            "betreuungstage_mit_obhut": {"2028-11": 16},
+        }
+    )
+    assert simulation.calculate("kibg_beitragsbeginn_erreicht", "2028-11")[2]

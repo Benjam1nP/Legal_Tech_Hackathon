@@ -72,9 +72,14 @@ Jede Bestimmung des Gesetzes (KiBG, `Gesetz.pdf`) und der Verordnung (KiBV, `Ver
 | `kibg_restkosten_eltern` | Person (Kind) | MONTH | Formel | Fr. | KiBG 12.2 |
 | `kibg_anteil_kanton` | Person (Kind) | MONTH | Formel | Fr. | KiBG 18.1 |
 | `kibg_anteil_gemeinde` | Person (Kind) | MONTH | Formel | Fr. | KiBG 18.1, 20.2 |
-| `betreuungsbeginn` | Person (Kind) | ETERNITY | Eingabe | Datum | KiBG 9.2 |
-| `kibg_gesuchsdatum` | Person (Kind) | ETERNITY | Eingabe | Datum | KiBG 9.1 |
-| `kibg_beitragsbeginn` | Person (Kind) | ETERNITY | Formel (optional) | Datum | KiBG 9.2, KiBV 25 |
+| `betreuungsbeginn` | Person (Kind) | ETERNITY | Eingabe, **Pflicht für jedes Kind** | Datum | KiBG 9.2 |
+| `kibg_gesuchsdatum` | Person (Kind) | ETERNITY | Eingabe, **Pflicht für jedes Kind**: Tag des Eingangs bei der Gemeinde (A10) | Datum | KiBG 9.1–9.2, KiBV 25.1 |
+| `kibg_gesuch_innert_frist` | Person (Kind) | MONTH | Formel | ja/nein | KiBG 9.2 Satz 1 |
+| `kibg_gesuch_in_uebergangsfrist` | Person (Kind) | MONTH | Formel | ja/nein | KiBV 25.1 |
+| `kibg_beitragsbeginn` | Person (Kind) | MONTH | Formel | Datum | KiBG 9.2, KiBV 25.1 |
+| `kibg_beitragsbeginn_erreicht` | Person (Kind) | MONTH | Formel (Voraussetzung des Anspruchs) | ja/nein | KiBG 9.2, KiBV 25.1 |
+| `kibg_einrichtung_bestaetigt_am` | Person (Kind) | ETERNITY | Eingabe, freiwillig (hat Vorrang vor `kibg_einrichtung_angemeldet`) | Datum | KiBV 5–6 |
+| `kibg_einrichtung_teilnahmebeginn` | Person (Kind) | MONTH | Formel | Datum | KiBV 6 |
 | `kibg_verfuegung_ende` | Person (Kind) | ETERNITY | Formel (optional) | Datum | KiBV 16 |
 | `gemeinsamer_haushalt` | Haushalt | MONTH | Eingabe | ja/nein | KiBG 4.1b |
 | `kibg_beschaeftigung_lit_a_erfuellt` | Haushalt | MONTH | Formel | ja/nein | KiBG 4.1a |
@@ -146,7 +151,7 @@ Jede Bestimmung des Gesetzes (KiBG, `Gesetz.pdf`) und der Verordnung (KiBV, `Ver
 | Ref. | Inhalt | Konzept | Vorgeschlagener Name | Bemerkung |
 |---|---|---|---|---|
 | Art. 9.1 | Beiträge nur auf Gesuch der Erziehungsberechtigten | Variable, Eingabe (Datum, ja/nein) | `kibg_gesuchsdatum`, `kibg_gesuchstellend` | Wer das Gesuch stellt, bestimmt den massgebenden Wohnsitz (O8) |
-| Art. 9.2 | Rückwirkend, wenn das Gesuch innert 30 Tagen nach Betreuungsbeginn eingeht, sonst ab Gesuch | Parameter + Eingabe + Formel | `kibg.verfahren.frist_rueckwirkung_tage = 30`, `betreuungsbeginn`, `kibg_beitragsbeginn` | Übergangsfrist in KiBV 25 |
+| Art. 9.2 | Rückwirkend, wenn das Gesuch innert 30 Tagen nach Betreuungsbeginn eingeht, sonst ab Gesuch | Parameter + Eingabe + Formel | `kibg.verfahren.frist_rueckwirkung_tage = 30`, `betreuungsbeginn`, `kibg_gesuchsdatum`, `kibg_gesuch_innert_frist`, `kibg_beitragsbeginn`, `kibg_beitragsbeginn_erreicht` | Vor dem Beitragsbeginn kein Anspruch; im Monat des Beitragsbeginns nur Stunden ab diesem Tag (A9). Übergangsfrist in KiBV 25 |
 | Art. 10 | Einrichtung bestätigt das Betreuungsverhältnis | Variable, Eingabe (ja/nein) (optional) | `betreuung_bestaetigt` | Kann weggelassen werden |
 | Art. 11.1 | Kommunale Stelle prüft und verfügt | Nicht berechenbar | — | **Unser Ergebnis ist eine Schätzung, keine Verfügung** |
 | Art. 11.2 | In der Regel zwölf Monate | Parameter | `kibg.verfahren.verfuegungsdauer_monate = 12` | Einzelheiten in KiBV 16 |
@@ -202,7 +207,7 @@ Jede Bestimmung des Gesetzes (KiBG, `Gesetz.pdf`) und der Verordnung (KiBV, `Ver
 | Ref. | Inhalt | Konzept | Vorgeschlagener Name | Bemerkung |
 |---|---|---|---|---|
 | Art. 3–5 | Anmeldung, Inhalt, Prüfung | Nicht berechenbar | — | Vereinfacht zu `kibg_einrichtung_angemeldet` |
-| Art. 6 | Teilnahme beginnt am Ersten des Folgemonats nach der Bestätigung | Variable, Formel (optional) | `kibg_einrichtung_teilnahmebeginn` | Kann weggelassen werden |
+| Art. 6 | Teilnahme beginnt am Ersten des Folgemonats nach der Bestätigung | Eingabe (freiwillig) + Formel | `kibg_einrichtung_bestaetigt_am`, `kibg_einrichtung_teilnahmebeginn`; fliesst in `kibg_einrichtung_berechtigt` | Ist das Datum bekannt, hat es Vorrang vor `kibg_einrichtung_angemeldet` (Teamentscheid) |
 
 ### III. Anspruch und Bemessung
 
@@ -273,7 +278,7 @@ Jede Bestimmung des Gesetzes (KiBG, `Gesetz.pdf`) und der Verordnung (KiBV, `Ver
 
 | Ref. | Inhalt | Konzept | Vorgeschlagener Name | Bemerkung |
 |---|---|---|---|---|
-| Art. 25.1 | Gesuche innert drei Monaten nach Vollzugsbeginn gelten rückwirkend ab Vollzugsbeginn | Parameter + Formel | `kibg.uebergang.frist_monate = 3` | Ersetzt in der Übergangszeit die 30 Tage aus KiBG 9.2 |
+| Art. 25.1 | Gesuche innert drei Monaten nach Vollzugsbeginn gelten rückwirkend ab Vollzugsbeginn | Parameter + Formel | `kibg.verfahren.uebergang_frist_monate = 3`, `kibg_gesuch_in_uebergangsfrist`, `kibg_beitragsbeginn` | Ersetzt in der Übergangszeit die 30 Tage aus KiBG 9.2; nicht vor dem Betreuungsbeginn. Frist bis und mit 2028-11-01 (A7) |
 | Art. 25.2 | KiBV 16 gilt sachgemäss | — | — | — |
 | II. | Änderung der Delegationsverordnung | Nicht berechenbar | — | — |
 | IV. | Anwendung «ab ●●» | Periode | — | O1 |

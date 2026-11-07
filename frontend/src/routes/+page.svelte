@@ -19,11 +19,14 @@
 	const neuesKind = () => ({
 		nr: naechsteKindNr++,
 		geburtsdatum: '',
+		betreuungsbeginn: '',
+		gesuchsdatum: '',
 		eingeschult: null,
 		primarschuleAbgeschlossen: null,
 		typ: null,
 		anerkannt: null,
 		angemeldet: null,
+		bestaetigtAm: '',
 		tage: null,
 		stunden: null,
 		kosten: null
@@ -109,6 +112,8 @@
 		kinder.forEach((kind, i) => {
 			const id = `kind_${i + 1}`;
 			pflicht(`${id}.geburtsdatum`, kind.geburtsdatum);
+			pflicht(`${id}.betreuungsbeginn`, kind.betreuungsbeginn);
+			pflicht(`${id}.gesuchsdatum`, kind.gesuchsdatum);
 			pflicht(`${id}.eingeschult`, kind.eingeschult);
 			if (kind.eingeschult === true) {
 				pflicht(`${id}.primarschuleAbgeschlossen`, kind.primarschuleAbgeschlossen);
@@ -131,6 +136,9 @@
 		gemeinsamer_haushalt: 'gemeinsam',
 		kibg_gesuchstellend: 'gesuchsteller',
 		betreuungstage_mit_obhut: 'tage',
+		kibg_gesuchsdatum: 'gesuchsdatum',
+		kibg_einrichtung_angemeldet: 'angemeldet',
+		kibg_einrichtung_bestaetigt_am: 'bestaetigtAm',
 		me_aktuell: 'aktuell',
 		me_steuerveranlagung: 'einkommen'
 	};
@@ -141,7 +149,12 @@
 			const feld = OPENFISCA_FELDER[variable] ?? variable ?? '';
 			const schluessel = ['gemeinsam', 'gesuchsteller'].includes(feld) ? feld : `${id}.${feld}`;
 			const kindIndex = id?.startsWith('kind_') ? Number(id.slice(5)) - 1 : 0;
-			const text = texte.fehler[variable];
+			// Zwei Prüfungen melden sich beim Feld der Betreuungstage: Tage fehlen
+			// (Art. 14 Abs. 4 KiBV) oder mehr Tage als ab dem Beitragsbeginn (A9).
+			const text =
+				variable === 'betreuungstage_mit_obhut' && meldung.includes('Beitragsbeginn')
+					? texte.fehler.betreuungstage_ab_beitragsbeginn
+					: texte.fehler[variable];
 			meldungen[pfad ? schluessel : 'allgemein'] = text
 				? einsetzen(text, { kind: kindName(kindIndex) })
 				: meldung;
@@ -189,11 +202,14 @@
 		einkommen: fb.personen.me_steuerveranlagung,
 		aktuell: fb.personen.me_aktuell,
 		geburtsdatum: fb.kind.geburtsdatum,
+		betreuungsbeginn: fb.kind.betreuungsbeginn,
+		gesuchsdatum: fb.kind.kibg_gesuchsdatum,
 		eingeschult: fb.kind.eingeschult,
 		primarschuleAbgeschlossen: fb.kind.primarschule_abgeschlossen,
 		typ: fb.kind.kibg_einrichtungstyp,
 		anerkannt: fb.kind.kibg_einrichtung_anerkannt,
 		angemeldet: fb.kind.kibg_einrichtung_angemeldet,
+		bestaetigtAm: fb.kind.kibg_einrichtung_bestaetigt_am,
 		tage: fb.kind.betreuungstage_mit_obhut,
 		stunden: fb.kind.betreuungsstunden,
 		kosten: fb.kind.kibg_betreuungskosten
@@ -406,6 +422,22 @@
 					bind:wert={kind.geburtsdatum}
 					fehler={fehler[`kind_${i + 1}.geburtsdatum`]}
 				/>
+				<Feld
+					id="betreuungsbeginn-{kind.nr}"
+					typ="date"
+					label={fb.kind.betreuungsbeginn.frage}
+					hilfe={fb.kind.betreuungsbeginn.hilfe}
+					bind:wert={kind.betreuungsbeginn}
+					fehler={fehler[`kind_${i + 1}.betreuungsbeginn`]}
+				/>
+				<Feld
+					id="gesuchsdatum-{kind.nr}"
+					typ="date"
+					label={fb.kind.kibg_gesuchsdatum.frage}
+					hilfe={fb.kind.kibg_gesuchsdatum.hilfe}
+					bind:wert={kind.gesuchsdatum}
+					fehler={fehler[`kind_${i + 1}.gesuchsdatum`]}
+				/>
 				<Auswahl
 					name="eingeschult-{kind.nr}"
 					frage={fb.kind.eingeschult.frage}
@@ -445,6 +477,14 @@
 						optionen={JA_NEIN}
 						bind:wert={kind.angemeldet}
 						fehler={fehler[`kind_${i + 1}.angemeldet`]}
+					/>
+					<Feld
+						id="bestaetigt-{kind.nr}"
+						typ="date"
+						label={fb.kind.kibg_einrichtung_bestaetigt_am.frage}
+						hilfe={fb.kind.kibg_einrichtung_bestaetigt_am.hilfe}
+						bind:wert={kind.bestaetigtAm}
+						fehler={fehler[`kind_${i + 1}.bestaetigtAm`]}
 					/>
 				{/if}
 				<Feld

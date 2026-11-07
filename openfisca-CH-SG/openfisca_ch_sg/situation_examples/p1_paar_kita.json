@@ -13,6 +13,8 @@
         },
         "lina": {
             "geburtsdatum": {"ETERNITY": "2027-09-01"},
+            "betreuungsbeginn": {"ETERNITY": "2028-08-01"},
+            "kibg_gesuchsdatum": {"ETERNITY": "2028-08-15"},
             "kibg_einrichtungstyp": {"2028-09": "kita"},
             "kibg_einrichtung_anerkannt": {"2028-09": true},
             "kibg_einrichtung_angemeldet": {"2028-09": true},

@@ -1,12 +1,12 @@
 """Angaben zur Betreuung des Kindes: Einrichtung, Stunden, Kosten."""
 
-from numpy import minimum
+from numpy import datetime64, logical_not as not_, minimum, where
 from openfisca_core.indexed_enums import Enum
 from openfisca_core.periods import MONTH
 from openfisca_core.variables import Variable
 
 from openfisca_ch_sg.entities import Person
-from openfisca_ch_sg.hilfsfunktionen import eingabefehler
+from openfisca_ch_sg.hilfsfunktionen import DATUM_FEHLT, eingabefehler
 
 
 class KibgEinrichtungstyp(Enum):
@@ -50,12 +50,28 @@ class kibg_einrichtung_berechtigt(Variable):
     entity = Person
     definition_period = MONTH
     label = "Betreuung in einer anerkannten und angemeldeten Einrichtung"
-    reference = "Art. 3 Abs. 1 KiBG"
+    reference = ("Art. 3 Abs. 1 und 3 KiBG", "Art. 6 KiBV (Entwurf)")
 
     def formula_2028_08(person, period, parameters):
         typ = person("kibg_einrichtungstyp", period)
         anerkannt = person("kibg_einrichtung_anerkannt", period)
-        angemeldet = person("kibg_einrichtung_angemeldet", period)
+        angemeldet_angegeben = person("kibg_einrichtung_angemeldet", period)
+        # Art. 6 KiBV: Ist das Datum der Bestätigung bekannt, folgt daraus, ob
+        # die Einrichtung in diesem Monat teilnimmt; es hat Vorrang vor der
+        # Angabe «angemeldet» (Teamentscheid).
+        teilnahmebeginn = person("kibg_einrichtung_teilnahmebeginn", period)
+        datum_bekannt = teilnahmebeginn != datetime64(DATUM_FEHLT)
+        nimmt_teil = teilnahmebeginn <= datetime64(period.start.date)
+        eingabefehler(
+            person,
+            datum_bekannt * angemeldet_angegeben * not_(nimmt_teil),
+            "kibg_einrichtung_angemeldet",
+            "Die Einrichtung ist als angemeldet angegeben, nimmt nach dem Datum "
+            "der Bestätigung in diesem Monat aber noch nicht teil. Die Teilnahme "
+            "beginnt am ersten Tag des Folgemonats nach der Bestätigung "
+            "(Art. 6 KiBV, Entwurf).",
+        )
+        angemeldet = where(datum_bekannt, nimmt_teil, angemeldet_angegeben)
         return (typ != KibgEinrichtungstyp.keine) * anerkannt * angemeldet
 
 

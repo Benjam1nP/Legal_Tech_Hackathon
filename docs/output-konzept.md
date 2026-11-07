@@ -25,15 +25,17 @@ Reihenfolge:
    Beschäftigungsgrad, massgebendes Einkommen und Vermögen gemäss letzter
    Steuerveranlagung; allenfalls Antrag und aktuelles Einkommen
    (Art. 5 Abs. 4 KiBG).
-3. **Pro Kind ein Block:** Geburtsdatum, eingeschult (ab Kindergarten, A8),
-   Primarschule abgeschlossen, Einrichtungstyp, anerkannt und angemeldet,
+3. **Pro Kind ein Block:** Geburtsdatum, Betreuungsbeginn, Tag, an dem das Gesuch
+   bei der Gemeinde eintrifft (auch geplant, A10), eingeschult (ab Kindergarten, A8),
+   Primarschule abgeschlossen, Einrichtungstyp, anerkannt und angemeldet
+   (freiwillig: Datum der Bestätigung der Einrichtung, Art. 6 KiBV),
    Betreuungsstunden und -tage im Monat, Kosten im Monat.
 
 Nicht abgefragt werden Namen, AHV-Nummer und Adresse (Datenminimierung; die
 Plattform nach Art. 21 KiBV braucht sie, der Rechner nicht). Zusatzbeiträge der
 Gemeinde (Z1, Z2) werden nicht abgefragt und sind 0.
 
-**Pflichtangaben:** Geburtsdatum jedes Kindes, bei zwei Erziehungsberechtigten
+**Pflichtangaben:** Geburtsdatum, Betreuungsbeginn und Gesuchsdatum jedes Kindes, bei zwei Erziehungsberechtigten
 die gesuchstellende Person (OpenFisca meldet sonst Fehler 400 mit dem Feld) und
 das massgebende Einkommen. Fehlt eine davon, zeigt das Interface keinen Betrag,
 sondern bittet um die Angabe. Beim Einkommen steht der Hinweis: «Diese Zahl
@@ -55,6 +57,14 @@ Gemeindesteuern), Art. 5 Abs. 3 KiBG.»
    Einkommensänderung, mögliche Entbindung vom Beschäftigungsgrad, Einkommen der
    Partnerin oder des Partners, Gesuchsfrist von 30 Tagen (Art. 9 Abs. 2 KiBG),
    Meldepflicht und mögliche Rückforderung (Art. 13 und 14 Abs. 2 KiBG).
+
+   **Beitragsbeginn (Art. 9 Abs. 2 KiBG, Art. 25 und 6 KiBV):** Liegt der
+   gewählte Monat vor dem Beitragsbeginn, ist die Voraussetzung «Beitragsbeginn»
+   nicht erfüllt und der Beitrag Fr. 0. Beginnt der Beitrag mitten im Monat,
+   zählen nur die Stunden ab diesem Tag (A9). Trifft das Gesuch mehr als 30 Tage
+   nach Betreuungsbeginn ein (ausserhalb der Übergangsfrist), erklärt ein
+   Hinweis, warum es keine Rückwirkung gibt. Nimmt die Einrichtung nach dem
+   Datum der Bestätigung erst später teil, nennt ein Hinweis den Teilnahmebeginn.
 
    **Anspruch erfüllt, aber Beitrag Fr. 0:** Wenn `kibg_anspruch` «ja» ist,
    `kibg_hoechstbeitrag` aber 0, gibt es für diese Kombination keinen Ansatz in

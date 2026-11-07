@@ -21,6 +21,8 @@
         me_steuerveranlagung: {2028: 37000}
       lina:
         geburtsdatum: 2027-09-01
+        betreuungsbeginn: 2028-08-01
+        kibg_gesuchsdatum: 2028-08-15
         kibg_einrichtungstyp: kita
         kibg_einrichtung_anerkannt: true
         kibg_einrichtung_angemeldet: true
@@ -73,6 +75,8 @@
         me_steuerveranlagung: {2028: 30000}
       noah:
         geburtsdatum: 2026-03-01
+        betreuungsbeginn: 2028-08-01
+        kibg_gesuchsdatum: 2028-08-15
         kibg_einrichtungstyp: tagesfamilie
         kibg_einrichtung_anerkannt: true
         kibg_einrichtung_angemeldet: true
@@ -111,6 +115,8 @@
         me_steuerveranlagung: {2028: 28500}
       mia:
         geburtsdatum: 2028-03-01
+        betreuungsbeginn: 2028-08-01
+        kibg_gesuchsdatum: 2028-08-15
         kibg_einrichtungstyp: kita
         kibg_einrichtung_anerkannt: true
         kibg_einrichtung_angemeldet: true
@@ -119,6 +125,8 @@
         kibg_betreuungskosten: 1500
       leo:
         geburtsdatum: 2021-05-01
+        betreuungsbeginn: 2028-08-01
+        kibg_gesuchsdatum: 2028-08-15
         eingeschult: true
         kibg_einrichtungstyp: schulergaenzend
         kibg_einrichtung_anerkannt: true
@@ -164,6 +172,8 @@
         me_steuerveranlagung: {2028: 55500}
       elias:
         geburtsdatum: 2026-09-01
+        betreuungsbeginn: 2028-08-01
+        kibg_gesuchsdatum: 2028-08-15
         kibg_einrichtungstyp: kita
         kibg_einrichtung_anerkannt: true
         kibg_einrichtung_angemeldet: true
@@ -203,6 +213,8 @@
         me_steuerveranlagung: {2028: 37000}
       lina:
         geburtsdatum: 2027-09-01
+        betreuungsbeginn: 2028-08-01
+        kibg_gesuchsdatum: 2028-08-15
         kibg_einrichtungstyp: kita
         kibg_einrichtung_anerkannt: true
         kibg_einrichtung_angemeldet: true
@@ -237,6 +249,8 @@
         me_steuerveranlagung: {2028: 40000}
       sara:
         geburtsdatum: 2028-01-01
+        betreuungsbeginn: 2028-08-01
+        kibg_gesuchsdatum: 2028-08-15
         kibg_einrichtungstyp: kita
         kibg_einrichtung_anerkannt: true
         kibg_einrichtung_angemeldet: true
@@ -269,6 +283,8 @@
         me_steuerveranlagung: {2028: 40000}
       sara:
         geburtsdatum: 2028-01-01
+        betreuungsbeginn: 2028-08-01
+        kibg_gesuchsdatum: 2028-08-15
         kibg_einrichtungstyp: kita
         kibg_einrichtung_anerkannt: true
         kibg_einrichtung_angemeldet: true
@@ -307,6 +323,8 @@
         me_steuerveranlagung: {2028: 45600}
       jonas:
         geburtsdatum: 2024-09-01
+        betreuungsbeginn: 2028-08-01
+        kibg_gesuchsdatum: 2028-08-15
         kibg_einrichtungstyp: kita
         kibg_einrichtung_anerkannt: true
         kibg_einrichtung_angemeldet: true
@@ -346,6 +364,8 @@
         me_steuerveranlagung: {2028: 45600}
       jonas:
         geburtsdatum: 2024-09-01
+        betreuungsbeginn: 2028-08-01
+        kibg_gesuchsdatum: 2028-08-15
         kibg_einrichtungstyp: kita
         kibg_einrichtung_anerkannt: true
         kibg_einrichtung_angemeldet: true

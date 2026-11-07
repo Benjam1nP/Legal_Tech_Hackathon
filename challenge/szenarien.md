@@ -62,6 +62,7 @@ Wenn bei einem Szenario nichts anderes steht, gilt:
 - Einrichtung anerkannt und angemeldet; Kind nicht eingeschult, Primarschule nicht abgeschlossen.
 - Keine Zusatzbeiträge der Gemeinde (`kibg_zusatzbeitrag_z1` = `kibg_zusatzbeitrag_z2` = 0); keine Ausnahme nach KiBG 4.2; kein Antrag auf aktuelle Gegebenheiten.
 - Massgebendes Einkommen als Eingabe für das Jahr 2028.
+- Jedes Kind: Betreuungsbeginn **2028-08-01**, Gesuch trifft am **2028-08-15** bei der Gemeinde ein. Das liegt in der Übergangsfrist; die Beiträge beginnen am 2028-08-01. Beide Daten sind Pflicht (siehe F10, F11).
 - Bei getrennt lebenden Eltern enthält der Haushalt im Modell nur die gesuchstellende Person (und allenfalls ihre Partnerin oder ihren Partner).
 - Bei zwei Erziehungsberechtigten im Haushalt stellt die Mutter das Gesuch (`kibg_gesuchstellend`). Diese Angabe ist Pflicht (siehe F2).
 - Jedes Kind hat ein Geburtsdatum. Diese Angabe ist Pflicht (siehe F1).
@@ -78,6 +79,8 @@ Wenn bei einem Szenario nichts anderes steht, gilt:
 | A6 | Beschäftigungsgrad: Jeder Elternteil braucht mindestens 20 % (KiBG 4.1a); Eltern im gemeinsamen Haushalt zusätzlich zusammen mindestens 120 % (KiBG 4.1b) | Entscheid zu O3: lit. a und b gelten kumulativ | G30–G38, X6, Q2 | bestätigt |
 | A7 | **Fristen:** Eine Frist in Tagen beginnt am Tag nach dem Ereignis; eine Frist in Monaten endet am Tag mit derselben Zahl (sinngemäss Art. 77 OR) | Der Text regelt die Berechnung nicht | D1–D2, D7 | bestätigt |
 | A8 | **Eingeschult** ist ein Kind ab dem Eintritt in den obligatorischen Kindergarten | KiBV 16.1 knüpft an das Jahr an, in dem das Kind «schulpflichtig wird»; im Kanton St. Gallen beginnt die Schulpflicht mit dem Kindergarten | G14 | bestätigt |
+| A9 | Im Monat, in dem die Beiträge beginnen, geben die Eltern **nur die Betreuungstage und -stunden ab diesem Tag** ein. Vor dem Beitragsbeginn gibt es keinen Anspruch | KiBG 9.2: Beiträge «ab dem Zeitpunkt der Gesuchstellung»; der Rechner rechnet pro Monat | D4, D5, F13 | bestätigt |
+| A10 | Das **Gesuchsdatum** ist der Tag, an dem das Gesuch bei der Gemeinde eintrifft. Es ist Pflicht, ebenso der Betreuungsbeginn | Teamentscheid; offen fürs Rechtsteam: ob nach dem St. Galler Verwaltungsrechtspflegegesetz schon die Postaufgabe die Frist wahrt | D1–D7, D10–D11, F10–F11 | bestätigt |
 
 ---
 
@@ -469,6 +472,10 @@ Ohne diese Angaben lässt sich der Text nicht anwenden. Der Rechner liefert dann
 | F7 | P1, 80 Stunden, aber 0 Betreuungstage | Fehler beim Feld `betreuungstage_mit_obhut` | Die Stunden zählen höchstens je Betreuungstag (KiBV 14.4) |
 | F8 | P1, Lina (12 Monate) als eingeschult angegeben | Fehler beim Feld `eingeschult` | Für Kinder unter 18 Monaten gilt KiBV 14.1; sie können nicht eingeschult sein |
 | F9 | P1, aktuelles Einkommen der Mutter −5'000 | Fehler beim Feld `me_aktuell` | Negative Werte würden sonst still wie «nicht angegeben» behandelt |
+| F10 | P1, aber ohne Betreuungsbeginn | Fehler beim Feld `betreuungsbeginn` | Ohne ihn lässt sich der Beitragsbeginn nicht bestimmen (KiBG 9.2) |
+| F11 | P1, aber ohne Gesuchsdatum | Fehler beim Feld `kibg_gesuchsdatum` | Ohne es lässt sich der Beitragsbeginn nicht bestimmen (KiBG 9.2, KiBV 25) |
+| F12 | P1, Kita am 2028-09-01 bestätigt, im September aber als angemeldet angegeben | Fehler beim Feld `kibg_einrichtung_angemeldet` | Nach KiBV 6 nimmt die Kita erst ab 2028-10-01 teil |
+| F13 | Gesuch trifft am 2028-11-15 ein, im November 20 Betreuungstage | Fehler beim Feld `betreuungstage_mit_obhut` | Ab dem 15. November bleiben nur 16 Tage (A9); mit 16 Tagen ist es kein Fehler |
 
 ---
 
@@ -496,26 +503,42 @@ E1 belegt die dokumentierte Grenze: Der Rechner liefert hier bewusst den zu hohe
 
 ---
 
-## Teil 6: Datumsregeln (optional)
+## Teil 6: Datumsregeln (KiBG 9.2, KiBV 25 und 6)
 
-Nur nötig, wenn `kibg_beitragsbeginn` und `kibg_einrichtung_teilnahmebeginn` programmiert werden. Vollzugsbeginn 2028-08-01; die Übergangsfrist nach KiBV 25.1 läuft bis 2028-11-01.
+Ab wann Beiträge fliessen. Grundlage ist P1 (Lina, Kita, 80 Stunden an 8 Tagen, Kosten 1'040, Einkommen 97'000, Faktor 0.5); geändert werden nur die Daten. Vollzugsbeginn 2028-08-01; die Übergangsfrist nach KiBV 25.1 läuft bis und mit 2028-11-01 (A7). Für Fälle im Jahr 2029 gilt das Einkommen auch für 2029. Getestet in `openfisca-CH-SG/openfisca_ch_sg/tests/datumsregeln.yaml`.
 
-| Nr. | Betreuungsbeginn | Gesuch | `kibg_beitragsbeginn` | Quelle | Status |
+**Regeln**
+
+1. Gesuch innert 30 Tagen seit Betreuungsbeginn (KiBG 9.2 Satz 1, A7: bis Betreuungsbeginn + 30 Tage) → Beiträge ab Betreuungsbeginn. Ein Gesuch vor dem Betreuungsbeginn ist immer rechtzeitig.
+2. Sonst ab dem Gesuchsdatum (KiBG 9.2 Satz 2).
+3. Gesuch bis 2028-11-01 (KiBV 25.1) → ab Vollzugsbeginn, aber nicht vor dem Betreuungsbeginn. Diese Regel geht 1 und 2 vor.
+4. Vor dem Beitragsbeginn besteht kein Anspruch (Teamentscheid). Im Monat des Beitragsbeginns zählen nur die Stunden ab diesem Tag (A9).
+5. Ist das Datum der Bestätigung der Kita bekannt, nimmt sie ab dem Ersten des Folgemonats teil (KiBV 6); das Datum hat Vorrang vor der Angabe «angemeldet».
+
+**Beitragsbeginn (KiBG 9.2, KiBV 25)**
+
+| Nr. | Betreuungsbeginn | Gesuch | `kibg_gesuch_innert_frist` | `kibg_gesuch_in_uebergangsfrist` | `kibg_beitragsbeginn` | Ergebnis pro Monat | Status |
+|---|---|---|---|---|---|---|---|
+| D1 | 2029-03-01 | 2029-03-31 (30 Tage später) | ja | nein | 2029-03-01 | März 2029: Anspruch ja, 300.00 (Lina 18 Monate, Ansatz 7.50) | A7 |
+| D2 | 2029-03-01 | 2029-04-01 (31 Tage später) | nein | nein | 2029-04-01 | März 2029: kein Anspruch, 0.00, Restkosten 1'040.00; April 2029: 300.00 | A7 |
+| D3 | 2028-08-01 | 2028-10-15 | nein | ja | 2028-08-01 | August 2028: 440.00 | fest |
+| D4 | 2028-08-01 | 2028-11-15 | nein | nein | 2028-11-15 | Oktober 2028: kein Anspruch, 0.00, Restkosten 1'040.00; November 2028 mit 4 Tagen, 40 Stunden ab dem 15., Kosten 520: 220.00, Restkosten 300.00 | A9 |
+| D5 | 2028-09-15 | 2028-10-31 (46 Tage später) | nein | ja | 2028-09-15 (nicht vor dem Betreuungsbeginn) | September 2028 mit 4 Tagen, 40 Stunden, Kosten 520: 220.00 | A9 |
+| D6 | 2026-01-01 | 2028-09-10 | nein | ja | 2028-08-01 (höchstens bis Vollzugsbeginn) | August 2028: 440.00 | fest |
+| D7 | 2028-08-01 | 2028-11-01 (letzter Tag der Übergangsfrist) | nein | ja | 2028-08-01 | August 2028: Anspruch ja | A7 |
+| D10 | 2029-03-01 | 2029-02-10 (vor dem Betreuungsbeginn) | ja | nein | 2029-03-01 | Februar 2029: kein Anspruch, 0.00; März 2029: 300.00 | fest |
+
+**Teilnahme der Einrichtung (KiBV 6)**
+
+Bei diesen Fällen ist «angemeldet» mit nein angegeben; massgebend ist das Datum der Bestätigung.
+
+| Nr. | Gesuch | Kita bestätigt am | `kibg_einrichtung_teilnahmebeginn` | Ergebnis pro Monat | Status |
 |---|---|---|---|---|---|
-| D1 | 2029-03-01 | 2029-03-31 (30 Tage später) | 2029-03-01 (rückwirkend) | KiBG 9.2 | A7 |
-| D2 | 2029-03-01 | 2029-04-01 (31 Tage später) | 2029-04-01 (ab Gesuch) | KiBG 9.2 | A7 |
-| D3 | 2028-08-01 (Vollzugsbeginn) | 2028-10-15 | 2028-08-01 (Übergangsfrist) | KiBV 25.1 | fest |
-| D4 | 2028-08-01 | 2028-11-15 | 2028-11-15 (ab Gesuch) | KiBG 9.2, KiBV 25.1 | fest |
-| D5 | 2028-09-15 | 2028-10-31 (46 Tage später) | 2028-09-15: Übergangsfrist gilt, aber nicht vor Beginn der Betreuung | KiBV 25.1 | fest |
-| D6 | 2026-01-01 (lange vor Vollzugsbeginn) | 2028-09-10 | 2028-08-01: rückwirkend höchstens bis Vollzugsbeginn | KiBV 25.1 | fest |
-| D7 | 2028-08-01 | 2028-11-01 (letzter Tag der Übergangsfrist) | 2028-08-01 | KiBV 25.1 | A7 |
+| D8 | 2028-08-15 | 2028-08-20 | 2028-09-01 | August 2028: Einrichtung nicht berechtigt, kein Anspruch, 0.00; September 2028: 440.00 | fest |
+| D9 | 2028-08-15 | 2028-09-01 | 2028-10-01 | September 2028: Einrichtung nicht berechtigt, 0.00 | fest |
+| D11 | 2028-08-20 (Übergangsfrist, Beitragsbeginn 2028-08-01) | 2028-08-10 | 2028-09-01 | August 2028: kein Anspruch, 0.00, Restkosten 1'040.00, obwohl der Beitragsbeginn erreicht ist; September 2028: 440.00 | fest |
 
-| Nr. | Teilnahme der Einrichtung vom Amt bestätigt | `kibg_einrichtung_teilnahmebeginn` | Quelle | Status |
-|---|---|---|---|---|
-| D8 | 2028-08-20 | 2028-09-01 (Erster des Folgemonats) | KiBV 6 | fest |
-| D9 | 2028-09-01 | 2028-10-01 | KiBV 6 | fest |
-
-Die Fälle D1 und D2 liegen bewusst im Jahr 2029, ausserhalb der Übergangsfrist, damit nur KiBG 9.2 wirkt.
+D1, D2 und D10 liegen bewusst im Jahr 2029, ausserhalb der Übergangsfrist, damit nur KiBG 9.2 wirkt.
 
 ---
 
@@ -575,11 +598,11 @@ Welche Bestimmung durch welche Fälle geprüft wird.
 | KiBG 4.3 | Mindestalter, Ende Primarschule; Geburtsdatum Pflicht | G15–G17, G49, X5, F1 |
 | KiBG 5.4, KiBV 11 | Aktuelle Gegebenheiten | G45–G48, Q4 |
 | KiBG 6.2 | Kostenobergrenze | P6, G21–G24, G28 |
-| KiBG 9.2, KiBV 25 | Rückwirkung, Übergang | D1–D7 |
+| KiBG 9.1–9.2, KiBV 25 | Gesuch, Rückwirkung, Übergang | D1–D7, D10–D11, F10–F11, F13 |
 | KiBG 12.2 | Restkosten der Eltern | alle P, G18–G29 |
 | KiBG 18.1 | Aufteilung Kanton / Gemeinde | alle P, G21–G29 |
 | KiBG 20, KiBV 24 | Zusatzbeiträge Z1, Z2 | P5, P6b, G24, G29, G39, Q3 |
-| KiBV 6 | Teilnahmebeginn der Einrichtung | D8–D9 |
+| KiBV 6 | Teilnahmebeginn der Einrichtung | D8–D9, D11, F12 |
 | KiBV 7 | Nur Tage mit Obhut | P7 (A5) |
 | KiBV 8 | Einkommen im Haushalt | P1, P3, P7, P7b, G40–G43, G48 |
 | KiBV 14.1–14.3 | Höchstbeitrag nach Alter und Betreuungsform | P1–P4, G7–G14, Q1 |
@@ -600,6 +623,6 @@ Jede Rechnung soll eine zweite Person nachrechnen, bevor sie zum Test wird.
 |---|---|---|
 | Teil 1 (P1–P7b) | | |
 | Teil 2 (G1–G53) | | |
-| Teil 3 (X1–X10, F1–F4) | | |
+| Teil 3 (X1–X10, F1–F13) | | |
 | Teil 4 (Q1–Q4) | | |
-| Teil 5–6 (E1–E2, D1–D9) | | |
+| Teil 5–6 (E1–E2, D1–D11) | | |

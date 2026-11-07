@@ -25,6 +25,8 @@
         me_steuerveranlagung: {2028: 37000}
       lina: &p1_lina
         geburtsdatum: 2027-09-01
+        betreuungsbeginn: 2028-08-01
+        kibg_gesuchsdatum: 2028-08-15
         kibg_einrichtungstyp: kita
         kibg_einrichtung_anerkannt: true
         kibg_einrichtung_angemeldet: true
@@ -64,6 +66,8 @@
         me_steuerveranlagung: {2028: 45600}
       jonas: &p7_jonas
         geburtsdatum: 2024-09-01
+        betreuungsbeginn: 2028-08-01
+        kibg_gesuchsdatum: 2028-08-15
         kibg_einrichtungstyp: kita
         kibg_einrichtung_anerkannt: true
         kibg_einrichtung_angemeldet: true
@@ -207,6 +211,8 @@
       lina:
         <<: *p1_lina
         geburtsdatum: 2027-03-02
+        betreuungsbeginn: 2028-08-01
+        kibg_gesuchsdatum: 2028-08-15
   output: *satz_11_00
 
 - name: G8 Kind über 18 Monate, tieferer Ansatz (Art. 14 Abs. 2 KiBV, A1)
@@ -220,6 +226,8 @@
       lina:
         <<: *p1_lina
         geburtsdatum: 2027-02-28
+        betreuungsbeginn: 2028-08-01
+        kibg_gesuchsdatum: 2028-08-15
   output:
     persons:
       lina:
@@ -257,6 +265,8 @@
         <<: *p1_lina
         kibg_einrichtungstyp: tagesfamilie
         geburtsdatum: 2026-03-01
+        betreuungsbeginn: 2028-08-01
+        kibg_gesuchsdatum: 2028-08-15
   output: &satz_5_50
     persons:
       lina:
@@ -275,6 +285,8 @@
       lina:
         <<: *p1_lina
         geburtsdatum: 2022-05-01
+        betreuungsbeginn: 2028-08-01
+        kibg_gesuchsdatum: 2028-08-15
         eingeschult: true
   output:
     persons:
@@ -294,6 +306,8 @@
       lina:
         <<: *p1_lina
         geburtsdatum: 2022-05-01
+        betreuungsbeginn: 2028-08-01
+        kibg_gesuchsdatum: 2028-08-15
         eingeschult: true
         kibg_einrichtungstyp: schulergaenzend
   output: *satz_5_50
@@ -309,6 +323,8 @@
       lina:
         <<: *p1_lina
         geburtsdatum: 2022-05-01
+        betreuungsbeginn: 2028-08-01
+        kibg_gesuchsdatum: 2028-08-15
         eingeschult: true
         kibg_einrichtungstyp: tagesfamilie
   output: *satz_5_50
@@ -324,6 +340,8 @@
       lina:
         <<: *p1_lina
         geburtsdatum: 2023-05-01
+        betreuungsbeginn: 2028-08-01
+        kibg_gesuchsdatum: 2028-08-15
         eingeschult: true
         kibg_einrichtungstyp: schulergaenzend
   output: *satz_5_50
@@ -341,6 +359,8 @@
       lina:
         <<: *p1_lina
         geburtsdatum: 2028-06-01
+        betreuungsbeginn: 2028-08-01
+        kibg_gesuchsdatum: 2028-08-15
   output:
     persons:
       lina:
@@ -358,6 +378,8 @@
       lina: &lina_juni
         <<: *p1_lina
         geburtsdatum: 2028-06-02
+        betreuungsbeginn: 2028-08-01
+        kibg_gesuchsdatum: 2028-08-15
   output:
     persons:
       lina:
@@ -522,6 +544,8 @@
         me_steuerveranlagung: {2028: 40000}
       sara:
         geburtsdatum: 2028-01-01
+        betreuungsbeginn: 2028-08-01
+        kibg_gesuchsdatum: 2028-08-15
         kibg_einrichtungstyp: kita
         kibg_einrichtung_anerkannt: true
         kibg_einrichtung_angemeldet: true
@@ -807,6 +831,8 @@
         me_steuerveranlagung: {2028: 30000}
       noah:
         geburtsdatum: 2026-03-01
+        betreuungsbeginn: 2028-08-01
+        kibg_gesuchsdatum: 2028-08-15
         kibg_einrichtungstyp: tagesfamilie
         kibg_einrichtung_anerkannt: true
         kibg_einrichtung_angemeldet: true
@@ -1042,6 +1068,8 @@
         me_steuerveranlagung: {2028: 28500}
       mia:
         geburtsdatum: 2028-07-01
+        betreuungsbeginn: 2028-08-01
+        kibg_gesuchsdatum: 2028-08-15
         kibg_einrichtungstyp: kita
         kibg_einrichtung_anerkannt: true
         kibg_einrichtung_angemeldet: true
@@ -1050,6 +1078,8 @@
         kibg_betreuungskosten: 1500
       leo:
         geburtsdatum: 2021-05-01
+        betreuungsbeginn: 2028-08-01
+        kibg_gesuchsdatum: 2028-08-15
         eingeschult: true
         kibg_einrichtungstyp: schulergaenzend
         kibg_einrichtung_anerkannt: true
@@ -1101,6 +1131,8 @@
         me_steuerveranlagung: {2029: 55500}
       elias:
         geburtsdatum: 2026-09-01
+        betreuungsbeginn: 2028-08-01
+        kibg_gesuchsdatum: 2028-08-15
         kibg_einrichtungstyp: kita
         kibg_einrichtung_anerkannt: true
         kibg_einrichtung_angemeldet: true
@@ -1236,6 +1268,8 @@
       lina:
         <<: *p1_lina
         geburtsdatum: 2016-05-01
+        betreuungsbeginn: 2028-08-01
+        kibg_gesuchsdatum: 2028-08-15
         eingeschult: true
         primarschule_abgeschlossen: true
   output: *kein_anspruch
@@ -1327,6 +1361,8 @@
       lina:
         <<: *p1_lina
         geburtsdatum: 2027-03-01
+        betreuungsbeginn: 2028-08-01
+        kibg_gesuchsdatum: 2028-08-15
   output:
     persons:
       lina:
@@ -1466,6 +1502,8 @@
       lina:
         <<: *p1_lina
         geburtsdatum: 2022-05-01
+        betreuungsbeginn: 2028-08-01
+        kibg_gesuchsdatum: 2028-08-15
         eingeschult: true
         kibg_einrichtungstyp: sonderschule
   output: *satz_5_50

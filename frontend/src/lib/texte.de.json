@@ -40,7 +40,11 @@
       "beginn_gemeinsamer_haushalt": "datum",
       "summe_beitrag_total": "franken",
       "summe_restkosten": "franken",
-      "summe_kosten": "franken"
+      "summe_kosten": "franken",
+      "kibg_beitragsbeginn": "datum",
+      "kibg_einrichtung_teilnahmebeginn": "datum",
+      "betreuungsbeginn": "datum",
+      "kibg_gesuchsdatum": "datum"
     }
   },
   "anzeigewerte": {
@@ -141,6 +145,14 @@
       "geburtsdatum": {
         "frage": "Geburtsdatum"
       },
+      "betreuungsbeginn": {
+        "frage": "Seit wann wird das Kind in dieser Einrichtung betreut?",
+        "hilfe": "Erster Tag der Betreuung (Art. 9 Abs. 2 KiBG)."
+      },
+      "kibg_gesuchsdatum": {
+        "frage": "An welchem Tag trifft Ihr Gesuch bei der Gemeinde ein?",
+        "hilfe": "Auch ein geplantes Datum. Massgebend ist der Tag, an dem das Gesuch bei der Gemeinde eintrifft. Trifft es innert 30 Tagen nach Betreuungsbeginn ein, gibt es den Beitrag rückwirkend ab Betreuungsbeginn, sonst erst ab dem Gesuch (Art. 9 Abs. 2 KiBG)."
+      },
       "eingeschult": {
         "frage": "Besucht das Kind den Kindergarten oder die Schule?"
       },
@@ -165,12 +177,17 @@
         "frage": "Ist die Einrichtung beim Kanton für Beiträge angemeldet?",
         "hilfe": "Fragen Sie im Zweifel bei der Einrichtung nach (Art. 3 Abs. 3 KiBG)."
       },
+      "kibg_einrichtung_bestaetigt_am": {
+        "frage": "Falls bekannt: An welchem Tag hat der Kanton die Teilnahme der Einrichtung bestätigt?",
+        "hilfe": "Freiwillig. Die Einrichtung nimmt ab dem Ersten des Folgemonats teil (Art. 6 KiBV (Entwurf)). Ohne Angabe gilt Ihre Antwort zur Anmeldung."
+      },
       "betreuungstage_mit_obhut": {
         "frage": "An wie vielen Tagen im Monat wird das Kind betreut?",
-        "hilfe": "Nur Tage, an denen das Kind bei Ihnen lebt (Art. 7 KiBV (Entwurf))."
+        "hilfe": "Nur Tage, an denen das Kind bei Ihnen lebt (Art. 7 KiBV (Entwurf)). Beginnt der Beitrag mitten im Monat, nur die Tage ab diesem Tag."
       },
       "betreuungsstunden": {
-        "frage": "Wie viele Betreuungsstunden sind das im Monat zusammen?"
+        "frage": "Wie viele Betreuungsstunden sind das im Monat zusammen?",
+        "hilfe": "Beginnt der Beitrag mitten im Monat, nur die Stunden ab diesem Tag."
       },
       "kibg_betreuungskosten": {
         "frage": "Wie viel kostet die Betreuung im Monat, in Franken?"
@@ -186,7 +203,11 @@
     "betreuungstage_mit_obhut": "Bitte geben Sie an, an wie vielen Tagen im Monat {kind} betreut wird. Die Stunden zählen höchstens 12 pro Betreuungstag.",
     "eingeschult": "{kind} ist jünger als 18 Monate und kann noch nicht eingeschult sein. Bitte prüfen Sie die Angabe.",
     "me_aktuell": "Das aktuelle Einkommen kann nicht negativ sein. Bitte prüfen Sie die Angabe.",
-    "allgemein": "Die Berechnung ist mit diesen Angaben nicht möglich. Bitte prüfen Sie Ihre Eingaben."
+    "allgemein": "Die Berechnung ist mit diesen Angaben nicht möglich. Bitte prüfen Sie Ihre Eingaben.",
+    "betreuungsbeginn": "Bitte geben Sie an, seit wann {kind} betreut wird. Ohne dieses Datum lässt sich nicht bestimmen, ab wann es Beiträge gibt.",
+    "kibg_gesuchsdatum": "Bitte geben Sie an, an welchem Tag Ihr Gesuch für {kind} bei der Gemeinde eintrifft (auch ein geplantes Datum). Davon hängt ab, ab wann es Beiträge gibt.",
+    "kibg_einrichtung_angemeldet": "Nach dem Datum der Bestätigung nimmt die Einrichtung im gewählten Monat noch nicht teil. Sie nimmt ab dem Ersten des Folgemonats teil. Bitte prüfen Sie die Angaben zur Anmeldung.",
+    "betreuungstage_ab_beitragsbeginn": "Die Beiträge für {kind} beginnen mitten im gewählten Monat. Geben Sie nur die Betreuungstage und -stunden ab diesem Tag an."
   },
   "ergebnis": {
     "anspruch": {
@@ -247,6 +268,11 @@
       "artikel": "Art. 3 Abs. 1 KiBG",
       "erfuellt": "Die Einrichtung ist anerkannt und für Beiträge angemeldet.",
       "nicht_erfuellt": "Beiträge gibt es nur für die Betreuung in einer anerkannten und beim Kanton angemeldeten Einrichtung: Kita, Tagesfamilie oder schulergänzende Betreuung."
+    },
+    "kibg_beitragsbeginn_erreicht": {
+      "artikel": "Art. 9 Abs. 2 KiBG, Art. 25 Abs. 1 KiBV (Entwurf)",
+      "erfuellt": "Die Beiträge beginnen am {kibg_beitragsbeginn}; der gewählte Monat ist eingeschlossen.",
+      "nicht_erfuellt": "Die Beiträge beginnen erst am {kibg_beitragsbeginn}. Für den gewählten Monat gibt es noch keinen Beitrag."
     }
   },
   "rechenweg": {
@@ -321,6 +347,26 @@
       "wann": "kibg_anspruch = ja",
       "text": "Melden Sie Änderungen bei Einkommen, Pensum, Wohnsitz oder Betreuung umgehend Ihrer Gemeinde. Zu Unrecht bezogene Beiträge können innert fünf Jahren zurückgefordert werden.",
       "artikel": "Art. 14 Abs. 2 und Art. 13 KiBG"
+    },
+    "beitragsbeginn_im_monat": {
+      "wann": "kibg_anspruch = ja und der Beitragsbeginn liegt im gewählten Monat nach dem 1.",
+      "text": "Die Beiträge beginnen am {kibg_beitragsbeginn}. Für diesen Monat zählen nur die Stunden ab diesem Tag.",
+      "artikel": "Art. 9 Abs. 2 KiBG"
+    },
+    "gesuch_zu_spaet": {
+      "wann": "kibg_gesuch_innert_frist = nein und kibg_gesuch_in_uebergangsfrist = nein",
+      "text": "Ihr Gesuch trifft mehr als 30 Tage nach Betreuungsbeginn bei der Gemeinde ein. Deshalb gibt es Beiträge erst ab dem Tag des Gesuchs, nicht rückwirkend ab Betreuungsbeginn.",
+      "artikel": "Art. 9 Abs. 2 KiBG"
+    },
+    "uebergangsfrist": {
+      "wann": "kibg_gesuch_in_uebergangsfrist = ja",
+      "text": "Gesuche, die bis drei Monate nach Beginn der neuen Regelung eintreffen, gelten rückwirkend ab Beginn der Regelung, frühestens ab Betreuungsbeginn.",
+      "artikel": "Art. 25 Abs. 1 KiBV (Entwurf)"
+    },
+    "teilnahme_einrichtung": {
+      "wann": "Datum der Bestätigung angegeben und kibg_einrichtung_berechtigt = nein",
+      "text": "Die Einrichtung nimmt erst ab dem {kibg_einrichtung_teilnahmebeginn} teil. Vorher gibt es für sie keine Beiträge.",
+      "artikel": "Art. 6 KiBV (Entwurf)"
     }
   },
   "fester_hinweis": "Dies ist eine unverbindliche Schätzung. Massgebend ist die Verfügung Ihrer Gemeinde, die jedes Gesuch prüft. Die Beträge stammen aus dem Entwurf der Verordnung (Vernehmlassung bis 15. November 2026) und können sich noch ändern. Zusatzbeiträge Ihrer Gemeinde sind nicht berücksichtigt; fragen Sie Ihre Gemeinde. Der Rechner speichert Ihre Angaben nicht; sie werden nur für die Berechnung verwendet."

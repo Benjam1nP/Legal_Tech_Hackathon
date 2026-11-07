@@ -73,6 +73,10 @@ export function voraussetzungen(kind, haushalt, angaben) {
 	}
 	liste.push(zeile('kibg_alter_erfuellt', kind.kibg_alter_erfuellt));
 	liste.push(zeile('kibg_einrichtung_berechtigt', kind.kibg_einrichtung_berechtigt));
+	// Art. 9 Abs. 2 KiBG, Art. 25 KiBV: vor dem Beitragsbeginn kein Beitrag.
+	if (kind.kibg_beitragsbeginn) {
+		liste.push(zeile('kibg_beitragsbeginn_erreicht', kind.kibg_beitragsbeginn_erreicht));
+	}
 	return liste;
 }
 
@@ -105,6 +109,20 @@ export function hinweise(kind, haushalt, angaben, partnerEinkommenZaehlt) {
 	}
 	if (partnerEinkommenZaehlt === true) liste.push(h.partner_einkommen_zaehlt);
 	if (partnerEinkommenZaehlt === false) liste.push(h.partner_einkommen_zaehlt_nicht);
+	// Datumsregeln (Art. 9 Abs. 2 KiBG, Art. 25 und Art. 6 KiBV)
+	const monatsbeginn = `${angaben.monat}-01`;
+	if (
+		kind.kibg_anspruch &&
+		kind.kibg_beitragsbeginn > monatsbeginn &&
+		kind.kibg_beitragsbeginn.startsWith(angaben.monat)
+	) {
+		liste.push(h.beitragsbeginn_im_monat);
+	}
+	if (kind.kibg_gesuch_in_uebergangsfrist) liste.push(h.uebergangsfrist);
+	else if (kind.kibg_gesuch_innert_frist === false) liste.push(h.gesuch_zu_spaet);
+	if (kind.kibg_einrichtung_teilnahmebeginn && !kind.kibg_einrichtung_berechtigt) {
+		liste.push(h.teilnahme_einrichtung);
+	}
 	if (kind.kibg_anspruch) {
 		liste.push(h.gesuchsfrist_30_tage);
 		liste.push(h.meldepflicht);

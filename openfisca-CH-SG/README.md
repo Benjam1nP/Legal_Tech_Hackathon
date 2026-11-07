@@ -36,12 +36,32 @@ checks: `../RULEBOOK.md`. Decisions: `../docs/CHANGELOG_DECISIONS.md`.
 
 Without these inputs the text cannot be applied. The model then computes no
 amount but stops with an error; the Web API answers with status 400 and names
-the missing field (tests F1 to F4 in `tests/test_eingabefehler.py`).
+the missing field (tests F1 to F13 in `tests/test_eingabefehler.py`).
 
 | Input | When required | Why |
 |---|---|---|
 | `geburtsdatum` | for every child | Minimum age (Art. 4 Abs. 3 KiBG) and maximum rate (Art. 14 KiBV) depend on it |
 | `kibg_gesuchstellend` | when two Erziehungsberechtigte live in the household; exactly one of them | Only the applicant must live in the canton (Art. 4 Abs. 1 KiBG, decision O8); the application is made by Erziehungsberechtigte (Art. 9 Abs. 1 KiBG) |
+| `betreuungsbeginn` | for every child | The start of the contributions depends on it (Art. 9 Abs. 2 KiBG, Art. 25 Abs. 1 KiBV) |
+| `kibg_gesuchsdatum` | for every child: the day the application reaches the municipality, also a planned date (assumption A10) | Contributions start retroactively only if the application arrives within 30 days, or within the transition period (Art. 9 Abs. 2 KiBG, Art. 25 Abs. 1 KiBV) |
+
+Optional: `kibg_einrichtung_bestaetigt_am`, the day the Amt für Soziales
+confirmed the facility. If entered, the facility takes part from the first day
+of the following month (Art. 6 KiBV) and this date overrides
+`kibg_einrichtung_angemeldet`.
+
+## Date rules
+
+The start of the contributions is encoded in `variables/verfahren.py`, one
+variable per provision: `kibg_gesuch_innert_frist` (Art. 9 Abs. 2 sentence 1
+KiBG), `kibg_gesuch_in_uebergangsfrist` (Art. 25 Abs. 1 KiBV),
+`kibg_beitragsbeginn` and `kibg_einrichtung_teilnahmebeginn` (Art. 6 KiBV).
+Before the start of the contributions there is no entitlement
+(`kibg_beitragsbeginn_erreicht`). In the month in which the contributions
+start, parents enter only the care days and hours from that day on
+(assumption A9). Time limits follow assumption A7; the start date
+2028-08-01 is a placeholder (O1). Tests: `tests/datumsregeln.yaml` (D1 to
+D11).
 
 ## Provisions not encoded
 
@@ -54,15 +74,13 @@ articles in `../docs/CHANGELOG_DECISIONS.md` is generated from the
 
 These rules could be expressed in OpenFisca. They are left out of the first
 version because the calculator estimates the contribution for one month and
-these rules concern dates and durations of the procedure. Test scenarios are
-ready in `../challenge/szenarien.md` (part 6) for the date rules.
+these rules concern durations of the procedure. (The start of the
+contributions under Art. 9 Abs. 2 KiBG and Art. 25 and 6 KiBV is encoded; see
+«Date rules».)
 
 | Provision | Content | Why not encoded | Ready scenarios |
 |---|---|---|---|
-| Art. 9 Abs. 2 KiBG | Retroactive payment if the application is made within 30 days of the start of care, otherwise from the application | Date logic of the procedure; the monthly amount does not change | D1, D2 |
-| Art. 25 Abs. 1 and 2 KiBV (draft) | Applications within three months of the start date apply retroactively from the start date | Same as above; only relevant in the transition period | D3 to D7 |
-| Art. 6 KiBV (draft) | A facility takes part from the first day of the month after confirmation | Entered as `kibg_einrichtung_angemeldet` for each month instead | D8, D9 |
-| Art. 11 Abs. 2 KiBG, Art. 16 Abs. 1 and 2 KiBV (draft) | Duration of the decision: usually 12 months, for school children one school year | Duration of a decision, not the amount | none |
+| Art. 11 Abs. 2 KiBG, Art. 16 Abs. 1 and 2 and Art. 25 Abs. 2 KiBV (draft) | Duration of the decision: usually 12 months, for school children one school year | Duration of a decision, not the amount | none |
 | Art. 11 Abs. 3 KiBV (draft) | New assessment during a running decision applies from the first day of the following month | Date logic. The calculator estimates the month of the application: `me_aktuell` is the income at the time of the application and the 25 % check is the one of Art. 11 Abs. 2 KiBV; a later change during a running decision is not modelled | none |
 | Art. 16 Abs. 3 KiBV (draft) | Reductions caused by model changes apply only with the next decision | Matters for reforms, not for one family | none |
 | Art. 14 Abs. 4 KiBV (draft), second sentence | At most five care days per week | Inputs are monthly; the weekly spread is unknown (team decision A3, test E1) | E1 |

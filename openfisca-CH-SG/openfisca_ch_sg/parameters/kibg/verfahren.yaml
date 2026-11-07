@@ -1,0 +1,25 @@
+description: >-
+  Fristen des Verfahrens (Art. 9 KiBG, Art. 25 KiBV, Entwurf). Berechnung der
+  Fristen nach Annahme A7: Fristen in Tagen beginnen am Tag nach dem Ereignis,
+  Fristen in Monaten enden am Tag mit derselben Zahl.
+frist_rueckwirkung_tage:
+  description: >-
+    Die Beiträge werden rückwirkend bis zum Datum der Inanspruchnahme des
+    Betreuungsangebots ausgerichtet, wenn das Gesuch innert 30 Tagen seit
+    Inanspruchnahme des Betreuungsangebots eingereicht wird.
+  metadata:
+    unit: day
+    reference: Art. 9 Abs. 2 KiBG
+  values:
+    2028-08-01:
+      value: 30
+uebergang_frist_monate:
+  description: >-
+    Beiträge für Gesuche, die bis spätestens drei Monate nach Vollzugsbeginn
+    eingereicht werden, werden rückwirkend ab Vollzugsbeginn verfügt.
+  metadata:
+    unit: month
+    reference: Art. 25 Abs. 1 KiBV (Entwurf)
+  values:
+    2028-08-01:
+      value: 3
