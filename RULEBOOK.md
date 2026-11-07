@@ -145,60 +145,75 @@ always be told apart. The checker warns if it is missing.
 
 ## 5. Examples of the expected format
 
-Names, entities and periods come from `challenge/line-to-line-rules.md`.
+Excerpts from the real model in `openfisca-CH-SG/openfisca_ch_sg/`. Names,
+entities and periods come from `challenge/line-to-line-rules.md`.
 
-Variable (`variables/beitrag.py`), coding Art. 20 Abs. 3 KiBG ("Die Summe aus
-einem Mindestbeitrag und einem allfälligen Zusatzbeitrag darf die Kosten der
-Erziehungsberechtigten für das in Anspruch genommene Betreuungsangebot nicht
-übersteigen"). The contribution is calculated per child, so the entity is
-`Person`:
+Variable (`variables/betreuung.py`), coding the 12-hour limit of
+Art. 14 Abs. 4 KiBV. The contribution is calculated per child, so the entity
+is `Person`:
 
 ```python
-from openfisca_core.model_api import min_
+from numpy import minimum
 from openfisca_core.periods import MONTH
 from openfisca_core.variables import Variable
 
 from openfisca_ch_sg.entities import Person
 
 
-class kibg_beitrag_total(Variable):
+class kibg_subventionierte_stunden(Variable):
     value_type = float
     entity = Person
     definition_period = MONTH
-    label = "Beitrag total (Mindest- und Zusatzbeitrag), höchstens die Kosten"
-    reference = "Art. 20 Abs. 3 KiBG"
+    label = "Subventionierte Betreuungsstunden im Monat"
+    reference = "Art. 14 Abs. 4 KiBV (Entwurf)"
 
-    def formula_2028_08(kind, period, parameters):
-        mindestbeitrag = kind("kibg_mindestbeitrag", period)  # Art. 6, 20.1 KiBG
-        zusatzbeitrag = kind("kibg_zusatzbeitrag", period)  # Art. 20.2 KiBG
-        kosten = kind("kibg_betreuungskosten", period)
-        return min_(mindestbeitrag + zusatzbeitrag, kosten)
+    def formula_2028_08(person, period, parameters):
+        max_stunden_pro_tag = parameters(period).kibg.betreuung.max_stunden_pro_tag
+        stunden = person("betreuungsstunden", period)
+        tage = person("betreuungstage_mit_obhut", period)
+        return minimum(stunden, tage * max_stunden_pro_tag)
 ```
 
-Parameter (`parameters/kibg/einkommen/min.yaml`, used as
-`parameters(period).kibg.einkommen.min`):
+Parameter (`parameters/kibg/betreuung.yaml`, used as
+`parameters(period).kibg.betreuung.max_stunden_pro_tag`). One file can hold
+several parameters of a topic:
 
 ```yaml
-description: Kleinstes massgebendes Einkommen und Vermögen (MinmE)
-metadata:
-  unit: currency-CHF
-  reference: Art. 15 Abs. 1 KiBV (Entwurf)
-values:
-  2028-08-01:
-    value: 40000
+description: Subventionierte Betreuung (Art. 14 Abs. 4 KiBV, Entwurf)
+max_stunden_pro_tag:
+  description: Höchstens subventionierte Betreuungsstunden je Kind und Betreuungstag
+  metadata:
+    unit: hour
+    reference: Art. 14 Abs. 4 KiBV (Entwurf)
+  values:
+    2028-08-01:
+      value: 12
 ```
 
-Test (`tests/beitrag.yaml`), calculated by hand from the article:
+Test (`tests/grenzfaelle.yaml`, case G17 from `challenge/szenarien.md`),
+calculated by hand from the article. The `<<: *p1_...` lines reuse the data of
+persona P1 and only change what is different:
 
 ```yaml
-- name: Mindest- und Zusatzbeitrag zusammen höchstens die Kosten (Art. 20 Abs. 3 KiBG)
-  period: 2028-08
+- name: G17 130 Stunden an 10 Tagen, nur 120 subventioniert (Art. 14 Abs. 4 KiBV)
+  period: 2028-09
+  absolute_error_margin: 0.01
   input:
-    kibg_mindestbeitrag: 600
-    kibg_zusatzbeitrag: 100
-    kibg_betreuungskosten: 650
+    household: *p1_haushalt
+    persons:
+      mutter: *p1_mutter
+      vater: *p1_vater
+      lina:
+        <<: *p1_lina
+        betreuungstage_mit_obhut: 10
+        betreuungsstunden: 130
+        kibg_betreuungskosten: 1690
   output:
-    kibg_beitrag_total: 650
+    persons:
+      lina:
+        kibg_subventionierte_stunden: 120
+        kibg_mindestbeitrag: 660
+        kibg_restkosten_eltern: 1030
 ```
 
 ## 6. Commit messages and the documentation file

@@ -19,8 +19,12 @@ class kibg_wohnsitz_erfuellt(Variable):
     def formula_2028_08(household, period, parameters):
         # Der Haushalt ist der Haushalt der gesuchstellenden Person (O8). Im
         # gemeinsamen Haushalt wohnen beide Erziehungsberechtigten am selben Ort.
+        # Ohne erziehungsberechtigte Person gibt es keinen Anspruch («alle»
+        # wäre bei null Personen sonst wahr).
+        hat_eltern = household.nb_persons(Household.ERZIEHUNGSBERECHTIGT) > 0
         wohnsitz = household.members("wohnsitz_kanton_sg", period)
-        return household.all(wohnsitz, role=Household.ERZIEHUNGSBERECHTIGT)
+        alle_im_kanton = household.all(wohnsitz, role=Household.ERZIEHUNGSBERECHTIGT)
+        return hat_eltern * alle_im_kanton
 
 
 class kibg_beschaeftigung_erfuellt(Variable):
@@ -42,7 +46,8 @@ class kibg_beschaeftigung_erfuellt(Variable):
         zusammen = household.sum(grad, role=Household.ERZIEHUNGSBERECHTIGT)
         zusammen_genug = mindestens(zusammen, p.min_beschaeftigungsgrad_gemeinsam)
         gemeinsam = household("gemeinsamer_haushalt", period)
-        return jeder_genug * (zusammen_genug + not_(gemeinsam))
+        hat_eltern = household.nb_persons(Household.ERZIEHUNGSBERECHTIGT) > 0
+        return hat_eltern * jeder_genug * (zusammen_genug + not_(gemeinsam))
 
 
 class kibg_ausnahme_bewilligt(Variable):

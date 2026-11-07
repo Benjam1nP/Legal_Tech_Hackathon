@@ -801,6 +801,46 @@
       lina: *p1_lina
   output: *kein_anspruch
 
+- name: X7 Haushalt ohne erziehungsberechtigte Person (Art. 4 Abs. 1 KiBG; zusätzlicher Fall)
+  period: 2028-09
+  absolute_error_margin: 0.01
+  input:
+    household:
+      kinder: [lina]
+    persons:
+      lina: *p1_lina
+  output:
+    household:
+      kibg_wohnsitz_erfuellt: false
+      kibg_beschaeftigung_erfuellt: false
+    persons:
+      lina:
+        kibg_anspruch: false
+        kibg_beitrag_total: 0
+
+- name: G36 Kantonsanteil über 1000 Franken, 1000.025 wird auf 1000.05 aufgerundet (A4; zusätzlicher Fall)
+  period: 2028-09
+  absolute_error_margin: 0.001
+  input:
+    household: *p1_haushalt
+    persons:
+      mutter:
+        <<: *p1_mutter
+        me_steuerveranlagung: {2028: 40000}
+      vater: *vater_ohne_einkommen
+      lina:
+        <<: *p1_lina
+        betreuungstage_mit_obhut: 20
+        betreuungsstunden: 200
+        kibg_betreuungskosten: 2000.05
+  output:
+    persons:
+      lina:
+        kibg_mindestbeitrag: 2000.05
+        kibg_anteil_kanton: 1000.05
+        kibg_anteil_gemeinde: 1000.00
+        kibg_restkosten_eltern: 0
+
 # --- Auslegungsfälle (Teil 4) ------------------------------------------------
 
 - name: Q1 Kind genau 18 Monate, tieferer Ansatz ab dem 18-Monate-Geburtstag (Art. 14 KiBV, O2)

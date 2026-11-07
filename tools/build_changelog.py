@@ -204,7 +204,7 @@ def model_elements() -> list[dict]:
             elements.append(
                 {
                     "name": cls.name,
-                    "kind": "formula" if has_formula else "input",
+                    "kind": "Variable, Formel" if has_formula else "Variable, Eingabe",
                     "reference": ref,
                     "path": path,
                 }
@@ -217,7 +217,7 @@ def model_elements() -> list[dict]:
             elements.append(
                 {
                     "name": name,
-                    "kind": "parameter",
+                    "kind": "Parameter",
                     "reference": "; ".join(chk.find_reference(doc)),
                     "path": path,
                 }
@@ -350,17 +350,17 @@ def render_function(elements: list[dict]) -> list[str]:
     files, cases = count_tests()
     kinds = {
         k: sum(e["kind"] == k for e in elements)
-        for k in ("input", "formula", "parameter")
+        for k in ("Variable, Eingabe", "Variable, Formel", "Parameter")
     }
     return [
         "**Current state of the model** (generated from the code):",
         "",
-        f"- Variables with a formula: {kinds['formula']}",
+        f"- Variable, Formel (calculated by OpenFisca): {kinds['Variable, Formel']}",
         (
-            "- Input variables (facts and human decisions entered by the user): "
-            f"{kinds['input']}"
+            "- Variable, Eingabe (facts and human decisions entered by the user): "
+            f"{kinds['Variable, Eingabe']}"
         ),
-        f"- Parameters (values taken from the legal text): {kinds['parameter']}",
+        f"- Parameter (values taken from the legal text): {kinds['Parameter']}",
         f"- Test cases: {cases} in {files} file(s)",
         "",
     ]
@@ -417,7 +417,7 @@ def render_legal(elements: list[dict]) -> list[str]:
             rows.append(
                 [ref, f"`{e['name']}`", e["kind"], draft, f"`{chk.rel(e['path'])}`"]
             )
-        out += table(["Reference", "Element", "Kind", "Source status", "File"], rows)
+        out += table(["Reference", "Element", "Konzept", "Source status", "File"], rows)
     else:
         out.append("_No element references an article yet._")
     if without:
