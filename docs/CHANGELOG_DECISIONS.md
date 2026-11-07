@@ -5,7 +5,7 @@
 
 Raw material for the legal and technical documentation. Sections follow the evaluation criteria in the course syllabus.
 
-_State as of commit `0759f0e` (2026-11-07 17:57)._
+_State as of commit `b04ef9a` (2026-11-07 18:35)._
 
 ## 1. Functionality and prototype quality
 
@@ -16,7 +16,7 @@ _Syllabus: the prototype demonstrates the core idea and shows that the solution 
 - Variable, Formel (calculated by OpenFisca): 29
 - Variable, Eingabe (facts and human decisions entered by the user): 24
 - Parameter (values taken from the legal text): 19
-- Test cases: 84 in 2 file(s)
+- Test cases: 82 in 2 file(s)
 
 **Decisions**
 
@@ -26,6 +26,11 @@ _Syllabus: the prototype demonstrates the core idea and shows that the solution 
 | 2026-11-07 | Calculator output has five blocks: result, conditions met or not met with article, calculation steps, situational hints, fixed disclaimer | The challenge asks to show which facts and rules determined the outcome; draft to be revised by the team | challenge/challenge.md, sub-challenge 1; docs/output-konzept.md | `288a151` | Benjamin Pfister |
 | 2026-11-07 | Date and duration rules are not encoded yet (Art. 9 Abs. 2 und 11 Abs. 2 KiBG; Art. 6, 11 Abs. 3, 16 und 25 KiBV); scenarios D1 to D9 are ready | The calculator estimates the amount for one month; these rules change when payments start or end, not the amount | openfisca-CH-SG/README.md, section Provisions not encoded | `fcf09a4` | Karla Ruggaber |
 | 2026-11-07 | Art. 17 KiBG (total volume and its adjustment) is not encoded | Needs data on all families in the canton; possible later as a budget simulation | Art. 17 KiBG; openfisca-CH-SG/README.md | `fcf09a4` | Karla Ruggaber |
+| 2026-11-07 | Conditions are shown with two states only (erfuellt / nicht erfuellt); no third state "von der Gemeinde zu pruefen", because the municipality checks every application anyway | Team decision; the fixed notice says that the decision of the municipality is binding | Art. 11 Abs. 1 KiBG; docs/output-konzept.md | `1236068` | Benjamin Pfister |
+| 2026-11-07 | The massgebendes Einkommen is a mandatory input; without it the calculator shows no amount and no range, but asks for the number, pointing to the last definitive tax assessment | A range would be of little use and the V EG-KVG formula is not available for an own estimate | Art. 5 Abs. 3 KiBG; Art. 9 KiBV (Entwurf); team decision | `1236068` | Benjamin Pfister |
+| 2026-11-07 | Supplementary contributions of the municipality (Z1, Z2) are not asked and set to 0, with a notice that they are not included | The amounts differ by municipality and are not public | Art. 20 Abs. 2 KiBG; Art. 24 KiBV (Entwurf); team decision | `1236068` | Benjamin Pfister |
+| 2026-11-07 | The hourly contribution is shown with three decimals (e.g. 4.125), because it is not rounded; only monthly amounts are rounded to 5 Rappen | Otherwise the calculation steps would not add up (P3: 4.125 x 48 = 198.00) | challenge/szenarien.md, A4 | `8d10af6` | Benjamin Pfister |
+| 2026-11-07 | Impossible inputs stop the calculation instead of being counted silently: care hours without care days, a child under 18 months marked as eingeschult, a negative current income | Otherwise the calculator shows wrong amounts (0 or the lower rate) without telling why | Art. 14 Abs. 1 und 4 KiBV (Entwurf); Art. 11 KiBV (Entwurf); team review | `b04ef9a` | Benjamin Pfister |
 
 ## 2. Technical design and architecture
 
@@ -49,6 +54,7 @@ _Syllabus: the technical structure is understandable, fits the goal and rests on
 | 2026-11-07 | A household is the household of the applicant; roles erziehungsberechtigt (max. 2), kind and partner (max. 1, not erziehungsberechtigt); with separated parents only the applicant is erziehungsberechtigt in the household (provisional, legal team to confirm) | Fits the decisions on O8 (applicant must live in the canton) and O10 (each parent applies for own days); keeps the household small and testable | Art. 2 Abs. 1 KiBG; Art. 7 und Art. 8 Abs. 1 KiBV (Entwurf); challenge/line-to-line-rules.md | `86719f2` | Benjamin Pfister |
 | 2026-11-07 | The rounding step of 5 Rappen is a parameter (kibg.rundung), marked as team decision without legal text | Keeps the assumption visible and changeable in one place | challenge/szenarien.md, Annahme A4 | `86719f2` | Benjamin Pfister |
 | 2026-11-07 | kibg_massgebendes_einkommen is monthly (inputs stay yearly); shares are compared with a small tolerance and amounts are rounded in whole Rappen | The household (partner) can change within a year; OpenFisca stores float32, so 0.7 or 274.025 would otherwise be misjudged | team decision; challenge/szenarien.md, A4 | `6b073a8` | Benjamin Pfister |
+| 2026-11-07 | Questionnaire order household, persons, one block per child; result per child and as a sum for the family; texts in Sie-form in frontend/src/lib/texte.de.json | Follows the structure of the model (applicant's household, persons, children) | team decision; docs/output-konzept.md | `1236068` | Benjamin Pfister |
 
 ## 3. Legal and technical integration
 
@@ -187,6 +193,8 @@ _1 element(s) in the model have no article reference (template demo or still to 
 | 2026-11-07 | Confirmed by the team: care in a private special school uses the rate for schulergaenzende Betreuung of school children | Team review of the provisional decision (O11) | Art. 3 Abs. 2 lit. d KiBG; Art. 14 Abs. 3 lit. b KiBV (Entwurf); team decision | `0759f0e` | Benjamin Pfister |
 | 2026-11-07 | Confirmed by the team: schulergaenzende Betreuung before school entry gives no contribution, because schulergaenzende Betreuung presupposes school time; Art. 14 KiBV sets no rate for it | The term itself refers to school; filling the gap with another rate would not follow the text | Art. 14 Abs. 1 bis 3 KiBV (Entwurf); team decision | `0759f0e` | Benjamin Pfister |
 | 2026-11-07 | Confirmed by the team: the 25 % deviation is measured on the massgebendes Einkommen of Art. 8 KiBV: for parents in a shared household on their income together, for separated parents on the income of the applicant (with a partner in a gefestigte Lebensgemeinschaft) | Art. 11 Abs. 2 KiBV refers to "des massgebenden Einkommens und Vermoegens" (singular, the amount of Art. 8); Art. 5 Abs. 1 KiBG speaks of the Leistungsfaehigkeit "der Erziehungsberechtigten" | Art. 5 Abs. 1 und 2 KiBG; Art. 8 Abs. 1 und Art. 11 Abs. 2 und 3 KiBV (Entwurf) | `0759f0e` | Benjamin Pfister |
+| 2026-11-07 | With separated parents only the applicant is entered as erziehungsberechtigt; two Erziehungsberechtigte with "kein gemeinsamer Haushalt", or one with "gemeinsamer Haushalt", stop the calculation with an error | Art. 2 Abs. 1 KiBG defines Erziehungsberechtigte as the persons who claim contributions; Art. 8 Abs. 1 lit. a KiBV presupposes two persons in the shared household; otherwise Art. 4 and Art. 8 would treat the same case differently | Art. 2 Abs. 1 und Art. 4 Abs. 1 KiBG; Art. 8 Abs. 1 KiBV (Entwurf); team review | `b04ef9a` | Benjamin Pfister |
+| 2026-11-07 | kibg_hoechstbeitrag is labelled "je Kind und Betreuungsstunde" as in Art. 14 and the annex; the yearly period of the application for current circumstances is explained in the code | Wording of the text | Art. 14 KiBV (Entwurf), Anhang; Art. 11 Abs. 1 KiBV (Entwurf) | `b04ef9a` | Benjamin Pfister |
 
 ## 4. Responsible and ethical technology design
 
@@ -201,6 +209,9 @@ _Syllabus: awareness of privacy, security, fairness, transparency, accountabilit
 | 2026-11-07 | Default values are conservative: residence, recognised facility and other conditions are false unless entered; me_aktuell -1 means not entered (assessment applies); without a start date a partnership never counts as gefestigt | The calculator must not promise a contribution on facts nobody entered | team decision | `6b073a8` | Benjamin Pfister |
 | 2026-11-07 | If kibg_anspruch is true but the contribution is 0 (no rate in Art. 14 KiBV or income above Fr. 154'000), the interface explains why instead of showing only Fr. 0 | Parents must understand that they meet the conditions but the text sets no amount for their case | Art. 14 und 15 KiBV (Entwurf); docs/output-konzept.md | `fcf09a4` | Karla Ruggaber |
 | 2026-11-07 | Confirmed by the team: what is not entered counts as not fulfilled (residence, recognised facility and other conditions) | Team review of the provisional decision | team decision | `0759f0e` | Benjamin Pfister |
+| 2026-11-07 | Data protection: the calculator asks no names, AHV number or address; the notice says "Der Rechner speichert Ihre Angaben nicht", the stronger statement only after hosting and logging of the API are clarified | Data minimisation compared with the platform data of Art. 21 KiBV; no promise that is not technically verified | Art. 8 KiBG; Art. 21 bis 23 KiBV (Entwurf); team decision | `1236068` | Benjamin Pfister |
+| 2026-11-07 | Children are labelled "1. Kind", "2. Kind" in all texts; no names are asked | Data minimisation (decision 11) | docs/output-konzept.md; team decision | `8d10af6` | Benjamin Pfister |
+| 2026-11-07 | The hints include the 30-day deadline (Art. 9 Abs. 2 KiBG) and the duty to report changes with possible repayment (Art. 13 and 14 Abs. 2 KiBG) | Families should know the deadline and the risk of repayment; R1 in the rule inventory asks the calculator to point this out | Art. 9 Abs. 2, Art. 13 und Art. 14 Abs. 2 KiBG; challenge/line-to-line-rules.md, R1 | `8d10af6` | Benjamin Pfister |
 
 ## 5. Documentation and reproducibility
 
@@ -241,7 +252,7 @@ _Syllabus: each member's contribution, and disclosure of AI tools, open-source c
 | Member | Commits | First | Last | Files changed per area |
 |---|---|---|---|---|
 | Karla Ruggaber | 20 | 2026-11-04 | 2026-11-07 | rules (67), other (64), tests (48), docs (30), tooling (18), materials (4) |
-| Benjamin Pfister | 16 | 2026-10-10 | 2026-11-07 | docs (66), rules (38), tests (21), other (18), tooling (11) |
+| Benjamin Pfister | 19 | 2026-10-10 | 2026-11-07 | docs (70), rules (42), tests (23), other (20), tooling (11) |
 
 _Add contributions that don't show in git (legal analysis, testing by hand, pitch, ...) by hand in the report._
 
@@ -257,6 +268,9 @@ _Add contributions that don't show in git (legal analysis, testing by hand, pitc
 - Claude Code (Anthropic): renumbered and extended the boundary tests after the catalogue review (`96564c3`, Benjamin Pfister, 2026-11-07)
 - Claude Code (Anthropic): compared the code with the text, split the merged provisions, added tests (`38618cd`, Benjamin Pfister, 2026-11-07)
 - Claude Code (Anthropic): checked Art. 5, 8 and 11 against the wording, recorded the confirmed decisions and added a test for separated parents (`0759f0e`, Benjamin Pfister, 2026-11-07)
+- Claude Code (Anthropic): prepared the options for points 7 to 13 and updated the output concept after the team decisions (`1236068`, Benjamin Pfister, 2026-11-07)
+- Claude Code (Anthropic): drafted all texts from the output concept and checked placeholders and references against the model; to be revised by the team (`8d10af6`, Benjamin Pfister, 2026-11-07)
+- Claude Code (Anthropic): reproduced the reported cases, added the household and input checks, converted the tests and updated catalogue, README and error texts (`b04ef9a`, Benjamin Pfister, 2026-11-07)
 
 **Open-source components and external resources** (from `External:` lines):
 
@@ -274,6 +288,23 @@ _Add contributions that don't show in git (legal analysis, testing by hand, pitc
 
 ### 2026-11-07
 
+- **Reject inconsistent household input; add input checks from review** (`b04ef9a`, Benjamin Pfister, 18:35)
+  - Decision: With separated parents only the applicant is entered as erziehungsberechtigt; two Erziehungsberechtigte with "kein gemeinsamer Haushalt", or one with "gemeinsamer Haushalt", stop the calculation with an error
+  - Decision: Impossible inputs stop the calculation instead of being counted silently: care hours without care days, a child under 18 months marked as eingeschult, a negative current income
+  - Decision: kibg_hoechstbeitrag is labelled "je Kind und Betreuungsstunde" as in Art. 14 and the annex; the yearly period of the application for current circumstances is explained in the code
+  - Files: `challenge/szenarien.md` (changed), `frontend/src/lib/texte.de.json` (changed), `openfisca-CH-SG/README.md` (changed), `openfisca-CH-SG/openfisca_ch_sg/tests/grenzfaelle.yaml` (changed), `openfisca-CH-SG/openfisca_ch_sg/tests/test_eingabefehler.py` (changed), `openfisca-CH-SG/openfisca_ch_sg/variables/anspruch.py` (changed), `openfisca-CH-SG/openfisca_ch_sg/variables/beitrag.py` (changed), `openfisca-CH-SG/openfisca_ch_sg/variables/betreuung.py` (changed), `openfisca-CH-SG/openfisca_ch_sg/variables/einkommen.py` (changed)
+- **Add calculator texts (texte.de.json) following the output concept** (`8d10af6`, Benjamin Pfister, 18:12)
+  - Decision: Children are labelled "1. Kind", "2. Kind" in all texts; no names are asked
+  - Decision: The hourly contribution is shown with three decimals (e.g. 4.125), because it is not rounded; only monthly amounts are rounded to 5 Rappen
+  - Decision: The hints include the 30-day deadline (Art. 9 Abs. 2 KiBG) and the duty to report changes with possible repayment (Art. 13 and 14 Abs. 2 KiBG)
+  - Files: `docs/output-konzept.md` (changed), `frontend/src/lib/texte.de.json` (added)
+- **Record team decisions on the calculator output (points 7 to 13)** (`1236068`, Benjamin Pfister, 18:07)
+  - Decision: Conditions are shown with two states only (erfuellt / nicht erfuellt); no third state "von der Gemeinde zu pruefen", because the municipality checks every application anyway
+  - Decision: The massgebendes Einkommen is a mandatory input; without it the calculator shows no amount and no range, but asks for the number, pointing to the last definitive tax assessment
+  - Decision: Supplementary contributions of the municipality (Z1, Z2) are not asked and set to 0, with a notice that they are not included
+  - Decision: Data protection: the calculator asks no names, AHV number or address; the notice says "Der Rechner speichert Ihre Angaben nicht", the stronger statement only after hosting and logging of the API are clarified
+  - Decision: Questionnaire order household, persons, one block per child; result per child and as a sum for the family; texts in Sie-form in frontend/src/lib/texte.de.json
+  - Files: `docs/output-konzept.md` (changed)
 - **Record team confirmation of provisional decisions** (`0759f0e`, Benjamin Pfister, 17:57)
   - Decision: Confirmed by the team: a household is the household of the applicant; with separated parents the other parent is not entered
   - Decision: Confirmed by the team: care in a private special school uses the rate for schulergaenzende Betreuung of school children
