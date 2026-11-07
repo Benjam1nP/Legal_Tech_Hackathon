@@ -5,7 +5,7 @@
 
 Raw material for the legal and technical documentation. Sections follow the evaluation criteria in the course syllabus.
 
-_State as of commit `9b52503` (2026-11-07 19:28)._
+_State as of commit `13d9b3e` (2026-11-07 23:07)._
 
 ## 1. Functionality and prototype quality
 
@@ -13,10 +13,10 @@ _Syllabus: the prototype demonstrates the core idea and shows that the solution 
 
 **Current state of the model** (generated from the code):
 
-- Variable, Formel (calculated by OpenFisca): 34
-- Variable, Eingabe (facts and human decisions entered by the user): 27
-- Parameter (values taken from the legal text): 21
-- Test cases: 98 in 3 file(s)
+- Variable, Formel (calculated by OpenFisca): 37
+- Variable, Eingabe (facts and human decisions entered by the user): 28
+- Parameter (values taken from the legal text): 23
+- Test cases: 106 in 3 file(s)
 
 **Decisions**
 
@@ -32,6 +32,14 @@ _Syllabus: the prototype demonstrates the core idea and shows that the solution 
 | 2026-11-07 | The hourly contribution is shown with three decimals (e.g. 4.125), because it is not rounded; only monthly amounts are rounded to 5 Rappen | Otherwise the calculation steps would not add up (P3: 4.125 x 48 = 198.00) | challenge/szenarien.md, A4 | `8d10af6` | Benjamin Pfister |
 | 2026-11-07 | Impossible inputs stop the calculation instead of being counted silently: care hours without care days, a child under 18 months marked as eingeschult, a negative current income | Otherwise the calculator shows wrong amounts (0 or the lower rate) without telling why | Art. 14 Abs. 1 und 4 KiBV (Entwurf); Art. 11 KiBV (Entwurf); team review | `b04ef9a` | Benjamin Pfister |
 | 2026-11-07 | Help texts float above the content instead of pushing it down | In the browser test, clicks on the next field missed when the help text of the previous field disappeared and the layout jumped | test in headless Chromium | `68b1352` | Benjamin Pfister |
+| 2026-11-07 | If the chosen month lies before the start of care of a child, the interface shows a hint with a button to calculate the month of the start of care | Otherwise the result is Fr. 0 for a month in which nobody would apply; the date rules themselves stay in OpenFisca | Art. 9 Abs. 2 KiBG; team review | `379dd10` | Benjamin Pfister |
+| 2026-11-07 | The year of Kindergarten entry is an optional question; without it only the twelve-month rule applies | Team decision; the cut-off date for compulsory schooling is in the Volksschulgesetz, not in KiBG or KiBV, so it is not derived from the birth date | Art. 16 Abs. 1 KiBV (Entwurf); assumption A8; team decision | `bed6215` | Benjamin Pfister |
+| 2026-11-07 | ~~Care days per workload level are proposed by a rule and can be changed by the parents: one day per 20 % of the varied parent; with two parents the working days of the parent who works less (overlapping days)~~ (superseded by the weekly schedule of half-days) | Team decision (variant c with the assumption of variant a) | team decision | `d818016`, `ecc1d9b` | Karla Ruggaber |
+| 2026-11-07 | The comparison leaves out taxes and social contributions; "what remains" is before taxes | Team decision; the material contains no tax model | team decision | `d818016` | Karla Ruggaber |
+| 2026-11-07 | The comparison assumes residence in the canton, a recognised and registered facility, a timely application and no municipal supplements, so that only workload and care make the difference | Keeps the comparison focused; the Rechner tab covers the full conditions | Art. 3, 4 und 9 KiBG; team decision | `d818016` | Karla Ruggaber |
+| 2026-11-07 | The comparison uses a weekly schedule of half-days: one half-day of work is 10 % workload; care is needed when all parents work, nobody else helps and the child is not at school; at another workload half-days are added from Monday morning on and removed from Friday afternoon on | Team decision (proposal 2, half-days); closer to how parents plan their week than a table per workload level | team decision | `ecc1d9b` | Karla Ruggaber |
+| 2026-11-07 | The Dashboard comparison always uses the massgebendes Einkommen of the last definitive tax assessment; there is no long-term view | Team decision; the long-term view rested on a simplified income estimate that the text does not provide | Art. 5 Abs. 3 KiBG; team decision | `61c47a8` | Karla Ruggaber |
+| 2026-11-07 | The questionnaire no longer asks who applies; with two Erziehungsberechtigte it is enough that one lives in the canton, and the interface sets the first person with residence in the canton as applicant | Team decision; in a shared household the answer changes the result only if the parents have different civil domicile | Art. 4 Abs. 1 KiBG; decision on O8; team decision | `4c4e9ce` | Benjamin Pfister |
 
 ## 2. Technical design and architecture
 
@@ -60,6 +68,17 @@ _Syllabus: the technical structure is understandable, fits the goal and rests on
 | 2026-11-07 | Interface design: sober and close to authorities, white/black/green (green approximates the cantonal coat of arms, defined once as --gruen), system font, one page with three sections, large selection buttons, info text on focus, calculate always clickable with a list of missing answers, result in a green box with large amount and expandable details | Team decisions in the design questionnaire | team decision; docs/output-konzept.md | `68b1352` | Benjamin Pfister |
 | 2026-11-07 | The interface computes no law: it builds the OpenFisca situation on the server, sends it to /calculate and only formats and selects texts from the returned values; nothing is stored | One source of truth for the rules (OpenFisca); data minimisation | docs/output-konzept.md; Art. 21 KiBV (Entwurf) | `68b1352` | Benjamin Pfister |
 | 2026-11-07 | The Vollzugsbeginn 2028-08-01 is a constant in the code (VOLLZUGSBEGINN), next to formula_2028_08 and the parameter dates | OpenFisca parameters cannot hold dates; the placeholder must be changed in all three places once the Vollzugsbeginn is set | Ziff. IV KiBG und KiBV (Entwurf); decision on O1 | `9b52503` | Karla Ruggaber |
+| 2026-11-07 | Duration in months (12) and school-year start (August, O9) are parameters (kibg.verfahren) | Values of the text and team decisions in one place | Art. 11 Abs. 2 KiBG; Art. 16 KiBV (Entwurf); decision O9 | `bed6215` | Benjamin Pfister |
+| 2026-11-07 | The interface follows the style kit (structure, surfaces, typography, components) but keeps the St. Gallen green as the single accent, light mode only, and plain CSS tokens instead of the kit's Tailwind/shadcn stack | Team request for a cleaner, more modern look that stays simple; earlier decision on white/black/green | frontend/style-kit/STYLE.md; team decision | `ee9c4c1` | Benjamin Pfister |
+| 2026-11-07 | The selected state of a choice is shown with a green border and a light green tint instead of a solid green fill; the only solid green element is the calculate button | Style kit rule: the accent goes on the one primary action, selection, focus and links | frontend/style-kit/STYLE.md, section 1 | `ee9c4c1` | Benjamin Pfister |
+| 2026-11-07 | Section titles (Haushalt, Erziehungsberechtigte, Kinder, Ergebnis) have no number and use the St. Gallen green | Team request | team decision | `2c64a6f` | Benjamin Pfister |
+| 2026-11-07 | The interface has three tabs: Home (empty), Rechner (the calculator, /rechner) and Dashboard (empty, for Karla) | Team request; room for an introduction page and a dashboard | team decision | `61e12a1` | Benjamin Pfister |
+| 2026-11-07 | Home shows an aerial photo of St. Gallen as a full-width image band; it is decorative (empty alt text) | Team request | team decision | `0a1edbe` | Benjamin Pfister |
+| 2026-11-07 | Home shows only the photo, covering the whole screen below the tabs, without a title | Team request | team decision | `978e209` | Benjamin Pfister |
+| 2026-11-07 | The website explanation is layered: overview, step-by-step for families, rule table with sources for experts | Legal design methods from the course (layering, plain language, decision tree, swimlane, persona) | challenge/line-to-line-rules.md; challenge/szenarien.md; KiBG; KiBV (Entwurf) | `0e8a037` | JB-SG-42 |
+| 2026-11-07 | The application process is shown in six steps, each with two lanes (what parents do, what happens without them) and article references in brackets linking to the PDF page | Content from KiBG_Ablauf_Eltern.docx and Für Familien.docx (legal design team); swimlane makes roles visible | Art. 3-14 KiBG; Art. 2-25 KiBV (Entwurf) | `0c2391e` | JB-SG-42 |
+| 2026-11-07 | KiBG and KiBV (Entwurf) are shown on the website as text with an anchor for every article, paragraph and letter; article references link to that anchor | A PDF link only reaches a page, not the paragraph, and #page= does not work in every browser, especially on phones; sGS 221.1 still shows the old law until the Vollzugsbeginn | challenge/Gesetz.pdf; challenge/Verordnung.pdf | `13d9b3e` | Karla Ruggaber |
+| 2026-11-07 | The six-step Ablauf is the content of the Überblick tab; the separate tab Gesuch stellen is removed | Team decision | – | `13d9b3e` | Karla Ruggaber |
 
 ## 3. Legal and technical integration
 
@@ -101,7 +120,7 @@ _Syllabus: the technical solution clearly responds to the legal problem identifi
 | Art. 20 Abs. 3 KiBG | `kibg_beitrag_total` | Variable, Formel | law | `openfisca-CH-SG/openfisca_ch_sg/variables/beitrag.py` |
 | Art. 2 KiBV (Entwurf) | `wohngemeinde` | Variable, Eingabe | draft | `openfisca-CH-SG/openfisca_ch_sg/variables/haushalt.py` |
 | Art. 2 Abs. 1 KiBG; Art. 9 Abs. 1 KiBG; Art. 8 Abs. 1 lit. b KiBV (Entwurf) | `kibg_gesuchsteller` | Variable, Formel | draft | `openfisca-CH-SG/openfisca_ch_sg/variables/anspruch.py` |
-| Art. 3 Abs. 1 KiBG; Art. 4 Abs. 1 bis 3 KiBG; Art. 9 Abs. 2 KiBG; Art. 25 Abs. 1 KiBV (Entwurf) | `kibg_anspruch` | Variable, Formel | draft | `openfisca-CH-SG/openfisca_ch_sg/variables/anspruch.py` |
+| Art. 3 Abs. 1 KiBG; Art. 4 Abs. 1 bis 3 KiBG; Art. 9 Abs. 2 KiBG; Art. 11 Abs. 2 KiBG; Art. 16 KiBV (Entwurf); Art. 25 Abs. 1 KiBV (Entwurf) | `kibg_anspruch` | Variable, Formel | draft | `openfisca-CH-SG/openfisca_ch_sg/variables/anspruch.py` |
 | Art. 3 Abs. 1 und 3 KiBG; Art. 6 KiBV (Entwurf) | `kibg_einrichtung_berechtigt` | Variable, Formel | draft | `openfisca-CH-SG/openfisca_ch_sg/variables/betreuung.py` |
 | Art. 4 Abs. 1 lit. b KiBG; Art. 8 Abs. 1 KiBV (Entwurf) | `gemeinsamer_haushalt` | Variable, Eingabe | draft | `openfisca-CH-SG/openfisca_ch_sg/variables/haushalt.py` |
 | Art. 4 Abs. 2 KiBG; Art. 12 KiBV (Entwurf) | `kibg_ausnahme_bewilligt` | Variable, Eingabe | draft | `openfisca-CH-SG/openfisca_ch_sg/variables/anspruch.py` |
@@ -131,7 +150,10 @@ _Syllabus: the technical solution clearly responds to the legal problem identifi
 | Art. 9 Abs. 2 KiBG; Art. 25 Abs. 1 KiBV (Entwurf) | `kibg_beitragsbeginn_erreicht` | Variable, Formel | draft | `openfisca-CH-SG/openfisca_ch_sg/variables/verfahren.py` |
 | Art. 10 Abs. 1 KiBV (Entwurf) | `besteuerungsart` | Variable, Eingabe | draft | `openfisca-CH-SG/openfisca_ch_sg/variables/personen.py` |
 | Art. 11 Abs. 2 KiBV (Entwurf) | `kibg.einkommen.schwelle_abweichung` | Parameter | draft | `openfisca-CH-SG/openfisca_ch_sg/parameters/kibg/einkommen.yaml` |
+| Art. 11 Abs. 2 KiBG; Art. 16 Abs. 1 KiBV (Entwurf) | `kibg.verfahren.verfuegungsdauer_monate` | Parameter | draft | `openfisca-CH-SG/openfisca_ch_sg/parameters/kibg/verfahren.yaml` |
 | Art. 11 Abs. 2 KiBV (Entwurf) | `kibg_abweichung_wesentlich` | Variable, Formel | draft | `openfisca-CH-SG/openfisca_ch_sg/variables/einkommen.py` |
+| Art. 11 Abs. 2 KiBG; Art. 16 Abs. 1 und 2 KiBV (Entwurf); Art. 25 Abs. 2 KiBV (Entwurf) | `kibg_verfuegung_ende` | Variable, Formel | draft | `openfisca-CH-SG/openfisca_ch_sg/variables/verfahren.py` |
+| Art. 11 Abs. 2 KiBG; Art. 16 Abs. 1 und 2 KiBV (Entwurf) | `kibg_verfuegung_laeuft` | Variable, Formel | draft | `openfisca-CH-SG/openfisca_ch_sg/variables/verfahren.py` |
 | Art. 12 KiBV (Entwurf) | `kibg_ausnahmegrund` | Variable, Eingabe | draft | `openfisca-CH-SG/openfisca_ch_sg/variables/anspruch.py` |
 | Art. 13 KiBV (Entwurf); Anhang KiBV (Entwurf) | `kibg_beitrag_pro_stunde` | Variable, Formel | draft | `openfisca-CH-SG/openfisca_ch_sg/variables/beitrag.py` |
 | Art. 13 und Anhang KiBV (Entwurf); Art. 15 KiBV (Entwurf) | `kibg_einkommensfaktor` | Variable, Formel | draft | `openfisca-CH-SG/openfisca_ch_sg/variables/einkommen.py` |
@@ -151,6 +173,9 @@ _Syllabus: the technical solution clearly responds to the legal problem identifi
 | Art. 14 Abs. 4 KiBV (Entwurf) | `kibg_subventionierte_stunden` | Variable, Formel | draft | `openfisca-CH-SG/openfisca_ch_sg/variables/betreuung.py` |
 | Art. 15 Abs. 1 KiBV (Entwurf) | `kibg.einkommen.min` | Parameter | draft | `openfisca-CH-SG/openfisca_ch_sg/parameters/kibg/einkommen.yaml` |
 | Art. 15 Abs. 2 KiBV (Entwurf) | `kibg.einkommen.max` | Parameter | draft | `openfisca-CH-SG/openfisca_ch_sg/parameters/kibg/einkommen.yaml` |
+| Art. 16 Abs. 1 KiBV (Entwurf) | `jahr_eintritt_kindergarten` | Variable, Eingabe | draft | `openfisca-CH-SG/openfisca_ch_sg/variables/verfahren.py` |
+| Teamentscheid O9 zu Art. 16 Abs. 1 und 2 KiBV (Entwurf) | `kibg.verfahren.schuljahresbeginn_monat` | Parameter | draft | `openfisca-CH-SG/openfisca_ch_sg/parameters/kibg/verfahren.yaml` |
+| Art. 16 Abs. 1 und 2 KiBV (Entwurf) | `kibg_verfuegung_schulkind` | Variable, Formel | draft | `openfisca-CH-SG/openfisca_ch_sg/variables/verfahren.py` |
 | Art. 20 Abs. 2 und 3 KiBG; Art. 24 KiBV (Entwurf) | `kibg_zusatzbeitrag` | Variable, Formel | draft | `openfisca-CH-SG/openfisca_ch_sg/variables/beitrag.py` |
 | Art. 20 Abs. 2 KiBG; Art. 24 KiBV (Entwurf) | `kibg_zusatzbeitrag_pro_stunde` | Variable, Formel | draft | `openfisca-CH-SG/openfisca_ch_sg/variables/beitrag.py` |
 | Art. 20 Abs. 2 KiBG; Art. 24 KiBV (Entwurf) | `kibg_zusatzbeitrag_z1` | Variable, Eingabe | draft | `openfisca-CH-SG/openfisca_ch_sg/variables/beitrag.py` |
@@ -166,6 +191,14 @@ _1 element(s) in the model have no article reference (template demo or still to 
 - Art. 8 Abs. 1 lit. b KiBV counts, with separated parents, only the income of the applying Erziehungsberechtigte person (and of a partner in a gefestigte Lebensgemeinschaft). The code sums the income of all Erziehungsberechtigte in the household and relies on the convention that only the applicant is entered. Example: father applies (Fr. 51'400), the separated mother (Fr. 80'000) is entered by mistake as second Erziehungsberechtigte with no shared household: code Fr. 131'400, text Fr. 51'400. Should the code use kibg_gesuchsteller so that only the applicant's income counts, as the wording says? (`fcf09a4`, Karla Ruggaber, 2026-11-07)
 - Art. 11 Abs. 2 KiBV requires the deviation of 25 % "zum Zeitpunkt der Gesuchstellung"; afterwards the assessment stays until a new assessment is requested under Art. 11 Abs. 3 KiBV. The code checks the 25 % in every month, so it switches back to the tax assessment if the deviation later falls below 25 %, and switches without a new request if it arises later. Should the income at the time of the application be a separate input, checked only once? (`fcf09a4`, Karla Ruggaber, 2026-11-07)
 - Is the 30-day time limit of Art. 9 Abs. 2 KiBG met by posting the application on the last day (St. Gallen administrative procedure law) rather than by its arrival? The model uses the date of arrival (A10) (`9b52503`, Karla Ruggaber, 2026-11-07)
+- KiBG 5.4 makes the assessment on current circumstances mandatory, KiBV 11.1 requires a request: which one applies (U11)? (`8995fcb`, Karla Ruggaber, 2026-11-07)
+- Does the contribution drop when a child turns 18 months during a running decision, or only with the next decision (U15)? (`8995fcb`, Karla Ruggaber, 2026-11-07)
+- Which "Inanspruchnahme" starts the 30-day limit for follow-up applications and after a change of facility (U17)? (`8995fcb`, Karla Ruggaber, 2026-11-07)
+- Which costs count for the cost cap (meals, fees), and are booked or attended hours subsidised (U13, U14)? (`8995fcb`, Karla Ruggaber, 2026-11-07)
+- How are facilities outside the canton handled, as Art. 23 lit. f KiBG requires (U2)? (`8995fcb`, Karla Ruggaber, 2026-11-07)
+- Does the income of a partner count for a single parent without a second parent (U7)? (`8995fcb`, Karla Ruggaber, 2026-11-07)
+- Does the exception of Art. 4 Abs. 2 KiBG also release from the requirement to be employed, as KiBV 12a assumes (U9)? (`8995fcb`, Karla Ruggaber, 2026-11-07)
+- Do applications made before the Vollzugsbeginn count for the transition period of KiBV 25.1, as the model assumes (U20)? (`8995fcb`, Karla Ruggaber, 2026-11-07)
 
 **Decisions**
 
@@ -217,6 +250,14 @@ _1 element(s) in the model have no article reference (template demo or still to 
 | 2026-11-07 | The Gesuchsdatum is the day the application reaches the municipality; Betreuungsbeginn and Gesuchsdatum are mandatory for every child (assumption A10) | Team decision; without both dates the start of the contributions cannot be determined | Art. 9 Abs. 1 und 2 KiBG; Art. 25 Abs. 1 KiBV (Entwurf); team decision | `9b52503` | Karla Ruggaber |
 | 2026-11-07 | The transition rule of Art. 25 Abs. 1 KiBV takes precedence over the 30-day rule; contributions start at the Vollzugsbeginn, but not before the start of care; applications made before the Vollzugsbeginn also count | Wording "Gesuche, die bis spätestens drei Monate nach Vollzugsbeginn eingereicht werden"; without care there are no costs | Art. 25 Abs. 1 KiBV (Entwurf); Art. 9 Abs. 2 KiBG | `9b52503` | Karla Ruggaber |
 | 2026-11-07 | The date the Amt für Soziales confirmed a facility is optional; if entered, the facility takes part from the first day of the following month and this overrides kibg_einrichtung_angemeldet; "angemeldet" before that month stops the calculation with an error | Team decision (variant b): exact line-to-line coding of Art. 6 KiBV when the date is known, simple questionnaire otherwise | Art. 5 und 6 KiBV (Entwurf); team decision | `9b52503` | Karla Ruggaber |
+| 2026-11-07 | The application date (kibg_gesuchsdatum) is the day the application is submitted, at the municipality or by posting; under administrative procedure law the submission meets the 30-day time limit, not only the arrival | Answers the open question on Art. 9 Abs. 2 KiBG (legal team); replaces "date of arrival" in A10 | Art. 9 Abs. 2 KiBG; Art. 25 Abs. 1 KiBV (Entwurf); administrative procedure law; legal team | `379dd10` | Benjamin Pfister |
+| 2026-11-07 | The school year starts on 1 August (O9 confirmed); needed for the duration of a decision for school children (Art. 16 KiBV), which is not encoded yet | The text does not name the date; team decision | Art. 16 Abs. 2 KiBV (Entwurf); team decision | `379dd10` | Benjamin Pfister |
+| 2026-11-07 | The duration of the decision is encoded: twelve months (Art. 16 Abs. 1 KiBV), for school children one school year or until the end of the current one (Abs. 2), in the year the child becomes schulpflichtig only until the start of the school year (Abs. 1 Satz 2); after the end kibg_anspruch is false until a new application (Art. 16 Abs. 4 KiBV) | Without it the model granted contributions for any later month without a new application | Art. 11 Abs. 2 KiBG; Art. 16 Abs. 1, 2 und 4 KiBV (Entwurf) | `bed6215` | Benjamin Pfister |
+| 2026-11-07 | The decision starts with the start of the contributions (kibg_beitragsbeginn), also for transitional applications (provisional, legal team to confirm, assumption A11) | Art. 16 KiBV refers to the date the decision is made, which the calculator does not know; Art. 25 Abs. 2 KiBV applies Art. 16 sachgemaess | Art. 16 und Art. 25 Abs. 2 KiBV (Entwurf) | `bed6215` | Benjamin Pfister |
+| 2026-11-07 | If a decision ends within a month, only care days up to its end may be entered; without the year of Kindergarten entry, the choice between Art. 16 Abs. 1 and 2 uses "eingeschult" of the calculated month (provisional, legal team to confirm, assumption A12) | The calculator works per month; mirrors assumption A9 at the start | Art. 16 Abs. 1 und 2 KiBV (Entwurf) | `bed6215` | Benjamin Pfister |
+| 2026-11-07 | ~~Short term the massgebendes Einkommen stays as assessed; long term the additional yearly wage is added to it, a simplification because deductions usually make the increase smaller~~ (superseded: the Dashboard only uses the income of the last definitive tax assessment) | Art. 5 Abs. 3 KiBG bases the income on the last definitive tax assessment; a higher wage only counts later or under Art. 5 Abs. 4 KiBG and Art. 11 KiBV | Art. 5 Abs. 3 und 4 KiBG; Art. 11 KiBV (Entwurf) | `d818016`, `61c47a8` | Karla Ruggaber |
+| 2026-11-07 | Care hours are entered per half-day and form, at most 6 hours, so that a day never exceeds the 12 subsidised hours of Art. 14 Abs. 4 KiBV | Keeps the half-day schedule consistent with the limit per care day | Art. 14 Abs. 4 KiBV (Entwurf) | `ecc1d9b` | Karla Ruggaber |
+| 2026-11-07 | ~~Article links point to pages of the PDF versions, not to sGS 221.1~~ (superseded: article links now point to the paragraph in the Gesetzgebung tab; the PDF versions stay linked there) | sGS 221.1 in the Gesetzessammlung still shows the old law of 29 Nov 2020 until the Vollzugsbeginn | KiBG Ziff. III und IV | `0e8a037`, `13d9b3e` | JB-SG-42, Karla Ruggaber |
 
 ## 4. Responsible and ethical technology design
 
@@ -265,6 +306,7 @@ cd openfisca-CH-SG && make serve-local    # OpenFisca Web API on :5000
 | 2026-11-07 | Enum results are checked in tests as a list over all persons | OpenFisca 44 compares enum values per person as numbers; the calculation itself is correct | openfisca_core/tools/test_runner.py | `6b073a8` | Benjamin Pfister |
 | 2026-11-07 | Test cases reuse the P1 data with YAML anchors and only state what changes, like the scenario catalogue | Keeps 48 cases readable and the link to challenge/szenarien.md visible | challenge/szenarien.md | `f0bf3ce` | Benjamin Pfister |
 | 2026-11-07 | The documentation file uses the concept names of the rule inventory: Variable (Formel), Variable (Eingabe), Parameter | Same terms in inventory, code overview and report | challenge/line-to-line-rules.md; team request | `686ecf5` | Benjamin Pfister |
+| 2026-11-07 | A test checks that the Vollzugsbeginn is the same in VOLLZUGSBEGINN, in all dated formula names and in the first value of every parameter | The placeholder 2028-08-01 must be changed in three places once the canton sets the date | Ziff. IV KiBG und KiBV (Entwurf); openfisca-CH-SG/README.md | `379dd10` | Benjamin Pfister |
 
 ## 6. Team contribution and transparency
 
@@ -274,8 +316,9 @@ _Syllabus: each member's contribution, and disclosure of AI tools, open-source c
 
 | Member | Commits | First | Last | Files changed per area |
 |---|---|---|---|---|
-| Benjamin Pfister | 22 | 2026-10-10 | 2026-11-07 | docs (71), rules (45), other (35), tests (24), tooling (11) |
-| Karla Ruggaber | 22 | 2026-11-04 | 2026-11-07 | rules (71), other (70), tests (53), docs (35), tooling (18), materials (4) |
+| Karla Ruggaber | 34 | 2026-11-04 | 2026-11-07 | other (108), rules (71), tests (56), docs (44), tooling (18), materials (4) |
+| Benjamin Pfister | 33 | 2026-10-10 | 2026-11-07 | docs (83), other (74), rules (49), tests (28), tooling (11) |
+| JB-SG-42 | 2 | 2026-11-07 | 2026-11-07 | other (8), docs (2) |
 
 _Add contributions that don't show in git (legal analysis, testing by hand, pitch, ...) by hand in the report._
 
@@ -297,11 +340,26 @@ _Add contributions that don't show in git (legal analysis, testing by hand, pitc
 - Claude Code (Anthropic): moved the two checks to the household formula and added path assertions (`ac960b5`, Benjamin Pfister, 2026-11-07)
 - Claude Code (Anthropic): added the references (`922038b`, Benjamin Pfister, 2026-11-07)
 - Claude Code (Anthropic): built the SvelteKit interface from the design decisions and texte.de.json, tested it end to end and in a headless browser (`68b1352`, Benjamin Pfister, 2026-11-07)
+- Claude Code (Anthropic): updated wording, appendix and inventory, wrote the consistency test and the interface hint, tested in a headless browser (`379dd10`, Benjamin Pfister, 2026-11-07)
+- Claude Code (Anthropic): encoded the duration rules, tests, interface changes and documentation; checked in OpenFisca and a headless browser (`bed6215`, Benjamin Pfister, 2026-11-07)
+- Claude Code (Anthropic): adapted the design to the style kit and checked it in a headless browser (`ee9c4c1`, Benjamin Pfister, 2026-11-07)
+- Claude Code (Anthropic): changed the titles and their colour (`2c64a6f`, Benjamin Pfister, 2026-11-07)
+- Claude Code (Anthropic): added routes, tab navigation and placeholders (`61e12a1`, Benjamin Pfister, 2026-11-07)
+- Claude Code (Anthropic): removed the unused files (`ceec968`, Benjamin Pfister, 2026-11-07)
+- Claude Code (Anthropic): converted the photo to WebP and built the image band (`0a1edbe`, Benjamin Pfister, 2026-11-07)
+- Claude Code (Anthropic): converted the photo and made it fill the screen (`978e209`, Benjamin Pfister, 2026-11-07)
+- Claude Code (Anthropic): shortened the overline text (`cb25bcf`, Benjamin Pfister, 2026-11-07)
+- Claude Code (Anthropic): removed the question, derived the applicant, updated the output concept (`4c4e9ce`, Benjamin Pfister, 2026-11-07)
+- Claude Code: drafted the document from the rule inventory and scenarios, checked by the team (`0e8a037`, JB-SG-42, 2026-11-07)
+- Claude Code: built the page and components from the team's texts, checked in the browser (`0c2391e`, JB-SG-42, 2026-11-07)
 
 **Open-source components and external resources** (from `External:` lines):
 
 - OpenFisca country template (openfisca-CH-SG, AGPL-3.0): model scaffold and format reference (`ade2141`, Benjamin Pfister, 2026-11-07)
 - uv, pre-commit, ruff, yamllint: environment and automated checks (`ade2141`, Benjamin Pfister, 2026-11-07)
+- Aerial photo of St. Gallen (Hintergrund.png, supplied by the team): background image on Home; source and licence to be stated in the report (`0a1edbe`, Benjamin Pfister, 2026-11-07)
+- Photo of St. Gallen (Hintergrund.png, supplied by the team; replaces the earlier aerial photo): background on Home; source and licence to be stated in the report (`978e209`, Benjamin Pfister, 2026-11-07)
+- KiBG and KiBV (Entwurf) PDFs copied to frontend/static/quellen/ for the article links (`0c2391e`, JB-SG-42, 2026-11-07)
 
 **Decisions**
 
@@ -314,6 +372,87 @@ _Add contributions that don't show in git (legal analysis, testing by hand, pitc
 
 ### 2026-11-07
 
+- **Show KiBG and KiBV in the Gesetzgebung tab and link article references there** (`13d9b3e`, Karla Ruggaber, 23:07)
+  - Decision: Article links point to pages of the PDF versions, not to sGS 221.1
+  - Decision: KiBG and KiBV (Entwurf) are shown on the website as text with an anchor for every article, paragraph and letter; article references link to that anchor
+  - Decision: The six-step Ablauf is the content of the Überblick tab; the separate tab Gesuch stellen is removed
+  - Files: `frontend/README.md` (changed), `frontend/package-lock.json` (changed), `frontend/package.json` (changed), `frontend/src/lib/ablauf.de.json` (changed), `frontend/src/lib/quellen.js` (changed), `frontend/src/lib/recht/kibg.md` (added), `frontend/src/lib/recht/kibv.md` (added), `frontend/src/lib/server/recht.js` (added), `frontend/src/lib/texte.de.json` (changed), `frontend/src/routes/+layout.svelte` (changed), `frontend/src/routes/gesetzgebung/+page.server.js` (added), `frontend/src/routes/gesetzgebung/+page.svelte` (changed), and 3 more
+- **Add tab Gesuch stellen: application process as a six-step diagram** (`0c2391e`, JB-SG-42, 22:55)
+  - Decision: The application process is shown in six steps, each with two lanes (what parents do, what happens without them) and article references in brackets linking to the PDF page
+  - Files: `frontend/README.md` (changed), `frontend/src/lib/Quelle.svelte` (added), `frontend/src/lib/ablauf.de.json` (added), `frontend/src/lib/quellen.js` (added), `frontend/src/lib/texte.de.json` (changed), `frontend/src/routes/+layout.svelte` (changed), `frontend/src/routes/gesuch/+page.svelte` (added), `frontend/static/quellen/KiBG.pdf` (added), `frontend/static/quellen/KiBV-Entwurf.pdf` (added)
+- **Add legal design document explaining the calculator with links to the law** (`0e8a037`, JB-SG-42, 22:55)
+  - Decision: The website explanation is layered: overview, step-by-step for families, rule table with sources for experts
+  - Decision: Article links point to pages of the PDF versions, not to sGS 221.1
+  - Files: `docs/legal-design.md` (added)
+- **Add frontend tests for the comparison logic and the OpenFisca calls** (`9c2798f`, Karla Ruggaber, 22:27)
+  - Files: `frontend/package.json` (changed), `frontend/tests/api.test.js` (added), `frontend/tests/vergleich.test.js` (added)
+- **Fix stale results and missing input checks in Rechner and Vergleichstool** (`d75159f`, Karla Ruggaber, 22:27)
+  - Files: `frontend/src/lib/server/situation.js` (changed), `frontend/src/routes/dashboard/+page.svelte` (changed), `frontend/src/routes/rechner/+page.svelte` (changed)
+- **Add empty Überblick and Gesetzgebung tabs** (`3d4a699`, Karla Ruggaber, 22:24)
+  - Files: `frontend/src/lib/texte.de.json` (changed), `frontend/src/routes/+layout.svelte` (changed), `frontend/src/routes/gesetzgebung/+page.svelte` (added), `frontend/src/routes/ueberblick/+page.svelte` (added)
+- **small changes** (`9d5dcb6`, Benjamin Pfister, 22:05)
+  - Files: `frontend/src/lib/assets/Hintergrund.png` (added)
+- **Drop the applicant question; one parent living in the canton is enough** (`4c4e9ce`, Benjamin Pfister, 21:58)
+  - Decision: The questionnaire no longer asks who applies; with two Erziehungsberechtigte it is enough that one lives in the canton, and the interface sets the first person with residence in the canton as applicant
+  - Files: `docs/output-konzept.md` (changed), `frontend/src/routes/rechner/+page.svelte` (changed)
+- **Header overline: Prototyp Kanton St. Gallen** (`cb25bcf`, Benjamin Pfister, 21:55)
+  - Files: `frontend/src/routes/+layout.svelte` (changed)
+- **Home: new photo fills the whole screen below the tabs, without title** (`978e209`, Benjamin Pfister, 21:46)
+  - Decision: Home shows only the photo, covering the whole screen below the tabs, without a title
+  - Files: `frontend/src/app.css` (changed), `frontend/src/lib/assets/Hintergrund.webp` (changed), `frontend/src/routes/+layout.svelte` (changed), `frontend/src/routes/+page.svelte` (changed)
+- **Home: aerial photo of St. Gallen as full-width image band** (`0a1edbe`, Benjamin Pfister, 21:26)
+  - Decision: Home shows an aerial photo of St. Gallen as a full-width image band; it is decorative (empty alt text)
+  - Files: `frontend/src/app.css` (changed), `frontend/src/lib/assets/Hintergrund.webp` (added), `frontend/src/routes/+page.svelte` (changed)
+- **Remove unused style-kit files, keep STYLE.md as design reference** (`ceec968`, Benjamin Pfister, 21:11)
+  - Files: `frontend/README.md` (changed), `frontend/package.json` (changed), `frontend/style-kit/components.json` (deleted), `frontend/style-kit/src/lib/components/ThemeToggle.svelte` (deleted), `frontend/style-kit/src/routes/layout.css` (deleted)
+- **Rename the Dashboard tab to Vergleichstool** (`44d871f`, Karla Ruggaber, 22:01)
+  - Files: `frontend/src/lib/texte.de.json` (changed)
+- **Explain how to enter school time in the weekly schedule** (`6604330`, Karla Ruggaber, 21:54)
+  - Files: `frontend/src/lib/texte.de.json` (changed), `frontend/src/routes/dashboard/+page.svelte` (changed)
+- **Remove the short-term and long-term view from the Dashboard** (`61c47a8`, Karla Ruggaber, 21:51)
+  - Decision: Short term the massgebendes Einkommen stays as assessed; long term the additional yearly wage is added to it, a simplification because deductions usually make the increase smaller
+  - Decision: The Dashboard comparison always uses the massgebendes Einkommen of the last definitive tax assessment; there is no long-term view
+  - Files: `frontend/README.md` (changed), `frontend/src/lib/server/vergleich.js` (changed), `frontend/src/lib/texte.de.json` (changed), `frontend/src/routes/dashboard/+page.svelte` (changed)
+- **Replace care table in the Dashboard with a weekly schedule of half-days** (`ecc1d9b`, Karla Ruggaber, 21:45)
+  - Decision: Care days per workload level are proposed by a rule and can be changed by the parents: one day per 20 % of the varied parent; with two parents the working days of the parent who works less (overlapping days)
+  - Decision: The comparison uses a weekly schedule of half-days: one half-day of work is 10 % workload; care is needed when all parents work, nobody else helps and the child is not at school; at another workload half-days are added from Monday morning on and removed from Friday afternoon on
+  - Decision: Care hours are entered per half-day and form, at most 6 hours, so that a day never exceeds the 12 subsidised hours of Art. 14 Abs. 4 KiBV
+  - Files: `frontend/README.md` (changed), `frontend/src/lib/Wochenplan.svelte` (added), `frontend/src/lib/server/vergleich.js` (changed), `frontend/src/lib/texte.de.json` (changed), `frontend/src/lib/vergleich.js` (changed), `frontend/src/routes/dashboard/+page.svelte` (changed)
+- **Add comparison tool to the Dashboard tab: workload, care form, what remains** (`d818016`, Karla Ruggaber, 21:22)
+  - Decision: Care days per workload level are proposed by a rule and can be changed by the parents: one day per 20 % of the varied parent; with two parents the working days of the parent who works less (overlapping days)
+  - Decision: The comparison leaves out taxes and social contributions; "what remains" is before taxes
+  - Decision: Short term the massgebendes Einkommen stays as assessed; long term the additional yearly wage is added to it, a simplification because deductions usually make the increase smaller
+  - Decision: The comparison assumes residence in the canton, a recognised and registered facility, a timely application and no municipal supplements, so that only workload and care make the difference
+  - Files: `frontend/README.md` (changed), `frontend/src/lib/BalkenChart.svelte` (added), `frontend/src/lib/LinienChart.svelte` (added), `frontend/src/lib/server/vergleich.js` (added), `frontend/src/lib/texte.de.json` (changed), `frontend/src/lib/vergleich.js` (added), `frontend/src/routes/api/vergleich/+server.js` (added), `frontend/src/routes/dashboard/+page.svelte` (changed)
+- **Add tabs Home, Rechner and Dashboard** (`61e12a1`, Benjamin Pfister, 21:08)
+  - Decision: The interface has three tabs: Home (empty), Rechner (the calculator, /rechner) and Dashboard (empty, for Karla)
+  - Files: `frontend/README.md` (changed), `frontend/src/lib/texte.de.json` (changed), `frontend/src/routes/+layout.svelte` (changed), `frontend/src/routes/+page.svelte` (changed), `frontend/src/routes/dashboard/+page.svelte` (added), `frontend/src/routes/rechner/+page.svelte` (added)
+- **Section titles without numbers, in St. Gallen green** (`2c64a6f`, Benjamin Pfister, 20:48)
+  - Decision: Section titles (Haushalt, Erziehungsberechtigte, Kinder, Ergebnis) have no number and use the St. Gallen green
+  - Files: `frontend/src/lib/texte.de.json` (changed), `frontend/src/routes/+page.svelte` (changed)
+- **Restyle interface after the style kit: cleaner, modern, simple** (`ee9c4c1`, Benjamin Pfister, 20:45)
+  - Decision: The interface follows the style kit (structure, surfaces, typography, components) but keeps the St. Gallen green as the single accent, light mode only, and plain CSS tokens instead of the kit's Tailwind/shadcn stack
+  - Decision: The selected state of a choice is shown with a green border and a light green tint instead of a solid green fill; the only solid green element is the calculate button
+  - Files: `frontend/README.md` (changed), `frontend/package-lock.json` (changed), `frontend/package.json` (changed), `frontend/src/app.css` (added), `frontend/src/lib/Auswahl.svelte` (changed), `frontend/src/lib/Ergebnis.svelte` (changed), `frontend/src/lib/Feld.svelte` (changed), `frontend/src/routes/+layout.svelte` (changed), `frontend/src/routes/+page.svelte` (changed), `frontend/style-kit/STYLE.md` (added), `frontend/style-kit/components.json` (added), `frontend/style-kit/src/lib/components/ThemeToggle.svelte` (added), and 1 more
+- **Encode duration of the contribution decision (Art. 11 Abs. 2 KiBG, Art. 16 KiBV)** (`bed6215`, Benjamin Pfister, 20:27)
+  - Decision: The duration of the decision is encoded: twelve months (Art. 16 Abs. 1 KiBV), for school children one school year or until the end of the current one (Abs. 2), in the year the child becomes schulpflichtig only until the start of the school year (Abs. 1 Satz 2); after the end kibg_anspruch is false until a new application (Art. 16 Abs. 4 KiBV)
+  - Decision: The decision starts with the start of the contributions (kibg_beitragsbeginn), also for transitional applications (provisional, legal team to confirm, assumption A11)
+  - Decision: If a decision ends within a month, only care days up to its end may be entered; without the year of Kindergarten entry, the choice between Art. 16 Abs. 1 and 2 uses "eingeschult" of the calculated month (provisional, legal team to confirm, assumption A12)
+  - Decision: The year of Kindergarten entry is an optional question; without it only the twelve-month rule applies
+  - Decision: Duration in months (12) and school-year start (August, O9) are parameters (kibg.verfahren)
+  - Files: `challenge/line-to-line-rules.md` (changed), `challenge/szenarien.md` (changed), `frontend/src/lib/darstellung.js` (changed), `frontend/src/lib/server/situation.js` (changed), `frontend/src/lib/texte.de.json` (changed), `frontend/src/routes/+page.svelte` (changed), `openfisca-CH-SG/README.md` (changed), `openfisca-CH-SG/openfisca_ch_sg/hilfsfunktionen.py` (changed), `openfisca-CH-SG/openfisca_ch_sg/parameters/kibg/verfahren.yaml` (changed), `openfisca-CH-SG/openfisca_ch_sg/tests/datumsregeln.yaml` (changed), `openfisca-CH-SG/openfisca_ch_sg/tests/test_eingabefehler.py` (changed), `openfisca-CH-SG/openfisca_ch_sg/variables/anspruch.py` (changed), and 1 more
+- **Mark U19 as decided: the submission date counts, also by post** (`0a1eabe`, Karla Ruggaber, 20:29)
+  - Files: `challenge/szenarien.md` (changed), `frontend/src/lib/texte.de.json` (changed)
+- **Add part 7 to the scenario catalogue: unclear provisions of KiBG and KiBV** (`8995fcb`, Karla Ruggaber, 20:28)
+  - Files: `challenge/szenarien.md` (changed)
+- **Application date is the submission date; consistency test for start date** (`379dd10`, Benjamin Pfister, 19:53)
+  - Decision: The application date (kibg_gesuchsdatum) is the day the application is submitted, at the municipality or by posting; under administrative procedure law the submission meets the 30-day time limit, not only the arrival
+  - Decision: The school year starts on 1 August (O9 confirmed); needed for the duration of a decision for school children (Art. 16 KiBV), which is not encoded yet
+  - Decision: A test checks that the Vollzugsbeginn is the same in VOLLZUGSBEGINN, in all dated formula names and in the first value of every parameter
+  - Decision: If the chosen month lies before the start of care of a child, the interface shows a hint with a button to calculate the month of the start of care
+  - Files: `challenge/line-to-line-rules.md` (changed), `challenge/szenarien.md` (changed), `docs/output-konzept.md` (changed), `frontend/src/lib/texte.de.json` (changed), `frontend/src/routes/+page.svelte` (changed), `openfisca-CH-SG/README.md` (changed), `openfisca-CH-SG/openfisca_ch_sg/tests/datumsregeln.yaml` (changed), `openfisca-CH-SG/openfisca_ch_sg/tests/test_vollzugsbeginn.py` (added), `openfisca-CH-SG/openfisca_ch_sg/variables/verfahren.py` (changed)
+- **Rebuild documentation file with date rules** (`4ed2b28`, Karla Ruggaber, 19:33)
+  - Files: `docs/CHANGELOG_DECISIONS.md` (changed)
 - **Encode date rules: start of contributions and participation of facilities** (`9b52503`, Karla Ruggaber, 19:28)
   - Decision: Before the start of the contributions (Art. 9 Abs. 2 KiBG, Art. 25 Abs. 1 KiBV) there is no entitlement; the start of the contributions is a condition of kibg_anspruch
   - Decision: In the month in which the contributions start, parents enter only the care days and hours from that day on; more days than remain from that day stop the calculation with an error (assumption A9)
