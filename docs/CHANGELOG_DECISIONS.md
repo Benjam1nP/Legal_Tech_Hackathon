@@ -5,12 +5,21 @@
 
 ## Decisions
 
-_No decisions recorded yet._
+| Date | Decision | Reason | Source | Commit | By |
+|---|---|---|---|---|---|
+| 2026-11-07 | Template demo files are replaced by KiBG rules; a copy is kept in docs/openfisca-template-reference/ as format reference | Template rules are fictional; we only need their format | team decision | `8789ae5` | Benjam1nP |
+| 2026-11-07 | Missing or placeholder legal references only warn, format errors block the push | Agreed strictness for the hackathon | team decision | `8789ae5` | Benjam1nP |
+| 2026-11-07 | Change and decision log is rebuilt by GitHub Actions after every push to main | Git has no local post-push hook; regenerating from history avoids merge conflicts | team decision | `8789ae5` | Benjam1nP |
 
 ## Change log
 
 ### 2026-11-07
 
+- **Add rulebook with pre-commit/pre-push checks and decision log** (`8789ae5`, Benjam1nP, 13:16)
+  - Decision: Template demo files are replaced by KiBG rules; a copy is kept in docs/openfisca-template-reference/ as format reference
+  - Decision: Missing or placeholder legal references only warn, format errors block the push
+  - Decision: Change and decision log is rebuilt by GitHub Actions after every push to main
+  - Files: `.github/workflows/changelog.yaml` (added), `.github/workflows/checks.yaml` (added), `.gitmessage` (added), `.pre-commit-config.yaml` (added), `.yamllint` (added), `RULEBOOK.md` (added), `docs/CHANGELOG_DECISIONS.md` (added), `docs/openfisca-template-reference/README.md` (added), `docs/openfisca-template-reference/__init__.py` (added), `docs/openfisca-template-reference/entities.py` (added), `docs/openfisca-template-reference/parameters/benefits/basic_income.yaml` (added), `docs/openfisca-template-reference/parameters/benefits/housing_allowance.yaml` (added), and 45 more
 - **Add challenge description and guidelines for childcare support** (`aecf019`, KarlaRuggaber, 12:42)
   - Files: `challenge/challenge.md` (added)
 - **Squashed 'openfisca-CH-SG/' content from commit b8dc207** (`ac15372`, karlaruggaber, 12:19)
