@@ -73,7 +73,7 @@ Jede Bestimmung des Gesetzes (KiBG, `Gesetz.pdf`) und der Verordnung (KiBV, `Ver
 | `kibg_verfuegung_ende` | Person (Kind) | ETERNITY | Formel (optional) | Datum | KiBV 16 |
 | `gemeinsamer_haushalt` | Haushalt | MONTH | Eingabe | ja/nein | KiBG 4.1b |
 | `kibg_beschaeftigung_erfuellt` | Haushalt | MONTH | Formel | ja/nein | KiBG 4.1 |
-| `kibg_wohnsitz_erfuellt` | Haushalt | MONTH | Formel | ja/nein | KiBG 4.1 (wer wohnen muss: O8) |
+| `kibg_wohnsitz_erfuellt` | Haushalt | MONTH | Formel | ja/nein | KiBG 4.1; erfüllt, wenn die gesuchstellende Person im Kanton wohnt (O8) |
 | `kibg_ausnahme_bewilligt` | Haushalt | MONTH | Eingabe | ja/nein | KiBG 4.2 |
 | `kibg_ausnahmegrund` | Haushalt | MONTH | Eingabe | Kategorie | KiBV 12 |
 | `verheiratet_oder_eingetragen` | Haushalt | MONTH | Eingabe | ja/nein | KiBV 8.2a |
@@ -103,14 +103,14 @@ Jede Bestimmung des Gesetzes (KiBG, `Gesetz.pdf`) und der Verordnung (KiBV, `Ver
 | Ref. | Inhalt | Konzept | Vorgeschlagener Name | Bemerkung |
 |---|---|---|---|---|
 | Art. 3.1 | Nur für anerkannte **und** angemeldete Einrichtungen | Variable, Formel | `kibg_einrichtung_berechtigt` (Kind) | = anerkannt UND angemeldet |
-| Art. 3.2 a–d | Anerkannte Einrichtungstypen | Variable, Eingabe (Kategorie) | `kibg_einrichtungstyp`: `kita` / `tagesfamilie` / `schulergaenzend` / `sonderschule` / `keine` | Welcher Ansatz gilt für Typ d? (O11) |
+| Art. 3.2 a–d | Anerkannte Einrichtungstypen | Variable, Eingabe (Kategorie) | `kibg_einrichtungstyp`: `kita` / `tagesfamilie` / `schulergaenzend` / `sonderschule` / `keine` | Der Höchstbeitrag richtet sich nach der Betreuungsform (KiBV 14.3), nicht nach der Schule |
 | Art. 3.2 (Kriterien) | Bewilligung, Qualitätskonzept, Leistungsvereinbarung | Variable, Eingabe (ja/nein) | `kibg_einrichtung_anerkannt` | Behördlicher Entscheid, daher Eingabe |
 | Art. 3.3 | Bei der kantonalen Stelle angemeldet | Variable, Eingabe (ja/nein) | `kibg_einrichtung_angemeldet` | Beginn gemäss KiBV 6 |
-| Art. 4.1 | Zivilrechtlicher Wohnsitz im Kanton | Variable, Eingabe (ja/nein) + Formel | `wohnsitz_kanton_sg` (Person), `kibg_wohnsitz_erfuellt` (Haushalt) | Welcher Elternteil muss hier wohnen? (O8) |
+| Art. 4.1 | Zivilrechtlicher Wohnsitz im Kanton | Variable, Eingabe (ja/nein) + Formel | `wohnsitz_kanton_sg` (Person), `kibg_wohnsitz_erfuellt` (Haushalt) | Die gesuchstellende Person muss hier wohnen (O8, entschieden) |
 | Art. 4.1 | Selbständig oder unselbständig erwerbstätig, mit Beschäftigungsgrad | Variable, Eingabe (Anteil) | `beschaeftigungsgrad` (Person) | Als Anteil: 80 % = 0.8 |
 | Art. 4.1a | Mindestens 20 Prozent | Parameter | `kibg.anspruch.min_beschaeftigungsgrad = 0.20` | Einheit `/1` (OpenFisca-Konvention) |
-| Art. 4.1b | Zusammen mindestens 120 Prozent bei gemeinsamem Haushalt | Parameter + Eingabe | `kibg.anspruch.min_beschaeftigungsgrad_gemeinsam = 1.20`, `gemeinsamer_haushalt` (Haushalt) | Braucht zusätzlich jeder Elternteil 20 %? (O3) |
-| Art. 4.1 | Beschäftigungsbedingung erfüllt | Variable, Formel | `kibg_beschaeftigung_erfuellt` (Haushalt) | a für einen Elternteil, b für einen gemeinsamen Haushalt |
+| Art. 4.1b | Zusammen mindestens 120 Prozent bei gemeinsamem Haushalt | Parameter + Eingabe | `kibg.anspruch.min_beschaeftigungsgrad_gemeinsam = 1.20`, `gemeinsamer_haushalt` (Haushalt) | Kumulativ zu lit. a: jeder Elternteil mindestens 20 % (O3, entschieden) |
+| Art. 4.1 | Beschäftigungsbedingung erfüllt | Variable, Formel | `kibg_beschaeftigung_erfuellt` (Haushalt) | Jeder Erziehungsberechtigte mindestens 20 % (a); im gemeinsamen Haushalt zusätzlich zusammen mindestens 120 % (b) (O3) |
 | Art. 4.2 | Ausnahme in begründeten Fällen | Variable, Eingabe (ja/nein) | `kibg_ausnahme_bewilligt` | Menschlicher Entscheid; Gründe in KiBV 12 |
 | Art. 4.3 | Ab drei Monaten | Parameter + Eingabe | `kibg.anspruch.mindestalter_monate = 3`, `geburtsdatum` | — |
 | Art. 4.3 | Bis zum Abschluss der Primarschule | Variable, Eingabe (ja/nein) | `primarschule_abgeschlossen` (Kind) | Eine Tatsache, kein Alter |
@@ -183,7 +183,7 @@ Jede Bestimmung des Gesetzes (KiBG, `Gesetz.pdf`) und der Verordnung (KiBV, `Ver
 | Ref. | Inhalt | Konzept | Vorgeschlagener Name | Bemerkung |
 |---|---|---|---|---|
 | Art. 1 | Zuständige Stelle: Amt für Soziales | Nicht berechenbar | — | — |
-| Art. 2 | Zuständige Gemeinde: Wohnsitz der anspruchsberechtigten Eltern | Variable, Eingabe | `wohngemeinde` (Haushalt) | Bestimmt Z1/Z2. Getrennte Eltern in verschiedenen Gemeinden? (O8) |
+| Art. 2 | Zuständige Gemeinde: Wohnsitz der anspruchsberechtigten Eltern | Variable, Eingabe | `wohngemeinde` (Haushalt) | Bestimmt Z1/Z2. Bei getrennten Eltern: Gemeinde der gesuchstellenden Person (O8, entschieden) |
 
 ### II. Anmeldung von Einrichtungen
 
@@ -196,7 +196,7 @@ Jede Bestimmung des Gesetzes (KiBG, `Gesetz.pdf`) und der Verordnung (KiBV, `Ver
 
 | Ref. | Inhalt | Konzept | Vorgeschlagener Name | Bemerkung |
 |---|---|---|---|---|
-| Art. 7 | Nur für Tage mit faktischer Obhut **und** genutzter Betreuung | Variable, Eingabe | `betreuungstage_mit_obhut` (Kind, monatlich) | Wichtig bei alternierender Obhut |
+| Art. 7 | Nur für Tage mit faktischer Obhut **und** genutzter Betreuung | Variable, Eingabe | `betreuungstage_mit_obhut` (Kind, monatlich) | Bei alternierender Obhut gibt jeder Elternteil nur seine eigenen Tage ein (O10) |
 | Art. 8.1a | Gemeinsamer Haushalt: Einkommen beider Eltern | Variable, Formel | Teil von `kibg_massgebendes_einkommen` | Summe über Rolle `erziehungsberechtigt` |
 | Art. 8.1b | Getrennter Haushalt: Gesuchsteller/in + gefestigte Partnerin oder gefestigter Partner, die oder der nicht erziehungsberechtigt ist | Variable, Formel | Teil von `kibg_massgebendes_einkommen` | Braucht Rolle `partner` |
 | Art. 8.2a | Gefestigt = Ehe oder eingetragene Partnerschaft | Variable, Eingabe | `verheiratet_oder_eingetragen` | — |
@@ -206,7 +206,7 @@ Jede Bestimmung des Gesetzes (KiBG, `Gesetz.pdf`) und der Verordnung (KiBV, `Ver
 | Art. 10.1 | Quellenbesteuerte oder ohne Veranlagung: nach Art. 12bis V EG-KVG | Variable, Eingabe (Kategorie) | `besteuerungsart` | Externer Erlass (O5) |
 | Art. 10.2 | Einkommens- und Vermögensnachweise einreichen | Nicht berechenbar | — | — |
 | Art. 11.1 | Aktuelle Gegebenheiten nur auf Antrag | Variable, Eingabe (ja/nein) | `kibg_antrag_aktuelle_gegebenheiten` | — |
-| Art. 11.2 | Abweichung von mindestens 25 % bei Gesuchstellung | Parameter + Formel | `kibg.einkommen.schwelle_abweichung = 0.25`, `kibg_massgebendes_einkommen` | Nach oben und unten? (O12) |
+| Art. 11.2 | Abweichung von mindestens 25 % bei Gesuchstellung | Parameter + Formel | `kibg.einkommen.schwelle_abweichung = 0.25`, `kibg_massgebendes_einkommen` | In beide Richtungen (O12, entschieden) |
 | Art. 11.3 | Veränderung von mindestens 25 % während laufender Verfügung gilt ab dem Ersten des Folgemonats | Formel (optional) | — | Datumslogik, kann weggelassen werden |
 | Art. 12 a–c | Ausnahmegründe: berufliche Integration, familiäre Belastung, Indikation beim Kind | Variable, Eingabe (Kategorie) | `kibg_ausnahmegrund` | Dokumentiert den Grund; der Entscheid bleibt bei `kibg_ausnahme_bewilligt` |
 
@@ -215,9 +215,9 @@ Jede Bestimmung des Gesetzes (KiBG, `Gesetz.pdf`) und der Verordnung (KiBV, `Ver
 | Ref. | Inhalt | Konzept | Vorgeschlagener Name | Bemerkung |
 |---|---|---|---|---|
 | Art. 13 | Formel im Anhang | Variable, Formel | `kibg_beitrag_pro_stunde` | — |
-| Art. 14.1a | Unter 18 Monaten, Kita: Fr. 11.00 | Parameter | `kibg.hoechstbeitrag.unter_18_monate.kita = 11.00` | Grenze bei genau 18 Monaten (O2) |
+| Art. 14.1a | Unter 18 Monaten, Kita: Fr. 11.00 | Parameter | `kibg.hoechstbeitrag.unter_18_monate.kita = 11.00` | Gilt die vollen ersten 18 Lebensmonate (O2, entschieden) |
 | Art. 14.1b | Unter 18 Monaten, Tagesfamilie: Fr. 8.30 | Parameter | `…unter_18_monate.tagesfamilie = 8.30` | — |
-| Art. 14.2a | Über 18 Monaten bis Einschulung, Kita: Fr. 7.50 | Parameter | `…ab_18_monate.kita = 7.50` | — |
+| Art. 14.2a | Über 18 Monaten bis Einschulung, Kita: Fr. 7.50 | Parameter | `…ab_18_monate.kita = 7.50` | Ab dem 18-Monate-Geburtstag (O2) |
 | Art. 14.2b | Über 18 Monaten bis Einschulung, Tagesfamilie: Fr. 5.50 | Parameter | `…ab_18_monate.tagesfamilie = 5.50` | — |
 | Art. 14.3a | Eingeschult bis Ende Primarstufe, Kita: Fr. 7.50 | Parameter | `…eingeschult.kita = 7.50` | — |
 | Art. 14.3b | Eingeschult, schulergänzende Betreuung: Fr. 5.50 | Parameter | `…eingeschult.schulergaenzend = 5.50` | — |
@@ -229,14 +229,14 @@ Jede Bestimmung des Gesetzes (KiBG, `Gesetz.pdf`) und der Verordnung (KiBV, `Ver
 | Art. 14.4 | Subventionierte Stunden | Variable, Eingabe + Formel | `betreuungsstunden` (Kind, monatlich), `kibg_subventionierte_stunden` | **Entscheid: Stunden pro Monat als Eingabe**; min(Stunden, Betreuungstage × 12). Tagesgrenze pro Woche offen (O7) |
 | Art. 14.5 | Betreuungsmodule und Monatspauschalen per Richtlinien | Ausserhalb des Umfangs | — | Die Richtlinien liegen nicht vor (O7) |
 | Art. 15.1 | Kleinstes ME Fr. 40'000; bis dahin voller Beitrag | Parameter + Formel | `kibg.einkommen.min = 40_000` | Faktor nach oben begrenzt |
-| Art. 15.2 | Höchstes ME Fr. 154'000; darüber kein Beitrag | Parameter + Formel | `kibg.einkommen.max = 154_000` | Was gilt hier für Z2? (O4) |
+| Art. 15.2 | Höchstes ME Fr. 154'000; darüber kein Beitrag | Parameter + Formel | `kibg.einkommen.max = 154_000` | Gilt nur für den Mindestbeitrag; Z2 wird auch darüber ausgerichtet (O4, entschieden) |
 
 ### V. Verfahren für die Ausrichtung der Beiträge
 
 | Ref. | Inhalt | Konzept | Vorgeschlagener Name | Bemerkung |
 |---|---|---|---|---|
 | Art. 16.1 | Kita und Tagesfamilie: 12 Monate, im Jahr der Einschulung bis Schuljahresbeginn | Formel (optional) | `kibg_verfuegung_ende` | — |
-| Art. 16.2 | Eingeschulte Kinder: ein Schuljahr, oder bis zum Ende des laufenden | Formel (optional) | `kibg_verfuegung_ende` | Datum des Schuljahresbeginns fehlt im Text (O9) |
+| Art. 16.2 | Eingeschulte Kinder: ein Schuljahr, oder bis zum Ende des laufenden | Formel (optional) | `kibg_verfuegung_ende` | Schuljahresbeginn vorläufig 1. August (O9) |
 | Art. 16.3 | Senkungen wegen Modelländerungen gelten erst ab der nächsten Verfügung | Periode | — | Wichtig für Reformszenarien |
 | Art. 16.4 | Erinnerung vor Ablauf einer Verfügung | Nicht berechenbar | — | — |
 | Art. 17 | Erfassung des Betreuungsumfangs bis zum 15., Auszahlungsrhythmus | Nicht berechenbar | — | — |
@@ -290,6 +290,7 @@ Jede Bestimmung des Gesetzes (KiBG, `Gesetz.pdf`) und der Verordnung (KiBV, `Ver
 5. × subventionierte Stunden
 6. auf die Kosten begrenzt
 7. aufgeteilt auf Kanton, Gemeinde und Restkosten der Eltern
+8. Monatsbeträge kaufmännisch auf 5 Rappen gerundet. **Teamentscheid, steht nicht im Text**; Regeln in `szenarien.md`, Annahme A4
 
 ---
 
@@ -308,17 +309,17 @@ Diese Bestimmungen modellieren wir anfangs bewusst nicht. Sie sind aber wichtig 
 | Nr. | Frage | Quelle |
 |---|---|---|
 | O1 | Kein Vollzugsbeginn («ab ●●»). **Entschieden:** Platzhalter 2028-08-01 (`formula_2028_08`), ersetzen sobald der Vollzugsbeginn feststeht | KiBG IV.1, KiBV IV |
-| O2 | Ein Kind mit genau 18 Monaten fällt zwischen «unter 18» und «über 18» | KiBV 14.1–14.2 |
-| O3 | Braucht es bei 120 % zusammen zusätzlich mindestens 20 % pro Elternteil? Und gilt «a» nur für Alleinerziehende? | KiBG 4.1 |
-| O4 | Gilt Z2 (einkommensunabhängig) auch über Fr. 154'000? | KiBV 15.2 vs. Anhang |
+| O2 | Ein Kind mit genau 18 Monaten fällt zwischen «unter 18» und «über 18». **Entschieden:** Der höhere Ansatz gilt die vollen ersten 18 Lebensmonate; ab dem 18-Monate-Geburtstag (erster Tag des 19. Lebensmonats) gilt der tiefere. Mit dem Stichtag Monatserster: Wer am Ersten des Monats mindestens 18 Monate alt ist, erhält in diesem Monat den tieferen Ansatz | KiBV 14.1–14.2 |
+| O3 | Braucht es bei 120 % zusammen zusätzlich mindestens 20 % pro Elternteil? Und gilt «a» nur für Alleinerziehende? **Entschieden: lit. a und b kumulativ.** Jeder Elternteil muss mindestens 20 % und beide zusammen mindestens 120 % arbeiten; 120 % / 0 % gibt keinen Anspruch (ausser mit Ausnahme nach Abs. 2). Begründung: Wortlaut (die Erziehungsberechtigten müssen «eine Erwerbstätigkeit ausüben», je einzeln; über 100 % für eine Person ist atypisch), Systematik (120 = 100 + 20 baut auf lit. a auf; Abs. 2 löst atypische Fälle), Rechtsgleichheit (Art. 8 BV: Paare nicht tiefer als Alleinerziehende), Zweck (ohne Erwerbstätigkeit eines Elternteils fehlt der Betreuungsbedarf) | KiBG 4.1 |
+| O4 | Gilt Z2 (einkommensunabhängig) auch über Fr. 154'000? **Entschieden: ja.** Z2 ist per Definition einkommensunabhängig (KiBV 24); KiBV 15.2 betrifft den Mindestbeitrag | KiBV 15.2 vs. Anhang |
 | O5 | Das massgebende Einkommen ist in einem anderen Erlass definiert (V EG-KVG, sGS 331.111), der in den Unterlagen fehlt. **Vorläufig entschieden:** Einkommen pro Person ist eine Eingabe | KiBV 9–10 |
 | O6 | Das Gesetzes-PDF ist die **Fassung der ersten Lesung (16. September 2025)**, die KiBV verweist aber auf das Gesetz vom 14. Juni 2026. Bei den Organisatoren nachfragen, ob der Schlusstext abweicht | KiBG Titelseite |
 | O7 | Umrechnung der Wochenobergrenzen auf einen Monat; Betreuungsmodule und Monatspauschalen sind Richtlinien überlassen, die nicht öffentlich sind. **Vorläufig entschieden:** Stunden pro Monat sind eine Eingabe; die Grenze von 5 Tagen pro Woche bleibt offen | KiBV 14.4–14.5 |
-| O8 | Welcher Elternteil muss im Kanton wohnen, und welche Gemeinde ist zuständig, wenn die Eltern getrennt leben? | KiBG 4.1, KiBV 2 |
-| O9 | Das Datum des Schuljahresbeginns steht nicht im Text | KiBV 16.2 |
-| O10 | Getrennte Eltern mit alternierender Obhut: Wer stellt das Gesuch, und wie werden die Tage aufgeteilt? | KiBV 7, 8.1b |
-| O11 | Private Sonderschulen (KiBG 3.2d): vermutlich der Ansatz für schulergänzende Betreuung von Fr. 5.50? | KiBG 3.2d, KiBV 14.3 |
-| O12 | Zählt die Abweichung von 25 % in beide Richtungen (nach oben und unten)? | KiBV 11.2–11.3 |
+| O8 | Welcher Elternteil muss im Kanton wohnen, und welche Gemeinde ist zuständig, wenn die Eltern getrennt leben? **Entschieden:** Die gesuchstellende Person muss im Kanton wohnen; zuständig ist ihre Wohngemeinde | KiBG 4.1, KiBV 2 |
+| O9 | Das Datum des Schuljahresbeginns steht nicht im Text. **Vorläufig:** 1. August; nur für die optionalen Datumsregeln nötig | KiBV 16.2 |
+| O10 | Getrennte Eltern mit alternierender Obhut: Wer stellt das Gesuch, und wie werden die Tage aufgeteilt? **Entschieden:** Jeder Elternteil stellt das Gesuch für die eigenen Obhutstage und gibt nur diese ein | KiBV 7, 8.1b |
+| O11 | ~~Private Sonderschulen (KiBG 3.2d): welcher Ansatz?~~ **Erledigt:** Der Anspruch folgt aus KiBG 3.2d; der Betrag richtet sich nach der Betreuungsform (KiBV 14.3) | KiBG 3.2d, KiBV 14.3 |
+| O12 | Zählt die Abweichung von 25 % in beide Richtungen (nach oben und unten)? **Entschieden: ja**, wie im Wortlaut («Abweichung») | KiBV 11.2–11.3 |
 
 ---
 
