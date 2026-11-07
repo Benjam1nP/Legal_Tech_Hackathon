@@ -145,54 +145,60 @@ always be told apart. The checker warns if it is missing.
 
 ## 5. Examples of the expected format
 
-Variable (`variables/beitrag.py`), coding Art. 6 Abs. 2 KiBG ("Ein Beitrag darf
-die Kosten der Erziehungsberechtigten für das in Anspruch genommene
-Betreuungsangebot nicht übersteigen"):
+Names, entities and periods come from `challenge/line-to-line-rules.md`.
+
+Variable (`variables/beitrag.py`), coding Art. 20 Abs. 3 KiBG ("Die Summe aus
+einem Mindestbeitrag und einem allfälligen Zusatzbeitrag darf die Kosten der
+Erziehungsberechtigten für das in Anspruch genommene Betreuungsangebot nicht
+übersteigen"). The contribution is calculated per child, so the entity is
+`Person`:
 
 ```python
 from openfisca_core.model_api import min_
 from openfisca_core.periods import MONTH
 from openfisca_core.variables import Variable
 
-from openfisca_ch_sg.entities import Household
+from openfisca_ch_sg.entities import Person
 
 
-class beitrag(Variable):
+class kibg_beitrag_total(Variable):
     value_type = float
-    entity = Household
+    entity = Person
     definition_period = MONTH
-    label = "Beitrag, begrenzt auf die Kosten des Betreuungsangebots"
-    reference = "Art. 6 Abs. 2 KiBG"
+    label = "Beitrag total (Mindest- und Zusatzbeitrag), höchstens die Kosten"
+    reference = "Art. 20 Abs. 3 KiBG"
 
-    def formula_2028_08(haushalt, period, parameters):
-        beitrag_linear = haushalt("beitrag_lineares_modell", period)  # Art. 6 Abs. 1
-        kosten = haushalt("kosten_betreuungsangebot", period)
-        return min_(beitrag_linear, kosten)
+    def formula_2028_08(kind, period, parameters):
+        mindestbeitrag = kind("kibg_mindestbeitrag", period)  # Art. 6, 20.1 KiBG
+        zusatzbeitrag = kind("kibg_zusatzbeitrag", period)  # Art. 20.2 KiBG
+        kosten = kind("kibg_betreuungskosten", period)
+        return min_(mindestbeitrag + zusatzbeitrag, kosten)
 ```
 
-Parameter (`parameters/einkommensgrenze.yaml`). Article and number are
-placeholders; take both from the text:
+Parameter (`parameters/kibg/einkommen/min.yaml`, used as
+`parameters(period).kibg.einkommen.min`):
 
 ```yaml
-description: Obergrenze des massgebenden Einkommens
+description: Kleinstes massgebendes Einkommen und Vermögen (MinmE)
 metadata:
   unit: currency-CHF
-  reference: Art. X Abs. Y KiBV (Entwurf)
+  reference: Art. 15 Abs. 1 KiBV (Entwurf)
 values:
   2028-08-01:
-    value: 100000
+    value: 40000
 ```
 
 Test (`tests/beitrag.yaml`), calculated by hand from the article:
 
 ```yaml
-- name: Beitrag übersteigt die Kosten nicht (Art. 6 Abs. 2 KiBG)
+- name: Mindest- und Zusatzbeitrag zusammen höchstens die Kosten (Art. 20 Abs. 3 KiBG)
   period: 2028-08
   input:
-    beitrag_lineares_modell: 900
-    kosten_betreuungsangebot: 700
+    kibg_mindestbeitrag: 600
+    kibg_zusatzbeitrag: 100
+    kibg_betreuungskosten: 650
   output:
-    beitrag: 700
+    kibg_beitrag_total: 650
 ```
 
 ## 6. Commit messages and the documentation file
