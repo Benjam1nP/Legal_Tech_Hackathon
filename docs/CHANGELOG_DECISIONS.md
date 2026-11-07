@@ -5,7 +5,7 @@
 
 Raw material for the legal and technical documentation. Sections follow the evaluation criteria in the course syllabus.
 
-_State as of commit `c66455b` (2026-11-07 16:48)._
+_State as of commit `fcf09a4` (2026-11-07 17:20)._
 
 ## 1. Functionality and prototype quality
 
@@ -13,10 +13,10 @@ _Syllabus: the prototype demonstrates the core idea and shows that the solution 
 
 **Current state of the model** (generated from the code):
 
-- Variable, Formel (calculated by OpenFisca): 19
-- Variable, Eingabe (facts and human decisions entered by the user): 23
+- Variable, Formel (calculated by OpenFisca): 24
+- Variable, Eingabe (facts and human decisions entered by the user): 24
 - Parameter (values taken from the legal text): 19
-- Test cases: 80 in 2 file(s)
+- Test cases: 82 in 2 file(s)
 
 **Decisions**
 
@@ -24,6 +24,8 @@ _Syllabus: the prototype demonstrates the core idea and shows that the solution 
 |---|---|---|---|---|---|
 | 2026-11-07 | The limit of 5 subsidised days per week is not enforced; inputs are assumed to stay within it, so care on more than 5 days a week (e.g. Saturdays) overstates the contribution | Inputs are monthly, so the weekly spread of care days is unknown; a fixed conversion (5 days x 4.33 weeks) would wrongly cut months with 23 working days. Most Kitas are open Monday to Friday only | Art. 14 Abs. 4 KiBV (Entwurf); team decision | `93b5f81` | Karla Ruggaber |
 | 2026-11-07 | Calculator output has five blocks: result, conditions met or not met with article, calculation steps, situational hints, fixed disclaimer | The challenge asks to show which facts and rules determined the outcome; draft to be revised by the team | challenge/challenge.md, sub-challenge 1; docs/output-konzept.md | `288a151` | Benjamin Pfister |
+| 2026-11-07 | Date and duration rules are not encoded yet (Art. 9 Abs. 2 und 11 Abs. 2 KiBG; Art. 6, 11 Abs. 3, 16 und 25 KiBV); scenarios D1 to D9 are ready | The calculator estimates the amount for one month; these rules change when payments start or end, not the amount | openfisca-CH-SG/README.md, section Provisions not encoded | `fcf09a4` | Karla Ruggaber |
+| 2026-11-07 | Art. 17 KiBG (total volume and its adjustment) is not encoded | Needs data on all families in the canton; possible later as a budget simulation | Art. 17 KiBG; openfisca-CH-SG/README.md | `fcf09a4` | Karla Ruggaber |
 
 ## 2. Technical design and architecture
 
@@ -63,6 +65,7 @@ _Syllabus: the technical solution clearly responds to the legal problem identifi
 
 | Reference | Element | Konzept | Source status | File |
 |---|---|---|---|---|
+| Art. 3 Abs. 1 KiBG; Art. 4 Abs. 1 bis 3 KiBG | `kibg_anspruch` | Variable, Formel | law | `openfisca-CH-SG/openfisca_ch_sg/variables/anspruch.py` |
 | Art. 3 Abs. 1 KiBG | `kibg_einrichtung_berechtigt` | Variable, Formel | law | `openfisca-CH-SG/openfisca_ch_sg/variables/betreuung.py` |
 | Art. 3 Abs. 2 KiBG | `kibg_einrichtung_anerkannt` | Variable, Eingabe | law | `openfisca-CH-SG/openfisca_ch_sg/variables/betreuung.py` |
 | Art. 3 Abs. 2 KiBG | `kibg_einrichtungstyp` | Variable, Eingabe | law | `openfisca-CH-SG/openfisca_ch_sg/variables/betreuung.py` |
@@ -71,13 +74,13 @@ _Syllabus: the technical solution clearly responds to the legal problem identifi
 | Art. 4 Abs. 1 lit. a KiBG | `kibg.anspruch.min_beschaeftigungsgrad` | Parameter | law | `openfisca-CH-SG/openfisca_ch_sg/parameters/kibg/anspruch.yaml` |
 | Art. 4 Abs. 1 lit. b KiBG | `kibg.anspruch.min_beschaeftigungsgrad_gemeinsam` | Parameter | law | `openfisca-CH-SG/openfisca_ch_sg/parameters/kibg/anspruch.yaml` |
 | Art. 4 Abs. 1 lit. a und b KiBG | `kibg_beschaeftigung_erfuellt` | Variable, Formel | law | `openfisca-CH-SG/openfisca_ch_sg/variables/anspruch.py` |
+| Art. 4 Abs. 1 lit. a KiBG | `kibg_beschaeftigung_lit_a_erfuellt` | Variable, Formel | law | `openfisca-CH-SG/openfisca_ch_sg/variables/anspruch.py` |
+| Art. 4 Abs. 1 lit. b KiBG | `kibg_beschaeftigung_lit_b_erfuellt` | Variable, Formel | law | `openfisca-CH-SG/openfisca_ch_sg/variables/anspruch.py` |
 | Art. 4 Abs. 1 KiBG | `kibg_wohnsitz_erfuellt` | Variable, Formel | law | `openfisca-CH-SG/openfisca_ch_sg/variables/anspruch.py` |
 | Art. 4 Abs. 1 KiBG | `wohnsitz_kanton_sg` | Variable, Eingabe | law | `openfisca-CH-SG/openfisca_ch_sg/variables/personen.py` |
-| Art. 4 Abs. 3 KiBG | `geburtsdatum` | Variable, Eingabe | law | `openfisca-CH-SG/openfisca_ch_sg/variables/personen.py` |
 | Art. 4 Abs. 3 KiBG | `kibg.anspruch.mindestalter_monate` | Parameter | law | `openfisca-CH-SG/openfisca_ch_sg/parameters/kibg/anspruch.yaml` |
 | Art. 4 Abs. 3 KiBG | `kibg_alter_erfuellt` | Variable, Formel | law | `openfisca-CH-SG/openfisca_ch_sg/variables/anspruch.py` |
 | Art. 4 Abs. 3 KiBG | `primarschule_abgeschlossen` | Variable, Eingabe | law | `openfisca-CH-SG/openfisca_ch_sg/variables/betreuung.py` |
-| Art. 6 KiBG; Art. 20 Abs. 1 KiBG | `kibg_mindestbeitrag` | Variable, Formel | law | `openfisca-CH-SG/openfisca_ch_sg/variables/beitrag.py` |
 | Art. 6 Abs. 2 KiBG | `kibg_betreuungskosten` | Variable, Eingabe | law | `openfisca-CH-SG/openfisca_ch_sg/variables/betreuung.py` |
 | Art. 12 Abs. 2 KiBG | `kibg_restkosten_eltern` | Variable, Formel | law | `openfisca-CH-SG/openfisca_ch_sg/variables/beitrag.py` |
 | Art. 18 Abs. 1 KiBG | `kibg.finanzierung.anteil_kanton` | Parameter | law | `openfisca-CH-SG/openfisca_ch_sg/parameters/kibg/finanzierung.yaml` |
@@ -85,33 +88,37 @@ _Syllabus: the technical solution clearly responds to the legal problem identifi
 | Art. 18 Abs. 1 KiBG | `kibg_anteil_kanton` | Variable, Formel | law | `openfisca-CH-SG/openfisca_ch_sg/variables/beitrag.py` |
 | Art. 20 Abs. 3 KiBG | `kibg_beitrag_total` | Variable, Formel | law | `openfisca-CH-SG/openfisca_ch_sg/variables/beitrag.py` |
 | Art. 2 KiBV (Entwurf) | `wohngemeinde` | Variable, Eingabe | draft | `openfisca-CH-SG/openfisca_ch_sg/variables/haushalt.py` |
-| Art. 3 und 4 KiBG; Art. 7 KiBV (Entwurf) | `kibg_anspruch` | Variable, Formel | draft | `openfisca-CH-SG/openfisca_ch_sg/variables/anspruch.py` |
 | Art. 4 Abs. 1 lit. b KiBG; Art. 8 Abs. 1 KiBV (Entwurf) | `gemeinsamer_haushalt` | Variable, Eingabe | draft | `openfisca-CH-SG/openfisca_ch_sg/variables/haushalt.py` |
 | Art. 4 Abs. 2 KiBG; Art. 12 KiBV (Entwurf) | `kibg_ausnahme_bewilligt` | Variable, Eingabe | draft | `openfisca-CH-SG/openfisca_ch_sg/variables/anspruch.py` |
+| Art. 4 Abs. 3 KiBG; Art. 14 Abs. 1 und 2 KiBV (Entwurf) | `geburtsdatum` | Variable, Eingabe | draft | `openfisca-CH-SG/openfisca_ch_sg/variables/personen.py` |
 | Art. 4 Abs. 3 KiBG; Art. 14 Abs. 1 und 2 KiBV (Entwurf) | `kibg_alter_monate` | Variable, Formel | draft | `openfisca-CH-SG/openfisca_ch_sg/variables/personen.py` |
-| Art. 5 KiBG; Art. 8 Abs. 1 KiBV (Entwurf); Art. 11 Abs. 2 KiBV (Entwurf) | `kibg_massgebendes_einkommen` | Variable, Formel | draft | `openfisca-CH-SG/openfisca_ch_sg/variables/einkommen.py` |
+| Art. 5 Abs. 1 bis 4 KiBG; Art. 8 Abs. 1 KiBV (Entwurf); Art. 11 Abs. 1 und 2 KiBV (Entwurf) | `kibg_massgebendes_einkommen` | Variable, Formel | draft | `openfisca-CH-SG/openfisca_ch_sg/variables/einkommen.py` |
 | Art. 5 Abs. 3 KiBG; Art. 9 KiBV (Entwurf) | `me_steuerveranlagung` | Variable, Eingabe | draft | `openfisca-CH-SG/openfisca_ch_sg/variables/personen.py` |
 | Art. 5 Abs. 4 KiBG; Art. 11 Abs. 1 KiBV (Entwurf) | `kibg_antrag_aktuelle_gegebenheiten` | Variable, Eingabe | draft | `openfisca-CH-SG/openfisca_ch_sg/variables/einkommen.py` |
 | Art. 5 Abs. 4 KiBG; Art. 11 KiBV (Entwurf) | `me_aktuell` | Variable, Eingabe | draft | `openfisca-CH-SG/openfisca_ch_sg/variables/personen.py` |
+| Art. 6 Abs. 1 und 2 KiBG; Art. 20 Abs. 1 KiBG; Art. 14 Abs. 4 KiBV (Entwurf) | `kibg_mindestbeitrag` | Variable, Formel | draft | `openfisca-CH-SG/openfisca_ch_sg/variables/beitrag.py` |
+| Art. 6 Abs. 1 KiBG; Art. 20 Abs. 1 KiBG; Art. 13 KiBV (Entwurf); Anhang KiBV (Entwurf) | `kibg_mindestbeitrag_pro_stunde` | Variable, Formel | draft | `openfisca-CH-SG/openfisca_ch_sg/variables/beitrag.py` |
 | Art. 7 KiBV (Entwurf); Art. 14 Abs. 4 KiBV (Entwurf) | `betreuungsstunden` | Variable, Eingabe | draft | `openfisca-CH-SG/openfisca_ch_sg/variables/betreuung.py` |
 | Art. 7 KiBV (Entwurf); Art. 14 Abs. 4 KiBV (Entwurf) | `betreuungstage_mit_obhut` | Variable, Eingabe | draft | `openfisca-CH-SG/openfisca_ch_sg/variables/betreuung.py` |
 | Art. 8 Abs. 2 lit. b KiBV (Entwurf) | `beginn_gemeinsamer_haushalt` | Variable, Eingabe | draft | `openfisca-CH-SG/openfisca_ch_sg/variables/haushalt.py` |
 | Art. 8 Abs. 2 lit. b KiBV (Entwurf) | `kibg.einkommen.mindestdauer_konkubinat_jahre` | Parameter | draft | `openfisca-CH-SG/openfisca_ch_sg/parameters/kibg/einkommen.yaml` |
 | Art. 8 Abs. 2 KiBV (Entwurf) | `kibg_gefestigte_lebensgemeinschaft` | Variable, Formel | draft | `openfisca-CH-SG/openfisca_ch_sg/variables/haushalt.py` |
 | Art. 8 Abs. 2 lit. a KiBV (Entwurf) | `verheiratet_oder_eingetragen` | Variable, Eingabe | draft | `openfisca-CH-SG/openfisca_ch_sg/variables/haushalt.py` |
+| Art. 9 Abs. 1 KiBG; Art. 8 Abs. 1 lit. b KiBV (Entwurf) | `kibg_gesuchstellend` | Variable, Eingabe | draft | `openfisca-CH-SG/openfisca_ch_sg/variables/personen.py` |
+| Art. 9 Abs. 1 KiBG; Art. 8 Abs. 1 lit. b KiBV (Entwurf) | `kibg_gesuchsteller` | Variable, Formel | draft | `openfisca-CH-SG/openfisca_ch_sg/variables/anspruch.py` |
 | Art. 10 Abs. 1 KiBV (Entwurf) | `besteuerungsart` | Variable, Eingabe | draft | `openfisca-CH-SG/openfisca_ch_sg/variables/personen.py` |
 | Art. 11 Abs. 2 KiBV (Entwurf) | `kibg.einkommen.schwelle_abweichung` | Parameter | draft | `openfisca-CH-SG/openfisca_ch_sg/parameters/kibg/einkommen.yaml` |
 | Art. 12 KiBV (Entwurf) | `kibg_ausnahmegrund` | Variable, Eingabe | draft | `openfisca-CH-SG/openfisca_ch_sg/variables/anspruch.py` |
-| Art. 13 und Anhang KiBV (Entwurf) | `kibg_beitrag_pro_stunde` | Variable, Formel | draft | `openfisca-CH-SG/openfisca_ch_sg/variables/beitrag.py` |
+| Art. 13 KiBV (Entwurf); Anhang KiBV (Entwurf) | `kibg_beitrag_pro_stunde` | Variable, Formel | draft | `openfisca-CH-SG/openfisca_ch_sg/variables/beitrag.py` |
 | Art. 13 und Anhang KiBV (Entwurf); Art. 15 KiBV (Entwurf) | `kibg_einkommensfaktor` | Variable, Formel | draft | `openfisca-CH-SG/openfisca_ch_sg/variables/einkommen.py` |
 | Art. 14 Abs. 1 und 2 KiBV (Entwurf) | `kibg.hoechstbeitrag.altersgrenze_monate` | Parameter | draft | `openfisca-CH-SG/openfisca_ch_sg/parameters/kibg/hoechstbeitrag.yaml` |
 | Art. 14 Abs. 1 lit. a KiBV (Entwurf) | `kibg.hoechstbeitrag.unter_18_monate.kita` | Parameter | draft | `openfisca-CH-SG/openfisca_ch_sg/parameters/kibg/hoechstbeitrag.yaml` |
 | Art. 14 Abs. 1 lit. b KiBV (Entwurf) | `kibg.hoechstbeitrag.unter_18_monate.tagesfamilie` | Parameter | draft | `openfisca-CH-SG/openfisca_ch_sg/parameters/kibg/hoechstbeitrag.yaml` |
 | Art. 14 Abs. 1 bis 3 KiBV (Entwurf) | `kibg_altersstufe` | Variable, Formel | draft | `openfisca-CH-SG/openfisca_ch_sg/variables/beitrag.py` |
 | Art. 14 Abs. 1 bis 3 KiBV (Entwurf) | `kibg_hoechstbeitrag` | Variable, Formel | draft | `openfisca-CH-SG/openfisca_ch_sg/variables/beitrag.py` |
-| Art. 14 Abs. 2 lit. a KiBV (Entwurf) | `kibg.hoechstbeitrag.ab_18_monate.kita` | Parameter | draft | `openfisca-CH-SG/openfisca_ch_sg/parameters/kibg/hoechstbeitrag.yaml` |
-| Art. 14 Abs. 2 lit. b KiBV (Entwurf) | `kibg.hoechstbeitrag.ab_18_monate.tagesfamilie` | Parameter | draft | `openfisca-CH-SG/openfisca_ch_sg/parameters/kibg/hoechstbeitrag.yaml` |
-| Art. 14 Abs. 3 KiBV (Entwurf) | `eingeschult` | Variable, Eingabe | draft | `openfisca-CH-SG/openfisca_ch_sg/variables/betreuung.py` |
+| Art. 14 Abs. 2 und 3 KiBV (Entwurf); Art. 16 Abs. 1 KiBV (Entwurf) | `eingeschult` | Variable, Eingabe | draft | `openfisca-CH-SG/openfisca_ch_sg/variables/betreuung.py` |
+| Art. 14 Abs. 2 lit. a KiBV (Entwurf) | `kibg.hoechstbeitrag.ueber_18_monate.kita` | Parameter | draft | `openfisca-CH-SG/openfisca_ch_sg/parameters/kibg/hoechstbeitrag.yaml` |
+| Art. 14 Abs. 2 lit. b KiBV (Entwurf) | `kibg.hoechstbeitrag.ueber_18_monate.tagesfamilie` | Parameter | draft | `openfisca-CH-SG/openfisca_ch_sg/parameters/kibg/hoechstbeitrag.yaml` |
 | Art. 14 Abs. 3 lit. a KiBV (Entwurf) | `kibg.hoechstbeitrag.eingeschult.kita` | Parameter | draft | `openfisca-CH-SG/openfisca_ch_sg/parameters/kibg/hoechstbeitrag.yaml` |
 | Art. 14 Abs. 3 lit. b KiBV (Entwurf) | `kibg.hoechstbeitrag.eingeschult.schulergaenzend` | Parameter | draft | `openfisca-CH-SG/openfisca_ch_sg/parameters/kibg/hoechstbeitrag.yaml` |
 | Art. 14 Abs. 3 lit. c KiBV (Entwurf) | `kibg.hoechstbeitrag.eingeschult.tagesfamilie` | Parameter | draft | `openfisca-CH-SG/openfisca_ch_sg/parameters/kibg/hoechstbeitrag.yaml` |
@@ -121,6 +128,7 @@ _Syllabus: the technical solution clearly responds to the legal problem identifi
 | Art. 15 Abs. 1 KiBV (Entwurf) | `kibg.einkommen.min` | Parameter | draft | `openfisca-CH-SG/openfisca_ch_sg/parameters/kibg/einkommen.yaml` |
 | Art. 15 Abs. 2 KiBV (Entwurf) | `kibg.einkommen.max` | Parameter | draft | `openfisca-CH-SG/openfisca_ch_sg/parameters/kibg/einkommen.yaml` |
 | Art. 20 Abs. 2 und 3 KiBG; Art. 24 KiBV (Entwurf) | `kibg_zusatzbeitrag` | Variable, Formel | draft | `openfisca-CH-SG/openfisca_ch_sg/variables/beitrag.py` |
+| Art. 20 Abs. 2 KiBG; Art. 24 KiBV (Entwurf) | `kibg_zusatzbeitrag_pro_stunde` | Variable, Formel | draft | `openfisca-CH-SG/openfisca_ch_sg/variables/beitrag.py` |
 | Art. 20 Abs. 2 KiBG; Art. 24 KiBV (Entwurf) | `kibg_zusatzbeitrag_z1` | Variable, Eingabe | draft | `openfisca-CH-SG/openfisca_ch_sg/variables/beitrag.py` |
 | Art. 20 Abs. 2 KiBG; Art. 24 KiBV (Entwurf) | `kibg_zusatzbeitrag_z2` | Variable, Eingabe | draft | `openfisca-CH-SG/openfisca_ch_sg/variables/beitrag.py` |
 
@@ -129,6 +137,8 @@ _1 element(s) in the model have no article reference (template demo or still to 
 **Open legal questions and ambiguities** (from `Question:` lines):
 
 - How is the limit of 5 days per week converted to a month, and which care modules and monthly flat rates apply (guidelines not public)? (`93b5f81`, Karla Ruggaber, 2026-11-07)
+- Art. 8 Abs. 1 lit. b KiBV counts, with separated parents, only the income of the applying Erziehungsberechtigte person (and of a partner in a gefestigte Lebensgemeinschaft). The code sums the income of all Erziehungsberechtigte in the household and relies on the convention that only the applicant is entered. Example: father applies (Fr. 51'400), the separated mother (Fr. 80'000) is entered by mistake as second Erziehungsberechtigte with no shared household: code Fr. 131'400, text Fr. 51'400. Should the code use kibg_gesuchsteller so that only the applicant's income counts, as the wording says? (`fcf09a4`, Karla Ruggaber, 2026-11-07)
+- Art. 11 Abs. 2 KiBV requires the deviation of 25 % "zum Zeitpunkt der Gesuchstellung"; afterwards the assessment stays until a new assessment is requested under Art. 11 Abs. 3 KiBV. The code checks the 25 % in every month, so it switches back to the tax assessment if the deviation later falls below 25 %, and switches without a new request if it arises later. Should the income at the time of the application be a separate input, checked only once? (`fcf09a4`, Karla Ruggaber, 2026-11-07)
 
 **Decisions**
 
@@ -147,7 +157,7 @@ _1 element(s) in the model have no article reference (template demo or still to 
 | 2026-11-07 | Age of the child and duration of a partnership are determined on the first day of the month and apply to the whole month | Contributions are computed per month; the text sets no reference day | Art. 4 Abs. 3 KiBG; Art. 8 Abs. 2 lit. b und Art. 14 KiBV (Entwurf); team decision | `2f3d8b5` | Karla Ruggaber |
 | 2026-11-07 | If minimum and supplementary contribution together exceed the costs, the municipal supplement is cut first | Art. 6 Abs. 2 KiBG already caps the minimum contribution at the costs; Art. 20 Abs. 3 KiBG then caps the sum | Art. 6 Abs. 2 und Art. 20 Abs. 3 KiBG; team decision | `2f3d8b5` | Karla Ruggaber |
 | 2026-11-07 | No separate rate for private special schools: entitlement follows from Art. 3 Abs. 2 lit. d KiBG, the amount from the form of care (Kita, schulergaenzende Betreuung or Tagesfamilie) | Art. 14 Abs. 3 KiBV sets the rate for school children by form of care, not by school | Art. 3 Abs. 2 lit. d KiBG; Art. 14 Abs. 3 KiBV (Entwurf); team decision | `2f3d8b5` | Karla Ruggaber |
-| 2026-11-07 | kibg_wohnsitz_erfuellt is true if every erziehungsberechtigte person in the applicant's household lives in the canton (provisional, legal team to confirm) | Implements O8 (the applicant must live in the canton); in a gemeinsamer Haushalt both parents share the residence | Art. 4 Abs. 1 KiBG; Art. 2 KiBV (Entwurf) | `6b073a8` | Benjamin Pfister |
+| 2026-11-07 | ~~kibg_wohnsitz_erfuellt is true if every erziehungsberechtigte person in the applicant's household lives in the canton (provisional, legal team to confirm)~~ (superseded by the decision that only the applicant must live in the canton) | Implements O8 (the applicant must live in the canton); in a gemeinsamer Haushalt both parents share the residence | Art. 4 Abs. 1 KiBG; Art. 2 KiBV (Entwurf) | `6b073a8`, `fcf09a4` | Benjamin Pfister, Karla Ruggaber |
 | 2026-11-07 | Care in a private special school uses the rate for schulergaenzende Betreuung of school children; combinations without a rate in the text (e.g. schulergaenzende Betreuung before school) give no contribution (provisional, legal team to confirm) | Art. 3 Abs. 2 lit. d KiBG covers the schulergaenzende Betreuung of the special school; Art. 14 KiBV sets no other rate | Art. 3 Abs. 2 lit. d KiBG; Art. 14 Abs. 3 KiBV (Entwurf); decision on O11 | `6b073a8` | Benjamin Pfister |
 | 2026-11-07 | Without entitlement the parents' remaining costs are the full costs (provisional, legal team to confirm) | Art. 12 Abs. 2 KiBG: the contribution is deducted from the invoice; without contribution nothing is deducted | Art. 12 Abs. 2 KiBG | `6b073a8` | Benjamin Pfister |
 | 2026-11-07 | The 25 % deviation is compared on the income of the household, not per person (provisional, legal team to confirm) | Art. 11 Abs. 2 KiBV refers to the massgebendes Einkommen und Vermoegen, which is a household amount under Art. 8 | Art. 11 Abs. 2 KiBV (Entwurf); Art. 8 Abs. 1 KiBV (Entwurf) | `6b073a8` | Benjamin Pfister |
@@ -158,6 +168,12 @@ _1 element(s) in the model have no article reference (template demo or still to 
 | 2026-11-07 | The other parent of separated parents is not part of the applicant's household and is not entered (G44) | Follows the household convention and the decision on O8 | Art. 4 Abs. 1 KiBG; Art. 2 KiBV (Entwurf) | `96564c3` | Benjamin Pfister |
 | 2026-11-07 | Time limits in days start on the day after the event; time limits in months end on the day with the same number (by analogy to Art. 77 OR); a request on 2028-11-01 is still within the transition period | KiBG and KiBV do not regulate how time limits are counted | Art. 9 Abs. 2 KiBG; Art. 25 Abs. 1 KiBV (Entwurf); Art. 77 OR; team decision | `4f83ca2` | Karla Ruggaber |
 | 2026-11-07 | A child counts as eingeschult from entry into the compulsory Kindergarten | Art. 16 Abs. 1 KiBV links to the year in which the child becomes schulpflichtig; in St. Gallen compulsory schooling starts with Kindergarten. Only relevant for schulergaenzende Betreuung, since Kita and Tagesfamilie rates are the same before and after school entry | Art. 14 Abs. 2 und 3, Art. 16 Abs. 1 KiBV (Entwurf); team decision | `4f83ca2` | Karla Ruggaber |
+| 2026-11-07 | Without a birth date of a child the model computes no contribution but stops with an error (Web API status 400 naming the field) | Minimum age (Art. 4 Abs. 3 KiBG) and maximum rate (Art. 14 KiBV) cannot be determined; a default date must not create an entitlement | Art. 4 Abs. 3 KiBG; Art. 14 KiBV (Entwurf); team decision | `fcf09a4` | Karla Ruggaber |
+| 2026-11-07 | Only the applicant must have civil domicile in the canton; with two Erziehungsberechtigte in the household the applicant must be entered (kibg_gesuchstellend), otherwise the model stops with an error; a single Erziehungsberechtigte person is the applicant | Decision on O8; the application is made by an Erziehungsberechtigte person (Art. 9 Abs. 1 KiBG) | Art. 4 Abs. 1 und Art. 9 Abs. 1 KiBG; Art. 2 KiBV (Entwurf); team decision | `fcf09a4` | Karla Ruggaber |
+| 2026-11-07 | The annex formula is written once in the code (formel_anhang) and applied where the text applies it: B with Z1 and Z2, the minimum contribution (Art. 6 and Art. 20 Abs. 1 KiBG) with Z1 = Z2 = 0; the supplement is B minus the minimum contribution (Art. 20 Abs. 2 KiBG) | Strictly coding the official text: the formula appears once in the text, the split into minimum and supplementary contribution follows from Art. 20 KiBG | Art. 13 und Anhang KiBV (Entwurf); Art. 6 und 20 KiBG | `fcf09a4` | Karla Ruggaber |
+| 2026-11-07 | Art. 4 Abs. 1 lit. a and lit. b KiBG are separate variables (kibg_beschaeftigung_lit_a_erfuellt, kibg_beschaeftigung_lit_b_erfuellt), combined cumulatively | Line-to-line match: each letter of the text is one element of the code; decision on O3 | Art. 4 Abs. 1 KiBG | `fcf09a4` | Karla Ruggaber |
+| 2026-11-07 | Names, labels and descriptions use the wording of the text: ueber_18_monate (Art. 14 Abs. 2 KiBV), the three grounds of Art. 12 KiBV verbatim, Art. 15 Abs. 2 KiBV verbatim with the interpretation O4 marked separately, eingeschult names assumption A8 | Line-to-line match; interpretations must not appear as if they were the text | Art. 12, 14 und 15 KiBV (Entwurf) | `fcf09a4` | Karla Ruggaber |
+| 2026-11-07 | Art. 14 Abs. 5 KiBV, Art. 21 KiBG and Art. 23 lit. f KiBG are not encoded because the material does not regulate them (guidelines not public, other support undefined, no rule for facilities outside the canton) | Nothing to encode line-to-line | Art. 21 und 23 KiBG; Art. 14 Abs. 5 KiBV (Entwurf); openfisca-CH-SG/README.md | `fcf09a4` | Karla Ruggaber |
 
 ## 4. Responsible and ethical technology design
 
@@ -170,6 +186,7 @@ _Syllabus: awareness of privacy, security, fairness, transparency, accountabilit
 | 2026-11-07 | The calculator never takes discretionary decisions; it refers to the municipality instead | Limits of automation; OpenFisca principle "human decisions are inputs" | Art. 4 Abs. 2 KiBG; Art. 12 KiBV (Entwurf) | `288a151` | Benjamin Pfister |
 | 2026-11-07 | Missing inputs give a range instead of an error; every result carries a disclaimer (non-binding estimate, draft ordinance, no data stored) | Transparency about uncertainty and data protection | team decision; Art. 21-23 KiBV (Entwurf) | `288a151` | Benjamin Pfister |
 | 2026-11-07 | Default values are conservative: residence, recognised facility and other conditions are false unless entered; me_aktuell -1 means not entered (assessment applies); without a start date a partnership never counts as gefestigt | The calculator must not promise a contribution on facts nobody entered | team decision | `6b073a8` | Benjamin Pfister |
+| 2026-11-07 | If kibg_anspruch is true but the contribution is 0 (no rate in Art. 14 KiBV or income above Fr. 154'000), the interface explains why instead of showing only Fr. 0 | Parents must understand that they meet the conditions but the text sets no amount for their case | Art. 14 und 15 KiBV (Entwurf); docs/output-konzept.md | `fcf09a4` | Karla Ruggaber |
 
 ## 5. Documentation and reproducibility
 
@@ -209,7 +226,7 @@ _Syllabus: each member's contribution, and disclosure of AI tools, open-source c
 
 | Member | Commits | First | Last | Files changed per area |
 |---|---|---|---|---|
-| Karla Ruggaber | 17 | 2026-11-04 | 2026-11-07 | other (62), rules (60), tests (45), docs (24), tooling (18), materials (4) |
+| Karla Ruggaber | 19 | 2026-11-04 | 2026-11-07 | rules (67), other (64), tests (48), docs (29), tooling (18), materials (4) |
 | Benjamin Pfister | 14 | 2026-10-10 | 2026-11-07 | docs (65), rules (34), tests (19), other (18), tooling (11) |
 
 _Add contributions that don't show in git (legal analysis, testing by hand, pitch, ...) by hand in the report._
@@ -241,6 +258,20 @@ _Add contributions that don't show in git (legal analysis, testing by hand, pitc
 
 ### 2026-11-07
 
+- **Align KiBG code line-to-line with the text after review** (`fcf09a4`, Karla Ruggaber, 17:20)
+  - Decision: Without a birth date of a child the model computes no contribution but stops with an error (Web API status 400 naming the field)
+  - Decision: kibg_wohnsitz_erfuellt is true if every erziehungsberechtigte person in the applicant's household lives in the canton (provisional, legal team to confirm)
+  - Decision: Only the applicant must have civil domicile in the canton; with two Erziehungsberechtigte in the household the applicant must be entered (kibg_gesuchstellend), otherwise the model stops with an error; a single Erziehungsberechtigte person is the applicant
+  - Decision: The annex formula is written once in the code (formel_anhang) and applied where the text applies it: B with Z1 and Z2, the minimum contribution (Art. 6 and Art. 20 Abs. 1 KiBG) with Z1 = Z2 = 0; the supplement is B minus the minimum contribution (Art. 20 Abs. 2 KiBG)
+  - Decision: Art. 4 Abs. 1 lit. a and lit. b KiBG are separate variables (kibg_beschaeftigung_lit_a_erfuellt, kibg_beschaeftigung_lit_b_erfuellt), combined cumulatively
+  - Decision: Names, labels and descriptions use the wording of the text: ueber_18_monate (Art. 14 Abs. 2 KiBV), the three grounds of Art. 12 KiBV verbatim, Art. 15 Abs. 2 KiBV verbatim with the interpretation O4 marked separately, eingeschult names assumption A8
+  - Decision: Date and duration rules are not encoded yet (Art. 9 Abs. 2 und 11 Abs. 2 KiBG; Art. 6, 11 Abs. 3, 16 und 25 KiBV); scenarios D1 to D9 are ready
+  - Decision: Art. 17 KiBG (total volume and its adjustment) is not encoded
+  - Decision: Art. 14 Abs. 5 KiBV, Art. 21 KiBG and Art. 23 lit. f KiBG are not encoded because the material does not regulate them (guidelines not public, other support undefined, no rule for facilities outside the canton)
+  - Decision: If kibg_anspruch is true but the contribution is 0 (no rate in Art. 14 KiBV or income above Fr. 154'000), the interface explains why instead of showing only Fr. 0
+  - Files: `challenge/line-to-line-rules.md` (changed), `challenge/szenarien.md` (changed), `docs/output-konzept.md` (changed), `openfisca-CH-SG/README.md` (changed), `openfisca-CH-SG/openfisca_ch_sg/hilfsfunktionen.py` (changed), `openfisca-CH-SG/openfisca_ch_sg/parameters/kibg/einkommen.yaml` (changed), `openfisca-CH-SG/openfisca_ch_sg/parameters/kibg/hoechstbeitrag.yaml` (changed), `openfisca-CH-SG/openfisca_ch_sg/situation_examples/p1_paar_kita.json` (changed), `openfisca-CH-SG/openfisca_ch_sg/tests/grenzfaelle.yaml` (changed), `openfisca-CH-SG/openfisca_ch_sg/tests/personas.yaml` (changed), `openfisca-CH-SG/openfisca_ch_sg/tests/test_eingabefehler.py` (added), `openfisca-CH-SG/openfisca_ch_sg/variables/anspruch.py` (changed), and 4 more
+- **Rebuild documentation file with confirmed assumptions** (`e7d77c3`, Karla Ruggaber, 16:48)
+  - Files: `docs/CHANGELOG_DECISIONS.md` (changed)
 - **List G49 among the cases that depend on assumption A1** (`c66455b`, Karla Ruggaber, 16:48)
   - Files: `challenge/szenarien.md` (changed)
 - **Confirm assumptions on time limits and school entry in scenario catalogue** (`4f83ca2`, Karla Ruggaber, 16:29)
