@@ -1,12 +1,15 @@
 
 # ^ Subject: what changed, in a few words, with the article if relevant.
-#   e.g. "Add income limit for childcare contribution (Art. 6 KiBG)"
+#   e.g. "Add Einkommen of partner in gefestigter Lebensgemeinschaft (Art. 8 KiBV)"
 #
-# Did you decide how to read the law, or make an assumption? Remove the "# "
-# in front of the lines below. They are copied automatically into
-# docs/CHANGELOG_DECISIONS.md after the push. Repeat the block for more
-# decisions.
+# Lines below go into docs/CHANGELOG_DECISIONS.md, the basis for the report.
+# Remove the "# " in front of the ones you need; repeat blocks as needed.
 #
 # Decision: <what we decided / how we interpret the rule>
+# Area: legal | function | design | ethics | repro | team
 # Reason: <why>
-# Source: <Art. X Abs. Y KiBG / Art. X Verordnung (Entwurf) / team assumption>
+# Source: <Art. 8 Abs. 1 lit. b KiBV (Entwurf) / Art. 6 Abs. 2 KiBG / team decision>
+#
+# Question: <open legal question or ambiguity in the text>
+# AI: <tool>: <what it was used for in this commit>
+# External: <resource or library>: <what it was used for>

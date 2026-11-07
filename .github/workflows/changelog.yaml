@@ -1,11 +1,11 @@
 ---
 name: Update changes and decisions
 
-# After every push to main, rebuild docs/CHANGELOG_DECISIONS.md from the git
-# history and commit it. Remember to pull afterwards.
+# Rebuilds docs/CHANGELOG_DECISIONS.md from the git history and the code, and
+# commits it. Runs only on demand: Actions -> "Update changes and decisions"
+# -> Run workflow. Run it at least once before the submission. Pull afterwards.
 on:
-  push:
-    branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -22,6 +22,11 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Install uv
+        uses: astral-sh/setup-uv@v9.0.0
+        with:
+          enable-cache: true
+
       - name: Rebuild and commit
         run: |
           git config user.name "github-actions[bot]"
@@ -29,7 +34,7 @@ jobs:
           for attempt in 1 2 3; do
             git fetch origin main
             git reset --hard origin/main
-            python3 tools/build_changelog.py
+            uv run --project openfisca-CH-SG --frozen python tools/build_changelog.py
             if git diff --quiet -- docs/CHANGELOG_DECISIONS.md; then
               echo "Already up to date."
               exit 0

@@ -20,7 +20,7 @@ Useful commands (run from the repository root):
 | Run all push checks now | `uv run --project openfisca-CH-SG pre-commit run --all-files --hook-stage pre-push` |
 | Only the rulebook checker | `uv run --project openfisca-CH-SG python tools/check_openfisca.py` |
 | Only the OpenFisca tests | `cd openfisca-CH-SG && make test` |
-| Rebuild the change log locally | `python3 tools/build_changelog.py` |
+| Rebuild the documentation file locally | `uv run --project openfisca-CH-SG python tools/build_changelog.py` |
 
 ## 1. Where our code goes
 
@@ -58,30 +58,56 @@ From the *Introduction to OpenFisca* (slide "An OpenFisca model is a set of rule
 3. **Users can plug in their own data.** Inputs have clear names, units and
    labels so a questionnaire or dataset can fill them.
 4. **The 4 key concepts:**
-   - **Periods**: every rule has a start date (`formula_2027_01`) and every
-     parameter value has a date. Use the date the provision **enters into force**.
+   - **Periods**: every rule has a start date and every parameter value has a
+     date. See "Start date" below.
    - **Parameters**: every amount, rate, threshold and age limit from the law
      goes into `parameters/*.yaml`, never into Python code.
-   - **Entities**: say *who* the rule applies to (person or household), as the
-     law does (Erziehungsberechtigte, Kind, Familie).
+   - **Entities**: say *who* the rule applies to, with the terms of the text:
+     Erziehungsberechtigte and Kind (Art. 2 Abs. 1 KiBG), the gemeinsamer or
+     getrennter Haushalt of the Erziehungsberechtigten (Art. 8 Abs. 1 lit. a/b
+     KiBV), and the Partnerin or Partner in a gefestigte Lebensgemeinschaft who
+     is not erziehungsberechtigt (Art. 8 Abs. 1 lit. b and Abs. 2 KiBV).
    - **Variables**: everything that is calculated or entered.
+
+### Names: German legal terms
+
+Variables and parameters are named with the **German terms of the text**, so the
+lawyers in the team can compare code and text line by line:
+
+- snake_case, ASCII only: `massgebendes_einkommen`, `erziehungsberechtigte`,
+  `kostenobergrenze` (ä → ae, ö → oe, ü → ue; the checker warns on umlauts).
+- `label` in German, close to the wording of the article.
+- No prefix needed: the template demo is being replaced.
+
+### Start date
+
+The Vollzugsbeginn is still open: the government sets it (KiBG Ziff. IV Nr. 1)
+and the KiBV applies "ab ●●" (KiBV Ziff. IV). Until it is known, we use the
+**placeholder 1 August 2028**:
+
+- formulas: `formula_2028_08`
+- parameter values: `2028-08-01`
+- tests: `period: 2028-08` or later
+
+When the real date is published, replace these everywhere and record it as a
+`Decision:`.
 
 ## 3. Legal sources and citation
 
 | Source | File | Status |
 |---|---|---|
 | Gesetz über Beiträge für familien- und schulergänzende Kinderbetreuung (**KiBG**) | `challenge/Gesetz.pdf` | The PDF is the *result of the first reading* (16 Sept 2025). The law was adopted on 14 June 2026. **Check provisions against the adopted version.** |
-| Verordnung über Beiträge für familien- und schulergänzende Kinderbetreuung | `challenge/Verordnung.pdf` | **Draft** (RRB 2026/733), open for comments until 15 Nov 2026. Not in force. |
+| Verordnung über Beiträge für familien- und schulergänzende Kinderbetreuung (**KiBV**, footnote 2 of the draft) | `challenge/Verordnung.pdf` | **Draft** (RRB 2026/733), open for comments until 15 Nov 2026. Not in force. |
 
 Citation format for `reference`:
 
-- Law: `Art. 6 Abs. 1 KiBG`
-- Ordinance: `Art. 3 Abs. 2 Verordnung KiBG (Entwurf)`
+- Law: `Art. 6 Abs. 2 KiBG`
+- Ordinance: `Art. 8 Abs. 1 lit. b KiBV (Entwurf)`
 - Add the official URL when available, e.g.
-  `reference = ["Art. 6 Abs. 1 KiBG", "https://www.sg.ch/..."]`
+  `reference = ["Art. 6 Abs. 2 KiBG", "https://www.sg.ch/..."]`
 
-Rules taken from the draft ordinance must say `(Entwurf)` in the reference, so
-rules in force and draft rules can always be told apart.
+Every KiBV reference must say `(Entwurf)`, so rules in force and draft rules can
+always be told apart. The checker warns if it is missing.
 
 ## 4. What is checked, and when
 
@@ -92,7 +118,7 @@ rules in force and draft rules can always be told apart.
 | every push | everything above + **all OpenFisca tests** | yes |
 | every push | **rulebook checker** (`tools/check_openfisca.py`) | see below |
 | on GitHub, every push | the same push checks again (`.github/workflows/checks.yaml`) | shows a red X |
-| on GitHub, push to `main` | `docs/CHANGELOG_DECISIONS.md` is rebuilt | – |
+| on demand | `docs/CHANGELOG_DECISIONS.md` is rebuilt (see section 6) | – |
 
 ### Rulebook checker: errors (block the push)
 
@@ -107,78 +133,109 @@ rules in force and draft rules can always be told apart.
 
 - No `reference`, a placeholder reference (`example`), or a reference without
   an article (`Art. ...`).
+- KiBV reference without `(Entwurf)`, or the ordinance cited as "Verordnung KiBG".
 - Parameter without `metadata.unit` (`currency-CHF`, `/1` for rates, `year`, ...).
 - Hard-coded numbers other than 0 and 1 in a formula (should be a parameter).
 - Variable with a formula but no test case in `tests/`.
-- Variable name not in snake_case; test case without `name`.
+- Variable name not in snake_case or with umlauts; test case without `name`.
 
 ## 5. Examples of the expected format
 
-Variable (`variables/eligibility.py`):
+Variable (`variables/beitrag.py`), coding Art. 6 Abs. 2 KiBG ("Ein Beitrag darf
+die Kosten der Erziehungsberechtigten für das in Anspruch genommene
+Betreuungsangebot nicht übersteigen"):
 
 ```python
+from openfisca_core.model_api import min_
 from openfisca_core.periods import MONTH
 from openfisca_core.variables import Variable
 
 from openfisca_ch_sg.entities import Household
 
 
-class kibg_income_limit_met(Variable):
-    value_type = bool
+class beitrag(Variable):
+    value_type = float
     entity = Household
     definition_period = MONTH
-    label = "Household income is below the KiBG income limit"
-    reference = "Art. X Abs. Y KiBG"  # replace with the real article
+    label = "Beitrag, begrenzt auf die Kosten des Betreuungsangebots"
+    reference = "Art. 6 Abs. 2 KiBG"
 
-    def formula_2027_01(household, period, parameters):
-        limit = parameters(period).kibg.income_limit
-        return household("kibg_determining_income", period) <= limit
+    def formula_2028_08(haushalt, period, parameters):
+        beitrag_linear = haushalt("beitrag_lineares_modell", period)  # Art. 6 Abs. 1
+        kosten = haushalt("kosten_betreuungsangebot", period)
+        return min_(beitrag_linear, kosten)
 ```
 
-Parameter (`parameters/income_limit.yaml`):
+Parameter (`parameters/einkommensgrenze.yaml`). Article and number are
+placeholders; take both from the text:
 
 ```yaml
-description: Income limit for childcare contributions
+description: Obergrenze des massgebenden Einkommens
 metadata:
   unit: currency-CHF
-  reference: Art. X Abs. Y Verordnung KiBG (Entwurf)
+  reference: Art. X Abs. Y KiBV (Entwurf)
 values:
-  2027-01-01:
-    value: 100000  # placeholder, take the number from the text
+  2028-08-01:
+    value: 100000
 ```
 
-Test (`tests/eligibility.yaml`):
+Test (`tests/beitrag.yaml`), calculated by hand from the article:
 
 ```yaml
-- name: Household just below the income limit is eligible (Art. X KiBG)
-  period: 2027-01
+- name: Beitrag übersteigt die Kosten nicht (Art. 6 Abs. 2 KiBG)
+  period: 2028-08
   input:
-    kibg_determining_income: 99999
+    beitrag_lineares_modell: 900
+    kosten_betreuungsangebot: 700
   output:
-    kibg_income_limit_met: true
+    beitrag: 700
 ```
 
-Numbers and dates above are placeholders, not legal values.
+## 6. Commit messages and the documentation file
 
-## 6. Commit messages, decisions and the change log
-
-Every interpretation of the law, assumption or open question goes into the
-**commit message**, using the template that opens with `git commit`:
+Every interpretation of the law, assumption, open question and use of AI goes
+into the **commit message**, using the template that opens with `git commit`:
 
 ```text
-Add income limit for childcare contribution (Art. 6 KiBG)
+Add Einkommen der Partnerin/des Partners (Art. 8 Abs. 1 lit. b KiBV)
 
-Decision: Income limit is applied per household, not per parent
-Reason: Art. 6 speaks of the "Familie"; confirmed in team call
-Source: Art. 6 Abs. 1 KiBG
+Decision: Income of a partner counts only if they share the household in a gefestigte Lebensgemeinschaft and are not erziehungsberechtigt
+Area: legal
+Reason: Wording of Art. 8 Abs. 1 lit. b KiBV; "gefestigt" is defined in Abs. 2
+Source: Art. 8 Abs. 1 lit. b und Abs. 2 KiBV (Entwurf)
+Question: Is the two-year Konkubinat (Art. 8 Abs. 2 lit. b KiBV) measured at the application date or for each month?
+AI: Claude Code: drafted the formula and test, checked by the team against the text
 ```
 
-After every push to `main`, GitHub rebuilds **`docs/CHANGELOG_DECISIONS.md`**
-from the git history: a table of all decisions and a dated list of all changes.
-Don't edit that file by hand; it is regenerated each time. **Run `git pull`
-after your push** to get the updated file.
+| Line | Use for | Goes to |
+|---|---|---|
+| `Decision:` + `Area:`, `Reason:`, `Source:` | interpretations, assumptions, design choices | decision table of the section given by `Area:` |
+| `Area:` | `function`, `design`, `legal`, `ethics`, `repro` or `team` | one of the 6 report sections |
+| `Status: superseded ...` | restate an old `Decision:` text to retire it | shown struck through |
+| `Question:` | open legal questions, ambiguities in the text | section 3 |
+| `AI:` | every use of an AI tool | section 6, Statement of AI Use |
+| `External:` | libraries, templates, sources used | section 6 |
 
-## 7. Emergencies
+**`docs/CHANGELOG_DECISIONS.md`** is generated from these lines and from the
+code. Its sections follow the evaluation criteria of the course syllabus:
+functionality, technical design, legal–technical integration (with a table of
+which article is encoded where), responsible design, reproducibility, and team
+contribution with AI use. That makes it the starting point for the report.
+
+It is **not** rebuilt on every push (that would add a bot commit each time).
+Rebuild it on demand, **at least once before the submission on 8 Nov**:
+
+- on GitHub: Actions → "Update changes and decisions" → Run workflow, then `git pull`
+- or locally: `uv run --project openfisca-CH-SG python tools/build_changelog.py`,
+  then commit the file
+
+Don't edit the file by hand; it is regenerated each time.
+
+## 7. Working together
+
+`tools/setup.sh` sets `pull.rebase true`, so `git pull` never creates merge
+commits. If a push is rejected because a teammate pushed first: `git pull`,
+then push again.
 
 `git push --no-verify` skips the local checks. Only use it if a check is broken
 rather than your code. GitHub still runs the checks and shows a red X. Fix it

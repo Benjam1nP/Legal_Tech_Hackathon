@@ -12,6 +12,9 @@ command -v uv >/dev/null || {
 (cd openfisca-CH-SG && uv sync --locked --all-extras --dev)
 uv run --project openfisca-CH-SG --frozen pre-commit install
 git config commit.template .gitmessage
+# Rebase instead of merge on pull: no merge commits between teammates
+git config pull.rebase true
+git config rebase.autoStash true
 
 echo
 echo "Done. Checks now run on every commit and push. Read RULEBOOK.md."

@@ -58,6 +58,10 @@ def check_reference(path: Path, line: int | None, texts: list[str], what: str) -
         warn(path, line, f"{what} still uses a placeholder reference ({joined!r})")
     if not ARTICLE_RE.search(joined):
         warn(path, line, f"{what} reference does not name an article (Art. ...)")
+    if "KiBV" in joined and "Entwurf" not in joined:
+        warn(path, line, f"{what} cites the KiBV without '(Entwurf)' (draft)")
+    if re.search(r"Verordnung\s+KiBG", joined):
+        warn(path, line, f"{what} cites 'Verordnung KiBG'; the ordinance is 'KiBV'")
 
 
 # --------------------------------------------------------------------------
@@ -99,6 +103,12 @@ def check_variables() -> dict[str, tuple]:
                 error(path, cls.lineno, f"variable '{name}' is defined twice")
             if name != name.lower():
                 warn(path, cls.lineno, f"variable '{name}' should be snake_case")
+            if not name.isascii():
+                warn(
+                    path,
+                    cls.lineno,
+                    f"variable '{name}' has umlauts; write ae/oe/ue (e.g. massgebend)",
+                )
 
             attrs = {
                 target.id: stmt
