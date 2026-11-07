@@ -628,11 +628,13 @@
 		border: 0;
 	}
 
+	/* Abschnittstitel im Grün des Kantons St. Gallen */
 	h2 {
 		margin: 0;
 		font-size: var(--text-xl);
 		line-height: 1.75rem;
 		font-weight: 700;
+		color: var(--gruen-wappen);
 	}
 
 	/* Unterblöcke (Person 1, 1. Kind …) durch eine Linie getrennt */

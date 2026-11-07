@@ -68,9 +68,9 @@
       "frage": "Für welchen Monat möchten Sie rechnen?",
       "hilfe": "Die neuen Regeln gelten im Rechner ab August 2028 (Platzhalter, der Kanton legt den Beginn noch fest)."
     },
-    "abschnitt_haushalt": "1  Haushalt",
-    "abschnitt_personen": "2  Erziehungsberechtigte",
-    "abschnitt_kinder": "3  Kinder",
+    "abschnitt_haushalt": "Haushalt",
+    "abschnitt_personen": "Erziehungsberechtigte",
+    "abschnitt_kinder": "Kinder",
     "person_einzeln": "Gesuchstellende Person",
     "person": "Person {nr}",
     "partner_titel": "Partnerin oder Partner",
