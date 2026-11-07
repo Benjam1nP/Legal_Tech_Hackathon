@@ -90,6 +90,7 @@
 	}
 
 	.inhalt {
+		width: 100%;
 		max-width: 46rem;
 		margin: 0 auto;
 		padding: 0 1rem;
@@ -98,6 +99,7 @@
 	/* main.inhalt, damit .inhalt (Innenabstand nur seitlich) den Abstand oben
 	   und unten nicht überschreibt */
 	main.inhalt {
+		flex: 1 0 auto;
 		padding-top: 2rem;
 		padding-bottom: 4rem;
 	}
