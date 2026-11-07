@@ -513,7 +513,8 @@
       "legende_schule": "Schule oder Kindergarten",
       "legende_betreuung": "Betreuung nötig (wird berechnet)",
       "bei_stufe": "Woche mit {pensum} % für {person}",
-      "bei_stufe_text": "Mehr Pensum kommt von Montag Vormittag an dazu (umrandet), weniger fällt von Freitag Nachmittag an weg. Die übrigen Angaben bleiben wie im Wochenplan oben."
+      "bei_stufe_text": "Mehr Pensum kommt von Montag Vormittag an dazu (umrandet), weniger fällt von Freitag Nachmittag an weg. Die übrigen Angaben bleiben wie im Wochenplan oben.",
+      "schule_hinweis": "Besucht ein Kind den Kindergarten oder die Schule? Antworten Sie oben bei diesem Kind mit «Ja». Dann erscheint hier eine Zeile für die Schulzeit (vorbelegt: alle Vormittage); in dieser Zeit braucht es keine Betreuung."
     }
   }
 }

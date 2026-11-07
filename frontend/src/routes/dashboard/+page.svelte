@@ -426,9 +426,14 @@
 		<ul class="legende-plan">
 			<li><span class="muster arbeit"></span>{t.wochenplan.legende_arbeit}</li>
 			<li><span class="muster hilfe"></span>{t.wochenplan.legende_hilfe}</li>
-			<li><span class="muster schule"></span>{t.wochenplan.legende_schule}</li>
+			{#if kinder.some((k) => k.eingeschult === true)}
+				<li><span class="muster schule"></span>{t.wochenplan.legende_schule}</li>
+			{/if}
 			<li><span class="muster betreuung"></span>{t.wochenplan.legende_betreuung}</li>
 		</ul>
+		{#if !kinder.some((k) => k.eingeschult === true)}
+			<p class="hinweis">{t.wochenplan.schule_hinweis}</p>
+		{/if}
 	</section>
 
 	<section>
