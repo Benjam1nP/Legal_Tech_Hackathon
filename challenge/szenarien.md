@@ -6,7 +6,7 @@ Verwendung:
 
 - **Tests:** Jedes Szenario wird ein OpenFisca-Test (Beispiel im Anhang).
 - **Frontend und Pitch:** Die Personas (Teil 1) sind die Beispielfamilien für die Demo.
-- **Stellungnahme zur Verordnung:** Die Auslegungsfälle (Teil 4) zeigen an konkreten Zahlen, wo der Text unklar ist und wie wir ihn auslegen.
+- **Stellungnahme zur Verordnung:** Die Auslegungsfälle (Teil 4) und die unklaren Stellen (Teil 7) zeigen an konkreten Zahlen, wo der Text unklar ist und wie wir ihn auslegen.
 
 Die Variablennamen stammen aus `line-to-line-rules.md`, Abschnitt «Variablen: Entität und Periode».
 
@@ -542,6 +542,106 @@ D1, D2 und D10 liegen bewusst im Jahr 2029, ausserhalb der Übergangsfrist, dami
 
 ---
 
+## Teil 7: Unklare Stellen im Text
+
+Hier ist das Recht nicht genau genug: Der Wortlaut lässt zwei oder mehr Lesarten zu, schweigt zu einem Fall, oder Gesetz und Verordnung passen nicht zusammen. Für jede Stelle steht, was unklar ist, ein konkretes Beispiel, was die Lesarten bewirken (in Franken, wenn möglich), wie das Modell heute damit umgeht und ob das Team schon entschieden hat.
+
+Die Beispiele gehen von P1 aus (Faktor 0.5, Kita, 80 Stunden), wenn nichts anderes steht. Die Beträge sind wie im übrigen Katalog gerechnet.
+
+**Stand**
+
+- **entschieden:** Das Team hat eine Auslegung gewählt (O… oder A…); sie ist im Modell umgesetzt.
+- **offen:** Noch kein Entscheid; das Modell folgt einer Lesart oder lässt die Frage über die Eingabe offen.
+- **Stellungnahme:** eignet sich für die Stellungnahme zur Verordnung (Vernehmlassung bis 15. November 2026). Bei Stellen im Gesetz eignet sie sich als Hinweis an den Kanton.
+
+### 7.1 Bereits entschieden
+
+| Stelle | Was unklar war | Entscheid |
+|---|---|---|
+| KiBV 14.1–14.2 | Kind mit genau 18 Monaten: weder «unter» noch «über» 18 Monaten | O2: tieferer Ansatz ab dem 18-Monate-Geburtstag (Q1) |
+| KiBG 4.1 lit. a und b | Genügt bei Paaren die Summe von 120 %? | O3: kumulativ, jede Person mindestens 20 % (Q2) |
+| KiBV 15.2, Anhang | Gilt «kein Beitrag» über Fr. 154'000 auch für Z2? | O4: Z2 wird auch darüber ausgerichtet (Q3) |
+| KiBG 4.1, KiBV 2 | Welcher Elternteil muss im Kanton wohnen? | O8: die gesuchstellende Person (G52, G53) |
+| KiBV 7, 8.1b | Alternierende Obhut: wer stellt das Gesuch? | O10: jeder Elternteil für die eigenen Tage |
+| KiBV 11.2 | Zählt die Abweichung von 25 % auch nach oben? | O12: in beide Richtungen (Q4) |
+| KiBG 3.2d, KiBV 14.3 | Ansatz für private Sonderschulen | O11 erledigt: Betrag nach Betreuungsform |
+| Ganzer Text | Stichtag für Alter und Dauer des Konkubinats im Monat | A1: erster Tag des Monats |
+| Ganzer Text | Rundung | A4: kaufmännisch auf 5 Rappen |
+| KiBG 9.2, KiBV 25 | Berechnung der Fristen | A7: sinngemäss Art. 77 OR |
+| KiBV 14.2–14.3, 16.1 | Ab wann ist ein Kind «eingeschult»? | A8: ab Kindergarten |
+| KiBG 9.2 | Beitragsbeginn mitten im Monat | A9: nur Stunden ab dem Stichtag |
+| KiBV 14.4 | Höchstens 5 Tage pro Woche bei Monatswerten | A3: nicht geprüft (E1) |
+
+### 7.2 Neu gefundene unklare Stellen
+
+#### Einrichtungen
+
+| Nr. | Bestimmung | Was unklar ist | Beispiel und Folge | Umgang im Modell | Stand |
+|---|---|---|---|---|---|
+| U1 | KiBG 3.2c | «Einrichtungen für schulergänzende Betreuung des Volksschulträgers sowie … beauftragte private Trägerschaften, die über ein Qualitätskonzept … verfügen»: Bezieht sich das Qualitätskonzept nur auf die privaten Trägerschaften oder auch auf die Einrichtungen des Volksschulträgers? KiBV 4.2 befreit öffentliche Einrichtungen nur vom **Nachweis**, nicht von der Voraussetzung | Eine Tagesstruktur der Schulgemeinde ohne Qualitätskonzept: nach Lesart 1 anerkannt, nach Lesart 2 nicht; im zweiten Fall Fr. 0 statt Beitrag | Eingabe `kibg_einrichtung_anerkannt`; die Frage stellt sich nicht | offen |
+| U2 | KiBV 3, KiBG 3.2c–d, 23f | KiBV 3 lässt auch **ausserkantonale** Einrichtungen zu. Für schulergänzende Betreuung verlangt KiBG 3.2c–d aber ein Qualitätskonzept bzw. eine Leistungsvereinbarung nach dem **St. Galler** Volksschulgesetz, das ausserkantonale Angebote nicht erfüllen können. KiBG 23f verlangt Regeln zum Verfahren bei ausserkantonaler Betreuung, die KiBV enthält keine | Kind wohnt in Wil SG, besucht den Mittagstisch in Sirnach TG: Kita in Sirnach wäre anerkannt (Bundesrecht), der Mittagstisch kaum | Eingabe `kibg_einrichtung_anerkannt` | offen, Stellungnahme |
+| U3 | KiBV 5.3, 6 | Das Amt kann die Teilnahme **provisorisch** bestätigen. Art. 6 sagt nicht, ob der Teilnahmebeginn an die provisorische oder an die definitive Bestätigung anknüpft, und nicht, was gilt, wenn die Nachweise nicht innert eines Monats nachgereicht werden | Provisorisch bestätigt 20.8., definitiv 25.9.: Teilnahme ab 1.9. oder erst ab 1.10.? Im September Fr. 440 oder Fr. 0 | Eingabe `kibg_einrichtung_bestaetigt_am`: es zählt das eingegebene Datum | offen, Stellungnahme |
+| U4 | KiBG 3.3, KiBV 5–6 | Nach dem Gesetz ist eine Einrichtung «angemeldet», sobald sie sich angemeldet hat. Nach der Verordnung nimmt sie erst ab dem Folgemonat nach der **Bestätigung** teil. Zwischen Anmeldung und Bestätigung ist sie angemeldet, nimmt aber nicht teil; die Verordnung ist strenger als das Gesetz | Anmeldung 1.8., Bestätigung 10.9.: nach dem Gesetz Beiträge ab August möglich, nach der KiBV erst ab Oktober | Folgt der KiBV (Art. 6, Datum hat Vorrang) | offen, Stellungnahme |
+| U5 | KiBG 3.2b | «Tagesfamilienorganisationen, deren angeschlossene Tagesfamilien … gemeldet sind»: Müssen **alle** angeschlossenen Tagesfamilien gemeldet sein oder nur jene, die das Kind betreut? | Eine Organisation mit einer nicht gemeldeten Familie: Ist die ganze Organisation nicht anerkannt? | Eingabe `kibg_einrichtung_anerkannt` | offen |
+
+#### Wer anspruchsberechtigt ist
+
+| Nr. | Bestimmung | Was unklar ist | Beispiel und Folge | Umgang im Modell | Stand |
+|---|---|---|---|---|---|
+| U6 | KiBG 2.1, 4.1b, KiBV 8.1a | Erziehungsberechtigte sind nach Art. 2.1 «Personen, die … Beiträge … geltend machen». Bei einem Paar stellt aber nur eine Person das Gesuch. Ist die andere dann erziehungsberechtigt im Sinn des Gesetzes? Davon hängen lit. b (zusammen 120 %) und das gemeinsame Einkommen (KiBV 8.1a) ab | P1: Ist nur die Mutter erziehungsberechtigt, zählt nur ihr Einkommen (60'000 statt 97'000) und lit. b entfällt | Beide Eltern im gemeinsamen Haushalt gelten als erziehungsberechtigt (Teamentscheid, F5, F6) | entschieden im Modell, Wortlaut unklar |
+| U7 | KiBV 8.1a–b | Beide Buchstaben setzen **zwei** Erziehungsberechtigte voraus («gemeinsamer» bzw. «getrennter Haushalt der Erziehungsberechtigten»). Für eine alleinerziehende Person ohne zweiten Elternteil (verstorben, unbekannt) passt keiner. Zählt das Einkommen eines Partners in gefestigter Lebensgemeinschaft dann mit? | Wie P7, aber ohne anderen Elternteil: Partnerin zählt → Fr. 270; zählt nicht → Fr. 486 | Wie lit. b: Partnerin zählt mit | offen, Stellungnahme |
+| U8 | KiBG 4.1 | Wie wird der Beschäftigungsgrad bei **Selbständigen** (kein Arbeitsvertrag) und bei **schwankenden Pensen** (Stundenlohn, Saison) bestimmt, und über welchen Zeitraum? | Selbständige Grafikerin mit 10–30 % je nach Monat: erfüllt sie lit. a? | Eingabe `beschaeftigungsgrad` pro Monat | offen, Stellungnahme |
+| U9 | KiBG 4.1–4.2, KiBV 12a | Art. 4.2 entbindet nur vom «minimalen **Beschäftigungsgrad**». Art. 4.1 verlangt aber zusätzlich, dass eine Erwerbstätigkeit **ausgeübt** wird. KiBV 12a nennt Stellensuche und Ausbildung, also Fälle ohne Erwerbstätigkeit. Geht die Verordnung über das Gesetz hinaus? | Mutter in Ausbildung, 0 %: nach der KiBV Ausnahme möglich (G37: Fr. 594), nach dem Wortlaut des Gesetzes nicht | Die Ausnahme ersetzt die ganze Bedingung zum Beschäftigungsgrad | offen, Stellungnahme |
+| U10 | KiBG 4.2 | Entbindet die Ausnahme eine **Person** (nur lit. a) oder den **Haushalt** (auch lit. b)? | Vater 100 %, Mutter 0 % mit Ausnahme: gilt lit. b (zusammen 120 %) weiter, gibt es keinen Anspruch | Gilt für den Haushalt: Anspruch ja (G36) | offen |
+
+#### Einkommen
+
+| Nr. | Bestimmung | Was unklar ist | Beispiel und Folge | Umgang im Modell | Stand |
+|---|---|---|---|---|---|
+| U11 | KiBG 5.4, KiBV 11.1 | Das Gesetz ist **zwingend**: Hat sich das Einkommen wesentlich verändert, «werden» die aktuellen Gegebenheiten massgebend. Die Verordnung macht daraus eine Bemessung **nur auf Antrag**. Bei höherem Einkommen stellt kaum jemand einen Antrag | Veranlagt 60'000, aktuell 100'000 (+67 %), kein Antrag: nach der KiBV Fr. 725.60, nach dem Gesetz Fr. 416.85 pro Monat (Differenz Fr. 308.75) | Folgt der KiBV: nur auf Antrag (G47) | offen, Stellungnahme |
+| U12 | KiBG 5.3 | «**in der Regel** die letzte definitive Steuerveranlagung»: Welche Ausnahmen gibt es ausser Abs. 4? Die letzte definitive Veranlagung kann zwei bis drei Jahre alt sein | Gesuch 2028, letzte definitive Veranlagung 2025 | Eingabe des Einkommens | offen |
+
+#### Höhe des Beitrags
+
+| Nr. | Bestimmung | Was unklar ist | Beispiel und Folge | Umgang im Modell | Stand |
+|---|---|---|---|---|---|
+| U13 | KiBG 6.2, 20.3 | «Kosten … für das in Anspruch genommene Betreuungsangebot»: Gehören **Mahlzeiten**, Material oder Anmeldegebühren dazu? Und gilt die Obergrenze pro Monat, pro Rechnung oder für die ganze Verfügung? | Faktor 1, 100 Stunden, Rechnung 1'200 inkl. 200 für Mahlzeiten: mit Mahlzeiten Fr. 1'100, ohne Fr. 1'000 | Kosten werden eingegeben; pro Monat | offen, Stellungnahme |
+| U14 | KiBV 14, 17.1, Anhang | Was ist eine **Betreuungsstunde**: die gebuchte oder die tatsächlich besuchte? Nach KiBV 17.1 erfasst die Einrichtung den «Betreuungsumfang», ohne zu sagen, welchen. Für Module und Monatspauschalen fehlen die Richtlinien (O7) | 80 Stunden gebucht, 2 Tage krank (60 Stunden besucht): Fr. 440 oder Fr. 330 | Eingabe `betreuungsstunden` | offen, Stellungnahme |
+| U15 | KiBG 11.2–11.3, KiBV 16.3 | Ändert sich der Beitrag **während** einer Verfügung, wenn das Kind 18 Monate alt wird? KiBV 16.3 regelt nur Senkungen wegen Modelländerungen, nicht wegen des Alters | Lina wird mitten in der Verfügung 18 Monate: sofort Fr. 300 statt Fr. 440, oder bis zum Ende der Verfügung weiter Fr. 440 (bis zu Fr. 140 pro Monat) | Monatlich: der Beitrag sinkt ab dem 18-Monate-Geburtstag | offen, Stellungnahme |
+| U16 | KiBG 18.1, KiBV 2 | **Umzug** in eine andere Gemeinde während einer Verfügung: Welche Gemeinde trägt den Anteil, und wessen Zusatzbeiträge gelten im Monat des Umzugs? | Umzug am 15. von St. Gallen nach Gossau mit anderen Z1/Z2 | Eine Gemeinde pro Monat (`wohngemeinde`), Z1/Z2 als Eingabe | offen |
+
+#### Verfahren und Fristen
+
+| Nr. | Bestimmung | Was unklar ist | Beispiel und Folge | Umgang im Modell | Stand |
+|---|---|---|---|---|---|
+| U17 | KiBG 9.2, KiBV 16.4 | «Datum der **Inanspruchnahme** des Betreuungsangebots»: der erste Tag der Betreuung überhaupt, der erste Tag in **dieser** Einrichtung oder der Beginn der neuen Verfügungsperiode bei einem **Folgegesuch**? | Verfügung endet 31.7.2029, Folgegesuch trifft am 15.9.2029 ein. Zählt die Frist ab dem ersten Betreuungsbeginn 2028, gibt es erst ab 15.9. Beiträge: August Fr. 300 und halber September Fr. 150 verloren | Betreuungsbeginn wird eingegeben; die Frage entscheidet, wer ihn eingibt | offen, Stellungnahme |
+| U18 | KiBV 16.1–16.2 | Ein **eingeschultes Kind in einer Kita** oder Tagesfamilie: Gilt die Verfügung 12 Monate (Abs. 1: Kita und Tagesfamilie) oder ein Schuljahr (Abs. 2: eingeschulte Kinder)? | Verfügung im Oktober: bis September des Folgejahres oder bis Ende Juli? | Dauer der Verfügung nicht umgesetzt (README) | offen, Stellungnahme |
+| U19 | KiBG 9.2 | «eingereicht»: Zählt der **Eingang** bei der Gemeinde oder schon die **Postaufgabe**? | Gesuch am Tag 30 aufgegeben, am Tag 31 eingetroffen: rückwirkend oder nicht | A10: Eingang | offen, Rechtsteam |
+| U20 | KiBV 25.1 | Gilt die Übergangsfrist auch für Gesuche **vor** dem Vollzugsbeginn, und gibt es die Plattform dann schon? | Gesuch im Juli 2028 für eine Betreuung ab August | Ja, auch frühere Gesuche zählen (beim Umsetzen festgelegt und im Commit dokumentiert; vom Team zu bestätigen) | offen |
+
+#### Redaktionelles und Unvollständiges
+
+| Nr. | Bestimmung | Was unklar ist | Folge | Umgang im Modell | Stand |
+|---|---|---|---|---|---|
+| U21 | KiBG 18.1, 20.1 | Art. 18.1 spricht von «Beiträgen nach Art. 6 **und 17**», Art. 20.1 von «Beiträgen nach Art. 6, **17 und 18**». Art. 17 und 18 regeln aber das Budget und die Finanzierung, keine Beiträge | Keine Folge für den Betrag; unklare Verweise | Mindestbeitrag = Beitrag nach Art. 6 | Hinweis an den Kanton |
+| U22 | KiBV 21.1a Ziff. 13, 21.1b Ziff. 5 | «[Daten werden im Rahmen der Konzeptphase von IT-KiBG weiter spezifiziert]»: Die Liste der bearbeiteten Daten ist offen. Art. 8 KiBG verlangt eine klare Grundlage für die Bearbeitung besonders schützenswerter Daten | Wichtig für den Teil zu Datenschutz und Ethik | Der Rechner fragt nur das Nötige ab (Datenminimierung) | Stellungnahme |
+| U23 | Gesetz (Titelseite) | Unser Gesetzestext ist die Fassung der **ersten Lesung** (16. September 2025); die KiBV verweist auf das Gesetz vom 14. Juni 2026 (O6) | Weicht der Schlusstext ab, können Artikel oder Werte nicht stimmen | Fassung der ersten Lesung | offen, Organisatoren |
+| U24 | KiBV 14.5 | Betreuungsmodule und Monatspauschalen regelt das Amt «mittels Richtlinien»; diese liegen nicht vor (O7) | Pauschal abgerechnete Angebote lassen sich nicht in Stunden umrechnen | Stunden werden eingegeben | offen |
+
+### 7.3 Für die Stellungnahme besonders geeignet
+
+Diese Stellen haben die grösste Wirkung auf Familien und lassen sich mit einem Satz in der Verordnung klären:
+
+1. **U11:** KiBV 11.1 an KiBG 5.4 anpassen. Entweder wirkt die Bemessung nach aktuellen Gegebenheiten auch ohne Antrag, oder das Gesetz sagt klar, dass ein Antrag nötig ist.
+2. **U15:** Festlegen, ob der Wechsel des Ansatzes mit 18 Monaten während einer Verfügung wirkt.
+3. **U17:** Festlegen, welche «Inanspruchnahme» bei Folgegesuchen und beim Wechsel der Einrichtung zählt.
+4. **U13 und U14:** Festlegen, welche Kosten zählen und ob gebuchte oder besuchte Stunden.
+5. **U2:** Das Verfahren für ausserkantonale Einrichtungen regeln, wie es KiBG 23f verlangt.
+6. **U7:** Alleinerziehende ohne zweiten Elternteil in KiBV 8.1 ausdrücklich erfassen.
+7. **U9:** Klarstellen, dass die Ausnahme auch vom Erfordernis der Erwerbstätigkeit entbindet, oder KiBV 12a enger fassen.
+
+---
+
 ## Anhang: P1 als OpenFisca-Test
 
 So wird ein Szenario zum Test. Bei zwei Erziehungsberechtigten ist `kibg_gesuchstellend` Pflicht, für jedes Kind `betreuungsbeginn` und `kibg_gesuchsdatum` (Abgabedatum, A10). Dieselben Angaben stehen als echter Test in `openfisca-CH-SG/openfisca_ch_sg/tests/personas.yaml`.
@@ -629,3 +729,4 @@ Jede Rechnung soll eine zweite Person nachrechnen, bevor sie zum Test wird.
 | Teil 3 (X1–X10, F1–F13) | | |
 | Teil 4 (Q1–Q4) | | |
 | Teil 5–6 (E1–E2, D1–D11) | | |
+| Teil 7 (Beispiele U1–U24) | | |
