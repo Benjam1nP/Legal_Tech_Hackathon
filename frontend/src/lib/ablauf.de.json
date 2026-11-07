@@ -13,8 +13,8 @@
 			"kurz": "Prüfen Sie diese Punkte, zum Beispiel mit unserem Rechner.",
 			"pruefung": [
 				{ "text": "Sie wohnen im Kanton St. Gallen.", "quelle": ["KiBG 4 Abs. 1"] },
-				{ "text": "Ihr Kind ist mindestens 3 Monate alt und noch in der Primarschule.", "quelle": ["KiBG 4 Abs. 3"] },
-				{ "text": "Die Kita, Tagesfamilie oder Tagesstruktur ist beim Kanton angemeldet. Das geht auch ausserhalb des Kantons.", "quelle": ["KiBG 3", "KiBV 3"] },
+				{ "text": "Ihr Kind ist mindestens 3 Monate alt und hat die Primarschule noch nicht abgeschlossen.", "quelle": ["KiBG 4 Abs. 3"] },
+				{ "text": "Die Kita, Tagesfamilie oder Tagesstruktur ist anerkannt und beim Kanton angemeldet. Das geht auch ausserhalb des Kantons.", "quelle": ["KiBG 3", "KiBV 3"] },
 				{ "text": "Sie arbeiten mindestens 20 %. Leben Sie mit dem anderen Elternteil zusammen, arbeiten Sie zusammen mindestens 120 %.", "quelle": ["KiBG 4 Abs. 1"] },
 				{ "text": "Ihr massgebendes Einkommen und Vermögen liegt unter Fr. 154'000.", "quelle": ["KiBV 15 Abs. 2"] }
 			],
@@ -32,10 +32,10 @@
 		{
 			"nr": 2,
 			"titel": "Gesuch stellen",
-			"kurz": "Online auf der Plattform von Kanton und Gemeinden.",
+			"kurz": "Bei Ihrer Gemeinde, zum Beispiel online auf der Plattform von Kanton und Gemeinden.",
 			"sie": [
-				{ "text": "Mit dem E-Login auf der Plattform anmelden.", "quelle": ["KiBV 20"] },
-				{ "text": "Gesuch einreichen, am besten innert 30 Tagen nach dem ersten Betreuungstag.", "quelle": ["KiBG 9"] },
+				{ "text": "Online: mit dem E-Login auf der Plattform anmelden.", "quelle": ["KiBV 20"] },
+				{ "text": "Gesuch abgeben, am besten innert 30 Tagen nach dem ersten Betreuungstag. Massgebend ist der Tag der Abgabe bei der Gemeinde oder der Postaufgabe.", "quelle": ["KiBG 9"] },
 				{ "text": "Unterlagen nur, wenn keine ordentliche Steuerveranlagung vorliegt, zum Beispiel bei Quellensteuer.", "quelle": ["KiBV 10"] },
 				{ "text": "Freiwillig: Hat sich Ihr Einkommen um mindestens 25 % verändert, aktuelle Zahlen beantragen.", "quelle": ["KiBG 5 Abs. 4", "KiBV 11"] }
 			],
@@ -114,4 +114,4 @@
 			"zurueck_zu": 2
 		}
 	],
-	"vorbehalt": "Die Verordnung (KiBV) ist ein Entwurf. Die Vernehmlassung läuft bis 15. November 2026, Artikel und Beträge können sich noch ändern. Das neue System startet voraussichtlich am 1. August 2028. Ein Gesuch auf Papier sehen Gesetz und Verordnung nicht vor."}
+	"vorbehalt": "Die Verordnung (KiBV) ist ein Entwurf. Die Vernehmlassung läuft bis 15. November 2026, Artikel und Beträge können sich noch ändern. Das neue System startet laut Kanton Mitte 2028; das genaue Datum legt die Regierung noch fest. Bis dahin rechnet der Rechner mit dem 1. August 2028 als Platzhalter."}

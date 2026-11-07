@@ -43,7 +43,7 @@ the missing field (tests F1 to F13 in `tests/test_eingabefehler.py`).
 | `geburtsdatum` | for every child | Minimum age (Art. 4 Abs. 3 KiBG) and maximum rate (Art. 14 KiBV) depend on it |
 | `kibg_gesuchstellend` | when two Erziehungsberechtigte live in the household; exactly one of them | Only the applicant must live in the canton (Art. 4 Abs. 1 KiBG, decision O8); the application is made by Erziehungsberechtigte (Art. 9 Abs. 1 KiBG) |
 | `betreuungsbeginn` | for every child | The start of the contributions depends on it (Art. 9 Abs. 2 KiBG, Art. 25 Abs. 1 KiBV) |
-| `kibg_gesuchsdatum` | for every child: the day the application reaches the municipality, also a planned date (assumption A10) | Contributions start retroactively only if the application arrives within 30 days, or within the transition period (Art. 9 Abs. 2 KiBG, Art. 25 Abs. 1 KiBV) |
+| `kibg_gesuchsdatum` | for every child: the day the application is handed in at the municipality or posted, also a planned date (assumption A10) | Contributions start retroactively only if the application is handed in within 30 days, or within the transition period (Art. 9 Abs. 2 KiBG, Art. 25 Abs. 1 KiBV) |
 
 Optional: `kibg_einrichtung_bestaetigt_am`, the day the Amt für Soziales
 confirmed the facility. If entered, the facility takes part from the first day
