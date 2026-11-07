@@ -7,7 +7,7 @@
 // (Betreuungsbeginn und Gesuch am Monatsersten), keine Zusatzbeiträge der
 // Gemeinde. Bei zwei Eltern stellt Elternteil 1 das Gesuch.
 
-import { formenFuer, stufenMit, tageImMonat, vorschlagTage } from '#lib/vergleich.js';
+import { STUFEN, formenFuer, monatswerte } from '#lib/vergleich.js';
 
 export const ANSICHTEN = ['kurz', 'lang'];
 
@@ -26,13 +26,12 @@ const ERGEBNISSE_HAUSHALT = [
 
 const zahl = (wert) => Number(wert);
 
-/** Betreuungstage pro Woche für ein Kind auf einer Stufe (Eingabe oder Vorschlag). */
-function tageProWoche(angaben, stufe, kindIndex) {
-	const eigene = angaben.tage?.[stufe]?.[kindIndex];
-	if (eigene !== undefined && eigene !== null && eigene !== '') return zahl(eigene);
-	const paar = angaben.eltern.length === 2;
-	const andere = paar ? angaben.eltern[1 - angaben.variiert].pensum : 0;
-	return vorschlagTage(stufe, andere, paar);
+/**
+ * Betreuung pro Woche für ein Kind auf einer Pensumstufe, aus dem Wochenplan
+ * der Seite: { tage, halbtage }.
+ */
+function betreuungProWoche(angaben, stufe, kindIndex) {
+	return angaben.betreuung?.[stufe]?.[kindIndex] ?? { tage: 0, halbtage: 0 };
 }
 
 /** Alle Fälle, die gerechnet werden: je Stufe, Form des Vergleichskinds und Ansicht. */
@@ -44,7 +43,7 @@ export function faelle(angaben) {
 	const liste = [{ id: 'fall_heute', ansicht: 'kurz', form: kind.form, stufe: heute }];
 	for (const ansicht of ANSICHTEN) {
 		for (const form of formen) {
-			for (const stufe of stufenMit(heute)) {
+			for (const stufe of STUFEN) {
 				liste.push({ id: `fall_${liste.length}`, ansicht, form, stufe });
 			}
 		}
@@ -88,8 +87,11 @@ export function situation(angaben, liste) {
 			const form = index === angaben.vergleichKind ? fall.form : kind.form;
 			// «keine»: Die Eltern betreuen selbst, es entstehen keine Kosten.
 			const betreut = form !== 'keine';
-			const tage = betreut ? tageImMonat(tageProWoche(angaben, fall.stufe, index)) : 0;
-			const stunden = betreut ? tage * zahl(kind.stunden[form]) : 0;
+			const monat_ = betreut
+				? monatswerte(betreuungProWoche(angaben, fall.stufe, index), kind.stunden[form])
+				: { tage: 0, stunden: 0 };
+			const tage = monat_.tage;
+			const stunden = monat_.stunden;
 			persons[id] = {
 				geburtsdatum: { ETERNITY: kind.geburtsdatum },
 				betreuungsbeginn: { ETERNITY: tag },

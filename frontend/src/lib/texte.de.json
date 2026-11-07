@@ -398,7 +398,6 @@
     "einleitung": "Verändern Sie das Pensum einer erziehungsberechtigten Person und vergleichen Sie Betreuungsformen. Sie sehen, wie sich Beitrag und Restkosten verändern und was vom zusätzlichen Lohn bleibt. Die Beispielwerte sind vorausgefüllt; passen Sie sie an Ihre Familie an.",
     "abschnitt_familie": "Ihre Familie",
     "abschnitt_vergleich": "Vergleich einstellen",
-    "abschnitt_betreuung": "Betreuung je Pensum",
     "abschnitt_ergebnis": "Ergebnis",
     "monat": {
       "frage": "Für welchen Monat rechnen?",
@@ -410,10 +409,6 @@
       "zwei": "Zwei (gemeinsamer Haushalt)"
     },
     "person": "Person {nr}",
-    "pensum": {
-      "frage": "Heutiges Pensum",
-      "hilfe": "Beschäftigungsgrad in Prozent (Art. 4 Abs. 1 KiBG)."
-    },
     "einkommen": {
       "frage": "Massgebendes Einkommen und Vermögen",
       "hilfe": "Gemäss letzter definitiver Steuerveranlagung (Art. 5 Abs. 3 KiBG)."
@@ -436,8 +431,8 @@
       "hilfe": "Tarif der Einrichtung in Franken pro Stunde."
     },
     "stunden": {
-      "frage": "Stunden pro Betreuungstag: {form}",
-      "hilfe": "Bei schulergänzender Betreuung nur die Zeit ausserhalb der Schule."
+      "frage": "Stunden pro Halbtag: {form}",
+      "hilfe": "Wie lange das Kind an einem Halbtag betreut wird, höchstens 6 Stunden. Bei schulergänzender Betreuung die Zeit über Mittag und am Nachmittag."
     },
     "variiert": {
       "frage": "Wessen Pensum verändern?"
@@ -449,10 +444,6 @@
     "vergleich_kind": {
       "frage": "Betreuungsformen vergleichen für"
     },
-    "betreuung_hinweis": "Vorschlag: Betreuung an jedem Arbeitstag (100 % = 5 Tage). Bei zwei Eltern an den Arbeitstagen der Person, die weniger arbeitet. Arbeiten Sie an verschiedenen Tagen, helfen Grosseltern oder arbeiten Sie im Homeoffice, passen Sie die Tage an.",
-    "betreuung_spalte_pensum": "Pensum",
-    "betreuung_spalte_kind": "{kind}: Tage pro Woche",
-    "vorschlag_zuruecksetzen": "Vorschlag wiederherstellen",
     "vergleichen": "Vergleichen",
     "rechnet": "Rechnet …",
     "veraltet": "Die Angaben wurden geändert. Klicken Sie auf «Vergleichen», um neu zu rechnen.",
@@ -507,6 +498,29 @@
       "ausnahme": "Bei Stellensuche, Aus- oder Weiterbildung kann die Gemeinde vom Mindest-Beschäftigungsgrad entbinden (Art. 4 Abs. 2 KiBG, Art. 12 KiBV (Entwurf)).",
       "zwoelf_stunden": "Pro Betreuungstag werden höchstens 12 Stunden subventioniert (Art. 14 Abs. 4 KiBV (Entwurf))."
     },
-    "annahmen": "Annahmen: Wohnsitz im Kanton St. Gallen, Einrichtung anerkannt und angemeldet, Gesuch rechtzeitig gestellt, keine Zusatzbeiträge der Gemeinde, ohne Steuern und Sozialabgaben. Bei zwei Eltern stellt Person 1 das Gesuch. Dies ist eine unverbindliche Schätzung; massgebend ist die Verfügung Ihrer Gemeinde."
+    "annahmen": "Annahmen: Wohnsitz im Kanton St. Gallen, Einrichtung anerkannt und angemeldet, Gesuch rechtzeitig gestellt, keine Zusatzbeiträge der Gemeinde, ohne Steuern und Sozialabgaben. Bei zwei Eltern stellt Person 1 das Gesuch. Dies ist eine unverbindliche Schätzung; massgebend ist die Verfügung Ihrer Gemeinde.",
+    "pensum_aus_plan": "Pensum heute: {pensum} % (aus dem Wochenplan; 1 Halbtag = 10 %)",
+    "max_stunden": "Höchstens 6 Stunden pro Halbtag (12 Stunden pro Tag, Art. 14 Abs. 4 KiBV (Entwurf)).",
+    "wochenplan": {
+      "titel": "Wochenplan",
+      "einleitung": "Klicken Sie an, an welchen Halbtagen wer arbeitet und wann jemand anders zum Kind schaut. Betreuung braucht es, wenn alle Eltern arbeiten, niemand sonst hilft und das Kind nicht in der Schule ist. Ein Halbtag Arbeit entspricht 10 % Pensum.",
+      "vormittag": "Vormittag",
+      "nachmittag": "Nachmittag",
+      "vormittag_kurz": "VM",
+      "nachmittag_kurz": "NM",
+      "summe": "Woche",
+      "variiert": "wird verändert",
+      "hilfe": "Weitere Betreuung",
+      "hilfe_unter": "Grosseltern, Homeoffice … (ohne Kosten)",
+      "schule": "Schule/Kindergarten: {kind}",
+      "betreuung": "Betreuung nötig: {kind}",
+      "summe_betreuung": "{tage} Tage, {halbtage} Halbtage",
+      "legende_arbeit": "arbeitet",
+      "legende_hilfe": "jemand anders betreut",
+      "legende_schule": "Schule oder Kindergarten",
+      "legende_betreuung": "Betreuung nötig (wird berechnet)",
+      "bei_stufe": "Woche mit {pensum} % für {person}",
+      "bei_stufe_text": "Mehr Pensum kommt von Montag Vormittag an dazu (umrandet), weniger fällt von Freitag Nachmittag an weg. Die übrigen Angaben bleiben wie im Wochenplan oben."
+    }
   }
 }

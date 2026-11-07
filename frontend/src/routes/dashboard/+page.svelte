@@ -1,19 +1,25 @@
 <script>
 	// Dashboard: Vergleich «Mehr arbeiten – welche Betreuung – was bleibt?».
 	// Alle Beträge rechnet OpenFisca (Route /api/vergleich); hier stehen nur
-	// Eingaben, der Vorschlag für die Betreuungstage und die Darstellung.
+	// Eingaben, der Wochenplan mit Halbtagen und die Darstellung.
 	import Auswahl from '#lib/Auswahl.svelte';
 	import Feld from '#lib/Feld.svelte';
 	import LinienChart from '#lib/LinienChart.svelte';
 	import BalkenChart from '#lib/BalkenChart.svelte';
+	import Wochenplan from '#lib/Wochenplan.svelte';
 	import { texte, einsetzen } from '#lib/darstellung.js';
 	import {
-		FORMEN,
+		MAX_STUNDEN_HALBTAG,
+		STUFEN,
 		VORGABE_PREIS,
 		VORGABE_STUNDEN,
+		betreuungsplan,
 		formenFuer,
-		stufenMit,
-		vorschlagTage
+		leererPlan,
+		pensumAus,
+		planBeiStufe,
+		planMit,
+		wochenwerte
 	} from '#lib/vergleich.js';
 
 	const t = texte.dashboard;
@@ -45,6 +51,8 @@
 		geburtsdatum: '',
 		eingeschult: null,
 		form: null,
+		// Schule oder Kindergarten: vorbelegt alle Vormittage (nur für eingeschulte Kinder)
+		schule: leererPlan().map((_, i) => i % 2 === 0),
 		preise: { ...VORGABE_PREIS },
 		stunden: { ...VORGABE_STUNDEN },
 		...werte
@@ -53,16 +61,17 @@
 	// Beispielwerte (Familie P1 aus challenge/szenarien.md), zum Anpassen.
 	let monat = $state('2028-09');
 	let anzahl = $state(2);
+	// Wochenplan: Arbeits-Halbtage je Person (1 Halbtag = 10 % Pensum) und
+	// Halbtage, an denen sonst jemand betreut (Grosseltern, Homeoffice …).
 	let eltern = $state([
-		{ pensum: 100, einkommen: 60000 },
-		{ pensum: 40, einkommen: 37000 }
+		{ einkommen: 60000, plan: planMit(10) },
+		{ einkommen: 37000, plan: planMit(4) }
 	]);
+	let hilfe = $state(leererPlan());
 	let variiertWahl = $state(1);
 	let lohn100 = $state(7000);
 	let kinder = $state([neuesKind({ geburtsdatum: '2027-09-01', eingeschult: false, form: 'kita' })]);
 	let vergleichKind = $state(0);
-	// Eigene Betreuungstage pro Woche: { stufe: { kindIndex: tage } }
-	let tageEigen = $state({});
 
 	let ansicht = $state('kurz');
 	let ziel = $state(60);
@@ -76,14 +85,78 @@
 
 	let paar = $derived(anzahl === 2);
 	let variiert = $derived(paar ? variiertWahl : 0);
-	let heute = $derived(Math.round(Number(eltern[variiert].pensum)));
-	let andere = $derived(paar ? Number(eltern[1 - variiert].pensum) : 0);
-	let stufen = $derived(stufenMit(heute));
+	let heute = $derived(pensumAus(eltern[variiert].plan));
 
-	const vorschlag = (stufe) => vorschlagTage(stufe, andere, paar);
-	const tageWert = (stufe, k) => tageEigen[stufe]?.[k] ?? vorschlag(stufe);
-	function tageSetzen(stufe, k, wert) {
-		tageEigen[stufe] = { ...(tageEigen[stufe] ?? {}), [k]: wert === '' ? undefined : Number(wert) };
+	// Pläne der Eltern, wenn die variierte Person auf `stufe` Prozent geht.
+	function elternBeiStufe(stufe) {
+		return eltern.slice(0, anzahl).map((person, i) =>
+			i === variiert ? planBeiStufe(person.plan, stufe) : { plan: person.plan, neu: leererPlan() }
+		);
+	}
+	// Halbtage, in denen ein Kind betreut werden muss, bei einer Pensumstufe.
+	function betreuungBeiStufe(stufe, kind) {
+		const plaene = elternBeiStufe(stufe).map((e) => e.plan);
+		return betreuungsplan(plaene, hilfe, kind.eingeschult === true ? kind.schule : leererPlan());
+	}
+	const wochenText = ({ tage, halbtage }) =>
+		einsetzen(t.wochenplan.summe_betreuung, { tage, halbtage });
+
+	function umschalten(schluessel, i) {
+		if (schluessel === 'hilfe') hilfe[i] = !hilfe[i];
+		else if (schluessel.startsWith('person-')) {
+			const plan = eltern[Number(schluessel.slice(7))].plan;
+			plan[i] = !plan[i];
+		} else if (schluessel.startsWith('schule-')) {
+			const plan = kinder.find((k) => k.nr === Number(schluessel.slice(7))).schule;
+			plan[i] = !plan[i];
+		}
+	}
+
+	// Zeilen des Wochenplans: heute (zum Anklicken) oder bei einer Stufe (Anzeige).
+	function wochenZeilen(stufe, editierbar) {
+		const plaene = elternBeiStufe(stufe);
+		const zeilen = plaene.map((e, i) => ({
+			schluessel: `person-${i}`,
+			titel: einsetzen(t.person, { nr: i + 1 }),
+			untertitel: `${pensumAus(e.plan)} %${i === variiert ? ` · ${t.wochenplan.variiert}` : ''}`,
+			plan: e.plan,
+			neu: editierbar ? null : e.neu,
+			art: 'arbeit',
+			editierbar
+		}));
+		if (editierbar || hilfe.some(Boolean)) {
+			zeilen.push({
+				schluessel: 'hilfe',
+				titel: t.wochenplan.hilfe,
+				untertitel: t.wochenplan.hilfe_unter,
+				plan: hilfe,
+				art: 'hilfe',
+				editierbar
+			});
+		}
+		kinder.forEach((kind, k) => {
+			if (kind.eingeschult === true) {
+				zeilen.push({
+					schluessel: `schule-${kind.nr}`,
+					titel: einsetzen(t.wochenplan.schule, { kind: einsetzen(t.kind, { nr: k + 1 }) }),
+					plan: kind.schule,
+					art: 'schule',
+					editierbar
+				});
+			}
+		});
+		kinder.forEach((kind, k) => {
+			const plan = betreuungBeiStufe(stufe, kind);
+			zeilen.push({
+				schluessel: `betreuung-${kind.nr}`,
+				titel: einsetzen(t.wochenplan.betreuung, { kind: einsetzen(t.kind, { nr: k + 1 }) }),
+				untertitel: wochenText(wochenwerte(plan)),
+				plan,
+				art: 'betreuung',
+				editierbar: false
+			});
+		});
+		return zeilen;
 	}
 
 	let personenOptionen = $derived(
@@ -106,7 +179,7 @@
 		variiert,
 		lohn100: Number(lohn100),
 		vergleichKind: Math.min(vergleichKind, kinder.length - 1),
-		eltern: eltern.slice(0, anzahl).map((p) => ({ pensum: Number(p.pensum), einkommen: Number(p.einkommen) })),
+		eltern: eltern.slice(0, anzahl).map((p) => ({ pensum: pensumAus(p.plan), einkommen: Number(p.einkommen) })),
 		kinder: kinder.map((k) => ({
 			geburtsdatum: k.geburtsdatum,
 			eingeschult: k.eingeschult === true,
@@ -114,7 +187,10 @@
 			preise: k.preise,
 			stunden: k.stunden
 		})),
-		tage: Object.fromEntries(stufen.map((s) => [s, kinder.map((_, k) => tageWert(s, k))]))
+		// Betreuung pro Woche je Pensumstufe und Kind aus dem Wochenplan
+		betreuung: Object.fromEntries(
+			STUFEN.map((s) => [s, kinder.map((kind) => wochenwerte(betreuungBeiStufe(s, kind)))])
+		)
 	});
 	let veraltet = $derived(ergebnis !== null && JSON.stringify(angaben) !== berechnetMit);
 
@@ -130,7 +206,6 @@
 		if (leer(monat)) m.monat = t.pflicht;
 		if (leer(lohn100)) m.lohn100 = t.pflicht;
 		eltern.slice(0, anzahl).forEach((p, i) => {
-			if (leer(p.pensum)) m[`eltern.${i}.pensum`] = t.pflicht;
 			if (leer(p.einkommen)) m[`eltern.${i}.einkommen`] = t.pflicht;
 		});
 		kinder.forEach((k, i) => {
@@ -143,6 +218,9 @@
 			for (const form of formenFuer({ eingeschult: k.eingeschult === true })) {
 				if (leer(k.preise[form])) m[`kind.${i}.preis.${form}`] = t.pflicht;
 				if (leer(k.stunden[form])) m[`kind.${i}.stunden.${form}`] = t.pflicht;
+				else if (Number(k.stunden[form]) > MAX_STUNDEN_HALBTAG) {
+					m[`kind.${i}.stunden.${form}`] = t.max_stunden;
+				}
 			}
 		});
 		return m;
@@ -254,18 +332,8 @@
 		{#each eltern.slice(0, anzahl) as person, i (i)}
 			<div class="unterblock">
 				<h3>{einsetzen(t.person, { nr: i + 1 })}</h3>
+				<p class="hinweis">{einsetzen(t.pensum_aus_plan, { pensum: pensumAus(person.plan) })}</p>
 				<div class="felder">
-					<Feld
-						id="pensum-{i}"
-						label={t.pensum.frage}
-						hilfe={t.pensum.hilfe}
-						einheit="%"
-						min="0"
-						max="100"
-						step="10"
-						bind:wert={person.pensum}
-						fehler={fehler[`eltern.${i}.pensum`]}
-					/>
 					<Feld
 						id="einkommen-{i}"
 						label={t.einkommen.frage}
@@ -289,7 +357,6 @@
 							class="link"
 							onclick={() => {
 								kinder = kinder.filter((k) => k.nr !== kind.nr);
-								tageEigen = {};
 								vergleichKind = 0;
 							}}>{t.kind_entfernen}</button
 						>
@@ -334,7 +401,8 @@
 							hilfe={t.stunden.hilfe}
 							einheit="Std."
 							min="0"
-							max="24"
+							max={MAX_STUNDEN_HALBTAG}
+							step="0.5"
 							bind:wert={kind.stunden[form]}
 							fehler={fehler[`kind.${i}.stunden.${form}`]}
 						/>
@@ -345,6 +413,23 @@
 		<button type="button" class="zweitrangig" onclick={() => kinder.push(neuesKind())}>
 			{t.kind_hinzufuegen}
 		</button>
+	</section>
+
+	<section>
+		<h2>{t.wochenplan.titel}</h2>
+		<p class="hinweis">{t.wochenplan.einleitung}</p>
+		<Wochenplan
+			titel={t.wochenplan.titel}
+			zeilen={wochenZeilen(heute, true)}
+			texte={t.wochenplan}
+			{umschalten}
+		/>
+		<ul class="legende-plan">
+			<li><span class="muster arbeit"></span>{t.wochenplan.legende_arbeit}</li>
+			<li><span class="muster hilfe"></span>{t.wochenplan.legende_hilfe}</li>
+			<li><span class="muster schule"></span>{t.wochenplan.legende_schule}</li>
+			<li><span class="muster betreuung"></span>{t.wochenplan.legende_betreuung}</li>
+		</ul>
 	</section>
 
 	<section>
@@ -364,45 +449,6 @@
 		{#if kinder.length > 1}
 			<Auswahl name="vergleich-kind" frage={t.vergleich_kind.frage} optionen={kinderOptionen} bind:wert={vergleichKind} />
 		{/if}
-	</section>
-
-	<section>
-		<h2>{t.abschnitt_betreuung}</h2>
-		<p class="hinweis">{t.betreuung_hinweis}</p>
-		<div class="tabelle-rahmen">
-			<table class="tage">
-				<thead>
-					<tr>
-						<th scope="col">{t.betreuung_spalte_pensum} ({personName})</th>
-						{#each kinder as kind, k (kind.nr)}
-							<th scope="col">{einsetzen(t.betreuung_spalte_kind, { kind: einsetzen(t.kind, { nr: k + 1 }) })}</th>
-						{/each}
-					</tr>
-				</thead>
-				<tbody>
-					{#each stufen as stufe (stufe)}
-						<tr class={[stufe === heute && 'heute']}>
-							<th scope="row" class="figur">{stufe} %{stufe === heute ? ` (${t.tabelle.heute})` : ''}</th>
-							{#each kinder as kind, k (kind.nr)}
-								<td>
-									<input
-										class={['figur', tageEigen[stufe]?.[k] !== undefined && 'eigen']}
-										type="number"
-										min="0"
-										max="5"
-										step="0.5"
-										aria-label="{einsetzen(t.kind, { nr: k + 1 })}, {stufe} %"
-										value={tageWert(stufe, k)}
-										oninput={(e) => tageSetzen(stufe, k, e.currentTarget.value)}
-									/>
-								</td>
-							{/each}
-						</tr>
-					{/each}
-				</tbody>
-			</table>
-		</div>
-		<button type="button" class="zweitrangig" onclick={() => (tageEigen = {})}>{t.vorschlag_zuruecksetzen}</button>
 	</section>
 
 	{#if versucht && Object.keys(meldungen).length}
@@ -435,6 +481,16 @@
 			</div>
 		</div>
 		<p class="hinweis">{ansicht === 'kurz' ? t.ansicht.kurz_text : t.ansicht.lang_text}</p>
+
+		<div class="karte">
+			<p class="tabellentitel">{einsetzen(t.wochenplan.bei_stufe, { pensum: ziel, person: personName })}</p>
+			<p class="hinweis">{t.wochenplan.bei_stufe_text}</p>
+			<Wochenplan
+				titel={einsetzen(t.wochenplan.bei_stufe, { pensum: ziel, person: personName })}
+				zeilen={wochenZeilen(ziel, false)}
+				texte={t.wochenplan}
+			/>
+		</div>
 
 		<div class="kennzahlen">
 			<div class="karte">
@@ -717,21 +773,6 @@
 		background: var(--secondary);
 	}
 
-	.tage input {
-		width: 5rem;
-		height: 2rem;
-		padding: 0 0.5rem;
-		border: 1px solid var(--input);
-		border-radius: var(--radius-md);
-		background: var(--card);
-		text-align: right;
-		font: inherit;
-	}
-
-	.tage input.eigen {
-		border-color: var(--primary);
-		background: color-mix(in oklch, var(--primary) 6%, var(--card));
-	}
 
 	td.beste {
 		color: var(--primary);
@@ -856,6 +897,51 @@
 
 	.hinweise li {
 		margin: 0.25rem 0;
+	}
+
+	.legende-plan {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.25rem 1rem;
+		margin: 0.75rem 0 0;
+		padding: 0;
+		list-style: none;
+		font-size: var(--text-sm);
+		color: var(--muted-foreground);
+	}
+
+	.legende-plan li {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.375rem;
+	}
+
+	.muster {
+		display: inline-block;
+		width: 0.875rem;
+		height: 0.875rem;
+		border-radius: 0.2rem;
+		border: 1px solid var(--input);
+	}
+
+	.muster.arbeit {
+		background: var(--muted-foreground);
+		border-color: var(--muted-foreground);
+	}
+
+	.muster.hilfe {
+		background: color-mix(in oklch, var(--primary) 30%, var(--card));
+	}
+
+	.muster.schule {
+		background: var(--secondary);
+		border-style: dashed;
+		border-color: var(--muted-foreground);
+	}
+
+	.muster.betreuung {
+		background: var(--gruen-wappen);
+		border-color: var(--gruen-wappen);
 	}
 
 	.annahmen {
