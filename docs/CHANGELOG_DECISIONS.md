@@ -5,7 +5,7 @@
 
 Raw material for the legal and technical documentation. Sections follow the evaluation criteria in the course syllabus.
 
-_State as of commit `93b5f81` (2026-11-07 15:06)._
+_State as of commit `2f3d8b5` (2026-11-07 16:13)._
 
 ## 1. Functionality and prototype quality
 
@@ -23,6 +23,7 @@ _Syllabus: the prototype demonstrates the core idea and shows that the solution 
 | Date | Decision | Reason | Source | Commit | By |
 |---|---|---|---|---|---|
 | 2026-11-07 | The limit of 5 subsidised days per week is not enforced; inputs are assumed to stay within it, so care on more than 5 days a week (e.g. Saturdays) overstates the contribution | Inputs are monthly, so the weekly spread of care days is unknown; a fixed conversion (5 days x 4.33 weeks) would wrongly cut months with 23 working days. Most Kitas are open Monday to Friday only | Art. 14 Abs. 4 KiBV (Entwurf); team decision | `93b5f81` | Karla Ruggaber |
+| 2026-11-07 | Calculator output has five blocks: result, conditions met or not met with article, calculation steps, situational hints, fixed disclaimer | The challenge asks to show which facts and rules determined the outcome; draft to be revised by the team | challenge/challenge.md, sub-challenge 1; docs/output-konzept.md | `288a151` | Benjamin Pfister |
 
 ## 2. Technical design and architecture
 
@@ -38,6 +39,11 @@ _Syllabus: the technical structure is understandable, fits the goal and rests on
 | 2026-11-07 | Care hours are entered per month; the limit of 12 hours per day is applied as at most care days x 12 | The contribution is computed per month; monthly input is simplest for users and tests | Art. 14 Abs. 4 KiBV (Entwurf); team decision | `93b5f81` | Karla Ruggaber |
 | 2026-11-07 | The massgebendes Einkommen is entered per person, not computed under the V EG-KVG; the model only adds up whose income counts under Art. 8 KiBV | The V EG-KVG (sGS 331.111) is not part of the challenge material | Art. 5 Abs. 3 KiBG; Art. 8-10 KiBV (Entwurf); team decision | `93b5f81` | Karla Ruggaber |
 | 2026-11-07 | Variables about care, costs and contributions are monthly, income is yearly, dates are eternal | Contributions are paid per month; income rests on the yearly tax assessment | Art. 5 Abs. 3 KiBG; Art. 17 KiBV (Entwurf); team decision | `93b5f81` | Karla Ruggaber |
+| 2026-11-07 | Output texts live in the SvelteKit interface (e.g. texte.de.json); OpenFisca only returns values | Law students can revise texts without touching code; placeholders use the variable names of the rule inventory | team decision | `288a151` | Benjamin Pfister |
+| 2026-11-07 | Shares are fractions with unit /1: beschaeftigungsgrad 0.8 = 80 %, thresholds 0.20 and 1.20 | OpenFisca convention; inputs and parameters must use the same unit | Art. 4 Abs. 1 KiBG; team decision | `6dcc9df` | Benjamin Pfister |
+| 2026-11-07 | Prefix kibg_ for variables and parameters specific to the childcare contribution, no prefix for general facts (geburtsdatum, beschaeftigungsgrad) | Follows the names in the rule inventory; keeps KiBG rules recognisable | challenge/line-to-line-rules.md; team decision | `6dcc9df` | Benjamin Pfister |
+| 2026-11-07 | Names are fixed: formulas and parameters always kibg_ (kibg.), inputs without prefix only for general facts; renamed gefestigte_lebensgemeinschaft, gemeinde_z1/z2 (now kibg_zusatzbeitrag_z1/z2), antrag_aktuelle_gegebenheiten, gesuchsdatum, einrichtung_teilnahmebeginn | Tests and frontend texts depend on the names; terms created by KiBG/KiBV are recognisable by the prefix | challenge/line-to-line-rules.md; team review | `c88109b` | Benjamin Pfister |
+| 2026-11-07 | Monthly amounts in francs are rounded commercially to 5 Rappen (minimum and supplementary contribution, canton share); the hourly rate is not rounded; the cost cap applies after rounding; the municipal share is the remainder; parents' remaining costs are costs minus contribution | The text sets no rounding rule; 5 Rappen is the smallest coin | team decision | `2f3d8b5` | Karla Ruggaber |
 
 ## 3. Legal and technical integration
 
@@ -66,6 +72,17 @@ _33 element(s) in the model have no article reference (template demo or still to
 |---|---|---|---|---|---|
 | 2026-11-07 | Placeholder start date 1 August 2028 (formula_2028_08, values from 2028-08-01) until the Vollzugsbeginn is set | The Vollzugsbeginn is still open ("ab ●●") | KiBG Ziff. IV Nr. 1; KiBV Ziff. IV (Entwurf) | `ade2141` | Benjamin Pfister |
 | 2026-11-07 | The ordinance is cited as KiBV and always marked "(Entwurf)" | Own abbreviation of the ordinance; it is a draft and not in force | KiBV footnote 2 (Entwurf, RRB 2026/733) | `ade2141` | Benjamin Pfister |
+| 2026-11-07 | Each condition of Art. 4 KiBG and the income factor are separate variables: kibg_wohnsitz_erfuellt, kibg_alter_erfuellt, kibg_einkommensfaktor | Line-to-line match with the text; every condition can be tested and shown on its own | Art. 4 Abs. 1 und 3 KiBG; Art. 15 und Anhang KiBV (Entwurf) | `c88109b` | Benjamin Pfister |
+| 2026-11-07 | A child gets the rate for "unter 18 Monaten" for the full first 18 months of life; from the 18-month birthday (first day of the 19th month of life) the rate for "über 18 Monaten" applies | Closes the gap between "unter 18" and "über 18" in the wording; the child keeps the higher rate for the full 18 months | Art. 14 Abs. 1 und 2 KiBV (Entwurf); team decision | `2f3d8b5` | Karla Ruggaber |
+| 2026-11-07 | Art. 4 Abs. 1 lit. a and b KiBG apply cumulatively: each parent works at least 20 % and, in a shared household, both together at least 120 %; 120 % / 0 % gives no entitlement unless an exception under Abs. 2 is granted | Wording (each Erziehungsberechtigte must "eine Erwerbstätigkeit ausüben"; over 100 % for one person is atypical), system (120 = 100 + 20 builds on lit. a; Abs. 2 handles atypical cases), equal treatment (Art. 8 BV: couples not below the threshold for single parents), purpose (no care need if one parent does not work); all elements point the same way | Art. 4 Abs. 1 und 2 KiBG; Art. 8 BV; team decision | `2f3d8b5` | Karla Ruggaber |
+| 2026-11-07 | The income-independent municipal supplement Z2 is paid also above an income of Fr. 154'000; the upper limit of Art. 15 Abs. 2 KiBV applies to the minimum contribution only | Z2 is income-independent by definition (Art. 24 KiBV); the formula in the annex adds Z2 after the income factor | Art. 15 Abs. 2, Art. 24 und Anhang KiBV (Entwurf); team decision | `2f3d8b5` | Karla Ruggaber |
+| 2026-11-07 | A deviation of at least 25 % between current and assessed income counts in both directions | The wording speaks of "Abweichung" without a direction | Art. 11 Abs. 2 und 3 KiBV (Entwurf); team decision | `2f3d8b5` | Karla Ruggaber |
+| 2026-11-07 | For separated parents the applicant must live in the canton, and the applicant's municipality is responsible | Practicable reading of "Erziehungsberechtigte mit Wohnsitz im Kanton"; matches the competence rule | Art. 4 Abs. 1 KiBG; Art. 2 KiBV (Entwurf); team decision | `2f3d8b5` | Karla Ruggaber |
+| 2026-11-07 | With alternating custody each parent applies for and enters only their own days of actual custody | Contributions are only due for days of actual custody | Art. 7 und Art. 8 Abs. 1 lit. b KiBV (Entwurf); team decision | `2f3d8b5` | Karla Ruggaber |
+| 2026-11-07 | School year starts on 1 August (placeholder, only needed for the optional date rules) | The text does not name the date | Art. 16 Abs. 2 KiBV (Entwurf); team decision | `2f3d8b5` | Karla Ruggaber |
+| 2026-11-07 | Age of the child and duration of a partnership are determined on the first day of the month and apply to the whole month | Contributions are computed per month; the text sets no reference day | Art. 4 Abs. 3 KiBG; Art. 8 Abs. 2 lit. b und Art. 14 KiBV (Entwurf); team decision | `2f3d8b5` | Karla Ruggaber |
+| 2026-11-07 | If minimum and supplementary contribution together exceed the costs, the municipal supplement is cut first | Art. 6 Abs. 2 KiBG already caps the minimum contribution at the costs; Art. 20 Abs. 3 KiBG then caps the sum | Art. 6 Abs. 2 und Art. 20 Abs. 3 KiBG; team decision | `2f3d8b5` | Karla Ruggaber |
+| 2026-11-07 | No separate rate for private special schools: entitlement follows from Art. 3 Abs. 2 lit. d KiBG, the amount from the form of care (Kita, schulergaenzende Betreuung or Tagesfamilie) | Art. 14 Abs. 3 KiBV sets the rate for school children by form of care, not by school | Art. 3 Abs. 2 lit. d KiBG; Art. 14 Abs. 3 KiBV (Entwurf); team decision | `2f3d8b5` | Karla Ruggaber |
 
 ## 4. Responsible and ethical technology design
 
@@ -73,7 +90,10 @@ _Syllabus: awareness of privacy, security, fairness, transparency, accountabilit
 
 **Decisions**
 
-_No decisions recorded yet._
+| Date | Decision | Reason | Source | Commit | By |
+|---|---|---|---|---|---|
+| 2026-11-07 | The calculator never takes discretionary decisions; it refers to the municipality instead | Limits of automation; OpenFisca principle "human decisions are inputs" | Art. 4 Abs. 2 KiBG; Art. 12 KiBV (Entwurf) | `288a151` | Benjamin Pfister |
+| 2026-11-07 | Missing inputs give a range instead of an error; every result carries a disclaimer (non-binding estimate, draft ordinance, no data stored) | Transparency about uncertainty and data protection | team decision; Art. 21-23 KiBV (Entwurf) | `288a151` | Benjamin Pfister |
 
 ## 5. Documentation and reproducibility
 
@@ -110,14 +130,16 @@ _Syllabus: each member's contribution, and disclosure of AI tools, open-source c
 
 | Member | Commits | First | Last | Files changed per area |
 |---|---|---|---|---|
-| Karla Ruggaber | 11 | 2026-11-04 | 2026-11-07 | other (62), rules (60), tests (45), tooling (18), docs (17), materials (4) |
-| Benjamin Pfister | 6 | 2026-10-10 | 2026-11-07 | docs (56), tooling (10), other (5) |
+| Karla Ruggaber | 13 | 2026-11-04 | 2026-11-07 | other (62), rules (60), tests (45), docs (20), tooling (18), materials (4) |
+| Benjamin Pfister | 9 | 2026-10-10 | 2026-11-07 | docs (61), tooling (10), other (5) |
 
 _Add contributions that don't show in git (legal analysis, testing by hand, pitch, ...) by hand in the report._
 
 **AI use** (from `AI:` lines; basis for the Statement of Author Contribution and AI Use):
 
 - Claude Code (Anthropic): drafted RULEBOOK.md, the checker, the documentation generator, hooks and GitHub workflows (8789ae5 and this commit) on the team's instructions (`ade2141`, Benjamin Pfister, 2026-11-07)
+- Claude Code (Anthropic): drafted the output concept and example texts (`288a151`, Benjamin Pfister, 2026-11-07)
+- Claude Code (Anthropic): applied the renames, added the condition variables and rewrote the rulebook example, checked in OpenFisca (`c88109b`, Benjamin Pfister, 2026-11-07)
 
 **Open-source components and external resources** (from `External:` lines):
 
@@ -135,6 +157,35 @@ _Add contributions that don't show in git (legal analysis, testing by hand, pitc
 
 ### 2026-11-07
 
+- **Add scenario catalogue and record team decisions on open questions** (`2f3d8b5`, Karla Ruggaber, 16:13)
+  - Decision: A child gets the rate for "unter 18 Monaten" for the full first 18 months of life; from the 18-month birthday (first day of the 19th month of life) the rate for "über 18 Monaten" applies
+  - Decision: Art. 4 Abs. 1 lit. a and b KiBG apply cumulatively: each parent works at least 20 % and, in a shared household, both together at least 120 %; 120 % / 0 % gives no entitlement unless an exception under Abs. 2 is granted
+  - Decision: The income-independent municipal supplement Z2 is paid also above an income of Fr. 154'000; the upper limit of Art. 15 Abs. 2 KiBV applies to the minimum contribution only
+  - Decision: A deviation of at least 25 % between current and assessed income counts in both directions
+  - Decision: For separated parents the applicant must live in the canton, and the applicant's municipality is responsible
+  - Decision: With alternating custody each parent applies for and enters only their own days of actual custody
+  - Decision: School year starts on 1 August (placeholder, only needed for the optional date rules)
+  - Decision: Age of the child and duration of a partnership are determined on the first day of the month and apply to the whole month
+  - Decision: If minimum and supplementary contribution together exceed the costs, the municipal supplement is cut first
+  - Decision: Monthly amounts in francs are rounded commercially to 5 Rappen (minimum and supplementary contribution, canton share); the hourly rate is not rounded; the cost cap applies after rounding; the municipal share is the remainder; parents' remaining costs are costs minus contribution
+  - Decision: No separate rate for private special schools: entitlement follows from Art. 3 Abs. 2 lit. d KiBG, the amount from the form of care (Kita, schulergaenzende Betreuung or Tagesfamilie)
+  - Files: `challenge/line-to-line-rules.md` (changed), `challenge/szenarien.md` (added)
+- **Fix names, add condition variables, correct rulebook example** (`c88109b`, Benjamin Pfister, 15:29)
+  - Decision: Names are fixed: formulas and parameters always kibg_ (kibg.), inputs without prefix only for general facts; renamed gefestigte_lebensgemeinschaft, gemeinde_z1/z2 (now kibg_zusatzbeitrag_z1/z2), antrag_aktuelle_gegebenheiten, gesuchsdatum, einrichtung_teilnahmebeginn
+  - Decision: Each condition of Art. 4 KiBG and the income factor are separate variables: kibg_wohnsitz_erfuellt, kibg_alter_erfuellt, kibg_einkommensfaktor
+  - Files: `RULEBOOK.md` (changed), `challenge/line-to-line-rules.md` (changed)
+- **Align rule inventory and rulebook: shares as fractions, start date, prefix** (`6dcc9df`, Benjamin Pfister, 15:11)
+  - Decision: Shares are fractions with unit /1: beschaeftigungsgrad 0.8 = 80 %, thresholds 0.20 and 1.20
+  - Decision: Prefix kibg_ for variables and parameters specific to the childcare contribution, no prefix for general facts (geburtsdatum, beschaeftigungsgrad)
+  - Files: `RULEBOOK.md` (changed), `challenge/line-to-line-rules.md` (changed)
+- **Add output concept for the calculator (draft)** (`288a151`, Benjamin Pfister, 14:51)
+  - Decision: Calculator output has five blocks: result, conditions met or not met with article, calculation steps, situational hints, fixed disclaimer
+  - Decision: Output texts live in the SvelteKit interface (e.g. texte.de.json); OpenFisca only returns values
+  - Decision: The calculator never takes discretionary decisions; it refers to the municipality instead
+  - Decision: Missing inputs give a range instead of an error; every result carries a disclaimer (non-binding estimate, draft ordinance, no data stored)
+  - Files: `docs/output-konzept.md` (added)
+- **Rebuild documentation file with input and period decisions** (`4f559c7`, Karla Ruggaber, 15:07)
+  - Files: `docs/CHANGELOG_DECISIONS.md` (changed)
 - **Add periods of all variables and input decisions to rule inventory** (`93b5f81`, Karla Ruggaber, 15:06)
   - Decision: The limit of 5 subsidised days per week is not enforced; inputs are assumed to stay within it, so care on more than 5 days a week (e.g. Saturdays) overstates the contribution
   - Decision: Care hours are entered per month; the limit of 12 hours per day is applied as at most care days x 12
