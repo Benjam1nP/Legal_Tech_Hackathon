@@ -32,9 +32,10 @@
 <article class={['ergebnis', art === 'anspruch' ? 'positiv' : 'neutral']}>
 	{#if art === 'anspruch'}
 		<!-- Der Titel aus texte.de.json enthält den Betrag; hier steht er gross. -->
-		<h3>{bezeichnung}: voraussichtlicher Beitrag</h3>
+		<h3 class="label">{bezeichnung} · voraussichtlicher Beitrag</h3>
 		<p class="betrag">
-			Fr. {einsetzen('{kibg_beitrag_total}', werte)} <span>pro Monat</span>
+			<span class="figur">Fr. {einsetzen('{kibg_beitrag_total}', werte)}</span>
+			<span class="einheit">pro Monat</span>
 		</p>
 	{:else}
 		<h3>{einsetzen(ergebnis.titel, werte)}</h3>
@@ -49,9 +50,13 @@
 		<ul class="voraussetzungen">
 			{#each liste as zeile (zeile.artikel)}
 				<li class={zeile.erfuellt ? 'ja' : 'nein'}>
-					<strong>{zeile.erfuellt ? 'Erfüllt' : 'Nicht erfüllt'}:</strong>
-					{einsetzen(zeile.text, werte)}
-					<span class="artikel">{zeile.artikel}</span>
+					<span class={['status', zeile.erfuellt ? 'ja' : 'nein']}>
+						{zeile.erfuellt ? '✓ Erfüllt' : '✕ Nicht erfüllt'}
+					</span>
+					<span>
+						{einsetzen(zeile.text, werte)}
+						<span class="artikel">{zeile.artikel}</span>
+					</span>
 				</li>
 			{/each}
 		</ul>
@@ -87,49 +92,83 @@
 </article>
 
 <style>
+	/* Karte mit 2px-Akzentlinie links, wie die hervorgehobene Karte im Style-Kit */
 	.ergebnis {
-		border-left: 6px solid var(--grau-linie);
-		background: var(--grau-hell);
-		padding: 1rem 1.25rem;
-		margin: 1.25rem 0;
+		display: flex;
+		flex-direction: column;
+		gap: 0.75rem;
+		margin: 1rem 0;
+		padding: 1.25rem;
+		background: var(--card);
+		border: 1px solid var(--border);
+		border-radius: var(--radius-lg);
+		animation: einblenden 200ms var(--ease);
 	}
 
 	.ergebnis.positiv {
-		border-left-color: var(--gruen);
-		background: var(--weiss);
-		box-shadow: inset 0 0 0 1px var(--grau-linie);
+		border-left: 2px solid var(--primary);
+	}
+
+	@keyframes einblenden {
+		from {
+			opacity: 0;
+		}
 	}
 
 	h3 {
-		margin: 0 0 0.5rem;
-		font-size: 1.15rem;
+		margin: 0;
+		font-size: var(--text-lg);
+		font-weight: 600;
+	}
+
+	h3.label {
+		font-size: var(--text-xs);
+	}
+
+	p {
+		margin: 0;
 	}
 
 	.betrag {
-		margin: 0.25rem 0 0.75rem;
-		font-size: 2.2rem;
-		font-weight: 700;
-		color: var(--gruen-text);
+		display: flex;
+		align-items: baseline;
+		gap: 0.5rem;
+		font-size: var(--text-3xl);
+		line-height: 2.5rem;
+		font-weight: 500;
+		color: var(--primary);
 	}
 
-	.betrag span {
-		font-size: 1rem;
-		font-weight: 400;
-		color: var(--schwarz);
+	.betrag .einheit {
+		font-size: var(--text-sm);
+		color: var(--muted-foreground);
 	}
 
 	details {
-		border-top: 1px solid var(--grau-linie);
-		padding: 0.6rem 0;
+		border-top: 1px solid var(--border);
+		padding-top: 0.75rem;
 	}
 
 	summary {
 		cursor: pointer;
-		font-weight: 600;
+		font-size: var(--text-sm);
+		font-weight: 500;
+	}
+
+	summary:hover {
+		color: var(--primary);
 	}
 
 	summary:focus-visible {
-		outline: 3px solid var(--gruen);
+		outline: 3px solid var(--ring);
+		border-radius: var(--radius-md);
+	}
+
+	ul,
+	ol {
+		margin: 0.5rem 0 0;
+		padding-left: 1.25rem;
+		font-size: var(--text-sm);
 	}
 
 	li {
@@ -142,17 +181,31 @@
 	}
 
 	.voraussetzungen li {
-		border-left: 4px solid var(--gruen);
-		padding-left: 0.6rem;
+		display: grid;
+		grid-template-columns: 7.5rem 1fr;
+		gap: 0.75rem;
+		align-items: start;
 	}
 
-	.voraussetzungen li.nein {
-		border-left-color: var(--fehler);
+	/* Neutrale Status-Badges: das Zeichen trägt die Bedeutung (Style-Kit) */
+	.status {
+		justify-self: start;
+		padding: 0.0625rem 0.5rem;
+		border: 1px solid var(--border);
+		border-radius: var(--radius-md);
+		background: var(--secondary);
+		font-size: var(--text-xs);
+		font-weight: 500;
+		white-space: nowrap;
+	}
+
+	.status.nein {
+		color: var(--destructive);
 	}
 
 	.artikel {
 		display: block;
-		color: var(--grau);
-		font-size: 0.9rem;
+		color: var(--muted-foreground);
+		font-size: var(--text-xs);
 	}
 </style>

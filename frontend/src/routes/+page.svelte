@@ -603,29 +603,49 @@
 
 <style>
 	.einleitung {
-		margin-top: 0;
+		margin: 0 0 1.5rem;
+		color: var(--muted-foreground);
 	}
 
+	form {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+	}
+
+	/* Abschnitte als Karten: Fläche und 1px-Linie statt Schatten (Style-Kit) */
 	section {
-		margin: 2rem 0;
+		padding: 1.25rem;
+		background: var(--card);
+		border: 1px solid var(--border);
+		border-radius: var(--radius-lg);
+	}
+
+	section.ergebnisse {
+		margin-top: 2.5rem;
+		padding: 0;
+		background: none;
+		border: 0;
 	}
 
 	h2 {
-		font-size: 1.3rem;
-		margin: 0 0 0.5rem;
-		padding-bottom: 0.4rem;
-		border-bottom: 2px solid var(--schwarz);
+		margin: 0;
+		font-size: var(--text-xl);
+		line-height: 1.75rem;
+		font-weight: 700;
 	}
 
+	/* Unterblöcke (Person 1, 1. Kind …) durch eine Linie getrennt */
 	.unterblock {
-		border-left: 3px solid var(--grau-linie);
-		padding-left: 1rem;
-		margin: 1.25rem 0;
+		margin-top: 1.25rem;
+		padding-top: 1.25rem;
+		border-top: 1px solid var(--border);
 	}
 
 	.unterblock h3 {
-		font-size: 1.1rem;
 		margin: 0;
+		font-size: var(--text-base);
+		font-weight: 600;
 	}
 
 	.kopf {
@@ -637,95 +657,124 @@
 
 	button {
 		font: inherit;
+		font-size: var(--text-sm);
 		cursor: pointer;
-		border-radius: 0;
+		border-radius: var(--radius-md);
+		transition:
+			background-color 100ms ease-out,
+			opacity 100ms ease-out;
+	}
+
+	button:active {
+		transform: translateY(1px);
 	}
 
 	button:focus-visible {
-		outline: 3px solid var(--schwarz);
-		outline-offset: 2px;
+		outline: 3px solid var(--ring);
+		outline-offset: 1px;
 	}
 
+	/* Der einzige grüne Hauptknopf der Seite */
 	.hauptknopf {
-		background: var(--gruen);
-		color: var(--weiss);
-		border: 2px solid var(--gruen);
-		font-weight: 700;
-		font-size: 1.15rem;
-		padding: 0.75rem 2.5rem;
+		align-self: flex-start;
+		height: 2.5rem;
+		padding: 0 1.5rem;
+		background: var(--primary);
+		color: var(--primary-foreground);
+		border: 0;
+		font-weight: 500;
 	}
 
 	.hauptknopf:hover {
-		background: var(--gruen-text);
-		border-color: var(--gruen-text);
+		opacity: 0.85;
 	}
 
 	.hauptknopf:disabled {
-		opacity: 0.6;
+		opacity: 0.5;
 		cursor: wait;
 	}
 
 	.zweitrangig {
-		background: var(--weiss);
-		color: var(--schwarz);
-		border: 1px solid var(--schwarz);
-		padding: 0.5rem 1rem;
+		margin-top: 1.25rem;
+		height: 2.25rem;
+		padding: 0 0.875rem;
+		background: var(--card);
+		color: var(--foreground);
+		border: 1px solid var(--input);
 	}
 
 	.zweitrangig:hover {
-		background: var(--gruen-hell);
+		background: var(--secondary);
 	}
 
 	.link {
 		background: none;
 		border: 0;
-		color: var(--schwarz);
-		text-decoration: underline;
 		padding: 0;
+		color: var(--primary);
+		text-underline-offset: 4px;
+	}
+
+	.link:hover {
+		text-decoration: underline;
 	}
 
 	.hinweis-monat {
-		margin: -0.25rem 0 1rem;
-		padding: 0.5rem 0.7rem;
-		border-left: 4px solid var(--schwarz);
-		background: var(--grau-hell);
+		margin: -0.5rem 0 1rem;
+		padding: 0.625rem 0.75rem;
+		background: var(--secondary);
+		border-radius: var(--radius-md);
+		font-size: var(--text-sm);
 	}
 
+	/* Fehlende Angaben: ruhige Karte, Fehlerfarbe nur im Text */
 	.fehlerliste {
-		border-left: 6px solid var(--fehler);
-		background: var(--grau-hell);
-		padding: 0.75rem 1rem;
-		margin-bottom: 1rem;
+		padding: 1rem 1.25rem;
+		background: var(--card);
+		border: 1px solid var(--border);
+		border-left: 2px solid var(--destructive);
+		border-radius: var(--radius-lg);
+		font-size: var(--text-sm);
 	}
 
 	.fehlerliste p {
 		margin: 0;
-		font-weight: 600;
+		font-weight: 500;
+		color: var(--destructive);
 	}
 
 	.fehlerliste ul {
-		margin: 0.4rem 0 0;
-		padding-left: 1.2rem;
+		margin: 0.5rem 0 0;
+		padding-left: 1.25rem;
 	}
 
 	.veraltet {
-		font-weight: 600;
+		color: var(--muted-foreground);
+		font-size: var(--text-sm);
 	}
 
 	.familie {
-		border-top: 2px solid var(--schwarz);
-		padding-top: 0.75rem;
+		padding: 1.25rem;
+		background: var(--card);
+		border: 1px solid var(--border);
+		border-radius: var(--radius-lg);
 	}
 
 	.familie h3 {
 		margin: 0 0 0.25rem;
+		font-size: var(--text-base);
+		font-weight: 600;
+	}
+
+	.familie p {
+		margin: 0;
 	}
 
 	.fester-hinweis {
 		margin-top: 2.5rem;
-		padding-top: 1rem;
-		border-top: 1px solid var(--grau-linie);
-		color: var(--grau);
-		font-size: 0.95rem;
+		padding-top: 1.25rem;
+		border-top: 1px solid var(--border);
+		color: var(--muted-foreground);
+		font-size: var(--text-sm);
 	}
 </style>

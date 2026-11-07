@@ -1,0 +1,99 @@
+/* Design-Tokens nach dem Style-Kit (style-kit/STYLE.md), schlank umgesetzt:
+   nur hell, neutrale Grautöne, Ebenen durch Fläche und 1px-Linie statt
+   Schatten, eine Akzentfarbe. Statt Gletscher-Blau ist der Akzent das Grün
+   des Kantons St. Gallen (Teamentscheid). */
+
+@import '@fontsource-variable/geist';
+@import '@fontsource/geist-mono/400.css';
+@import '@fontsource/geist-mono/500.css';
+
+:root {
+	/* Grün an einer Stelle. --gruen-wappen nähert das Wappen-Grün an; den
+	   offiziellen Farbcode hier einsetzen. --primary ist eine dunklere Stufe,
+	   damit weisse Schrift darauf gut lesbar ist (WCAG AA). */
+	--gruen-wappen: #009a49;
+	--primary: #007a3d;
+	--primary-foreground: #ffffff;
+
+	--background: #f7f9fb;
+	--foreground: #0a0e13;
+	--card: #ffffff;
+	--secondary: #eef2f6;
+	--muted-foreground: #5b6773;
+	--border: #dce3ea;
+	--input: #cfd8e1;
+	--destructive: #c23b40;
+	--ring: color-mix(in oklch, var(--primary) 50%, transparent);
+
+	--radius-md: 0.4rem;
+	--radius-lg: 0.5rem;
+
+	/* Schriftgrössen: 15px Grundschrift */
+	--text-xs: 0.75rem;
+	--text-sm: 0.8125rem;
+	--text-base: 0.9375rem;
+	--text-lg: 1.125rem;
+	--text-xl: 1.25rem;
+	--text-2xl: 1.75rem;
+	--text-3xl: 2.25rem;
+
+	--font-sans: 'Geist Variable', system-ui, sans-serif;
+	--font-mono: 'Geist Mono', ui-monospace, monospace;
+	--ease: cubic-bezier(0.16, 1, 0.3, 1);
+
+	color-scheme: light;
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+html {
+	font-family: var(--font-sans);
+	-webkit-font-smoothing: antialiased;
+}
+
+body {
+	margin: 0;
+	background: var(--background);
+	color: var(--foreground);
+	font-size: var(--text-base);
+	line-height: 1.6;
+}
+
+::selection {
+	background: color-mix(in oklch, var(--primary) 30%, transparent);
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.015em;
+}
+
+/* Kleine Überschrift: 12px, Grossbuchstaben, gesperrt, gedämpft */
+.label {
+	font-size: var(--text-xs);
+	line-height: 1rem;
+	font-weight: 500;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	color: var(--muted-foreground);
+}
+
+/* Beträge und Zahlen: Mono, gleich breite Ziffern */
+.figur {
+	font-family: var(--font-mono);
+	font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		transition-duration: 0.01ms !important;
+	}
+}

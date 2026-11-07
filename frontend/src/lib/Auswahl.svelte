@@ -26,13 +26,15 @@
 	.auswahl {
 		position: relative;
 		border: 0;
-		margin: 1rem 0;
+		margin: 1.25rem 0;
 		padding: 0;
+		min-width: 0;
 	}
 
 	legend {
-		font-weight: 600;
-		margin-bottom: 0.4rem;
+		font-size: var(--text-sm);
+		font-weight: 500;
+		margin-bottom: 0.375rem;
 		padding: 0;
 	}
 
@@ -44,23 +46,33 @@
 
 	.knopf {
 		position: relative;
-		border: 1px solid var(--schwarz);
-		padding: 0.55rem 1.1rem;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-height: 2.25rem;
+		min-width: 5rem;
+		padding: 0.375rem 0.875rem;
+		border: 1px solid var(--input);
+		border-radius: var(--radius-md);
+		background: var(--card);
+		font-size: var(--text-sm);
 		cursor: pointer;
-		background: var(--weiss);
-		min-width: 5.5rem;
-		text-align: center;
+		transition:
+			background-color 100ms ease-out,
+			border-color 100ms ease-out;
 	}
 
 	.knopf:hover {
-		background: var(--gruen-hell);
+		background: var(--secondary);
 	}
 
+	/* Gewählt: Akzentfarbe nur als Rand und leichte Fläche (Style-Kit) */
 	.knopf.gewaehlt {
-		background: var(--gruen);
-		border-color: var(--gruen);
-		color: var(--weiss);
+		border-color: var(--primary);
+		background: color-mix(in oklch, var(--primary) 8%, var(--card));
+		color: var(--primary);
 		font-weight: 600;
+		box-shadow: inset 0 0 0 1px var(--primary);
 	}
 
 	/* Radio-Kreis ausblenden, aber für Tastatur und Screenreader behalten. */
@@ -72,26 +84,30 @@
 	}
 
 	.knopf:focus-within {
-		outline: 3px solid var(--schwarz);
-		outline-offset: 2px;
+		outline: 3px solid var(--ring);
+		outline-offset: 1px;
 	}
 
 	/* Wie bei den Eingabefeldern: Info-Text erscheint bei der Auswahl und
 	   schwebt über dem Inhalt darunter. */
 	.hilfe {
 		display: none;
-		margin: 0.4rem 0 0;
-		padding: 0.5rem 0.7rem;
 		position: absolute;
 		z-index: 10;
 		left: 0;
 		top: 100%;
-		width: min(100%, 34rem);
-		box-shadow: 0 2px 6px rgb(0 0 0 / 0.25);
+		width: min(100%, 32rem);
+		margin: 0.375rem 0 0;
+		padding: 0.625rem 0.75rem;
+		background: var(--card);
+		border: 1px solid var(--border);
+		border-left: 2px solid var(--primary);
+		border-radius: var(--radius-md);
+		box-shadow: 0 8px 24px rgb(10 14 19 / 0.08);
+		color: var(--muted-foreground);
+		font-size: var(--text-sm);
+		line-height: 1.25rem;
 		pointer-events: none; /* Klicks gehen durch zum Feld darunter */
-		background: var(--gruen-hell);
-		border-left: 4px solid var(--gruen);
-		font-size: 0.95rem;
 	}
 
 	.auswahl:focus-within .hilfe {
@@ -99,12 +115,12 @@
 	}
 
 	.mit-fehler .knopf:not(.gewaehlt) {
-		border: 2px solid var(--fehler);
+		border-color: var(--destructive);
 	}
 
 	.meldung {
-		margin: 0.3rem 0 0;
-		color: var(--fehler);
-		font-size: 0.95rem;
+		margin: 0.375rem 0 0;
+		color: var(--destructive);
+		font-size: var(--text-sm);
 	}
 </style>
