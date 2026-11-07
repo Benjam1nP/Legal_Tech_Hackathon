@@ -6,6 +6,7 @@ Jede Bestimmung des Gesetzes (KiBG, `Gesetz.pdf`) und der Verordnung (KiBV, `Ver
 
 - **Nicht berechenbar:** Verfahren, Datenschutz, Finanzverwaltung. Gehört in die Dokumentation, nicht in den Code.
 - **Ausserhalb des Umfangs:** grundsätzlich berechenbar, aber nicht Teil der Berechnung für eine Familie.
+- **Zurückgestellt (R1, R2 …):** relevant, wird aber anfangs bewusst nicht modelliert. Details im Abschnitt «Zurückgestellt, aber relevant».
 - Variablen sind entweder **Eingaben** (Tatsachen oder menschliche Entscheide, welche die Nutzerin oder der Nutzer eingibt) oder **Formeln** (von OpenFisca berechnet).
 - Die Namen sind Vorschläge und können geändert werden.
 - **O1, O2 …** verweisen auf die offenen Fragen am Schluss.
@@ -76,7 +77,7 @@ Jede Bestimmung des Gesetzes (KiBG, `Gesetz.pdf`) und der Verordnung (KiBV, `Ver
 | Art. 11.3 | Verfügung wird bei Änderungen angepasst | Nicht berechenbar | — | — |
 | Art. 12.1, 12.3 | Auszahlung an die Einrichtung; Kantonsanteil an die Gemeinde | Nicht berechenbar | — | — |
 | Art. 12.2 | Beitrag wird auf der Rechnung an die Eltern abgezogen | Variable, Formel | `kibg_restkosten_eltern` | = Kosten − Beitrag. Gut für den Rechner |
-| Art. 13 | Rückerstattung innert fünf Jahren | Ausserhalb des Umfangs | — | — |
+| Art. 13 | Unrechtmässig bezogene Beiträge: Rückforderung oder Verrechnung innert fünf Jahren seit Rechtskraft der Verfügung | **Zurückgestellt (R1)** | — | Siehe R1 |
 | Art. 14–15 | Mitwirkungspflichten von Eltern und Einrichtungen | Nicht berechenbar | — | — |
 | Art. 16.1 | Controlling und Stichproben | Nicht berechenbar | — | — |
 | Art. 16.2 | Modell wird regelmässig überprüft | Nicht berechenbar | — | Stützt die Reformidee |
@@ -175,7 +176,7 @@ Jede Bestimmung des Gesetzes (KiBG, `Gesetz.pdf`) und der Verordnung (KiBV, `Ver
 | Art. 16.3 | Senkungen wegen Modelländerungen gelten erst ab der nächsten Verfügung | Periode | — | Wichtig für Reformszenarien |
 | Art. 16.4 | Erinnerung vor Ablauf einer Verfügung | Nicht berechenbar | — | — |
 | Art. 17 | Erfassung des Betreuungsumfangs bis zum 15., Auszahlungsrhythmus | Nicht berechenbar | — | — |
-| Art. 18 | Rückerstattung durch die Eltern | Ausserhalb des Umfangs | — | — |
+| Art. 18 | Unrecht bezogen, wenn die Anspruchsvoraussetzungen nicht erfüllt waren; Forderung richtet sich gegen die Eltern | **Zurückgestellt (R1)** | — | Konkretisiert KiBG 13, siehe R1 |
 
 ### VI. Plattform
 
@@ -225,6 +226,16 @@ Jede Bestimmung des Gesetzes (KiBG, `Gesetz.pdf`) und der Verordnung (KiBV, `Ver
 5. × subventionierte Stunden
 6. auf die Kosten begrenzt
 7. aufgeteilt auf Kanton, Gemeinde und Restkosten der Eltern
+
+---
+
+## Zurückgestellt, aber relevant
+
+Diese Bestimmungen modellieren wir anfangs bewusst nicht. Sie sind aber wichtig für die Dokumentation, den Pitch oder einen späteren Ausbau.
+
+| Nr. | Bestimmung | Inhalt | Warum relevant | Warum zurückgestellt | Mögliche Umsetzung später |
+|---|---|---|---|---|---|
+| R1 | KiBG 13, KiBV 18 | Unrechtmässig bezogene Beiträge werden innert fünf Jahren seit Rechtskraft der Verfügung zurückgefordert oder mit weiteren Beiträgen verrechnet. Unrecht bezogen ist, was ohne erfüllte Anspruchsvoraussetzungen bezogen wurde. Die Forderung richtet sich gegen die Eltern. | Zeigt das Risiko für Familien, wenn sich Einkommen, Pensum oder Betreuung ändern und das nicht gemeldet wird (Mitwirkungspflicht KiBG 14.2, Anpassung KiBG 11.3). Unser Rechner sollte darauf hinweisen. Gut für den Teil zu Ethik und Nutzerinformation. | Betrifft nicht die Berechnung des Beitrags, sondern ein späteres Verfahren. Ob ein Bezug unrechtmässig war, entscheidet die kommunale Stelle. | Parameter `kibg.verfahren.rueckforderungsfrist_jahre = 5`; Eingaben `kibg_bezogener_beitrag`, `rechtskraft_verfuegung`; Formeln `kibg_rueckforderungsbetrag` = bezogen − Anspruch nach den tatsächlichen Verhältnissen, `kibg_rueckforderung_moeglich` (Frist noch offen) |
 
 ---
 
