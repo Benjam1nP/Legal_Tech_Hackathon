@@ -10,7 +10,7 @@ Jede Bestimmung des Gesetzes (KiBG, `Gesetz.pdf`) und der Verordnung (KiBV, `Ver
 - Variablen sind entweder **Eingaben** (Tatsachen oder menschliche Entscheide, welche die Nutzerin oder der Nutzer eingibt) oder **Formeln** (von OpenFisca berechnet).
 - Die Namen sind Vorschläge und können geändert werden.
 - **O1, O2 …** verweisen auf die offenen Fragen am Schluss.
-- **Periode:** Alle Parameter gelten ab Vollzugsbeginn, der noch nicht feststeht (O1). Die meisten Variablen sind monatlich, das Einkommen jährlich, Daten sind taggenau.
+- **Periode:** Alle Parameter gelten ab Vollzugsbeginn, der noch nicht feststeht (O1). Die Periode jeder Variable steht im Abschnitt «Variablen: Entität und Periode».
 
 ---
 
@@ -22,6 +22,66 @@ Jede Bestimmung des Gesetzes (KiBG, `Gesetz.pdf`) und der Verordnung (KiBV, `Ver
 | `Household`, Rolle `erziehungsberechtigt` (max. 2) | KiBG 2.1 | Personen, die das Kind in Obhut haben und Beiträge geltend machen |
 | `Household`, Rolle `partner` (max. 1) | KiBV 8.1b | Partner/in in gefestigter Lebensgemeinschaft, die **nicht** erziehungsberechtigt ist. Diese Rolle fehlt in der Vorlage noch |
 | `Household`, Rolle `kind` (beliebig viele) | KiBG 4.3 | Die betreuten Kinder |
+
+---
+
+## Variablen: Entität und Periode
+
+**Grundregeln**
+
+- **Monatlich (`MONTH`):** alles, was mit Betreuung und Geld pro Monat zu tun hat, und Zustände, die sich unterjährig ändern können (Pensum, Wohnsitz, Einrichtung). Der Beitrag wird pro Monat berechnet.
+- **Jährlich (`YEAR`):** nur das Einkommen, weil es auf der Steuerveranlagung beruht (KiBG 5.3). Monatliche Formeln lesen es für das laufende Jahr.
+- **Unbefristet (`ETERNITY`):** Daten, die sich nie ändern (Geburtsdatum, Betreuungsbeginn, Gesuchsdatum).
+
+**Entscheide für die ersten Tests**
+
+- **Massgebendes Einkommen ist eine Eingabe.** Wir geben das massgebende Einkommen pro Person direkt ein (`me_steuerveranlagung`) und berechnen es nicht nach der V EG-KVG (O5). OpenFisca zählt nur zusammen, wessen Einkommen gemäss KiBV 8 dazugehört.
+- **Betreuungsstunden pro Monat sind eine Eingabe.** Wir geben die Stunden pro Monat direkt ein (`betreuungsstunden`), nicht Tage und Wochen. Die Obergrenze von 12 Stunden pro Tag prüfen wir über die Anzahl Betreuungstage: höchstens Tage × 12. Für die Obergrenze von 5 Tagen pro Woche fehlt die Umrechnung auf einen Monat (O7). Bis das geklärt ist, kürzt OpenFisca bei dieser Grenze nichts: Wir nehmen an, dass die eingegebenen Tage und Stunden höchstens 5 Tage pro Woche umfassen. Gibt jemand Samstagsbetreuung ein, rechnet der Rechner einen zu hohen Beitrag aus. Das ist selten, weil die meisten Kitas nur Montag bis Freitag geöffnet sind.
+
+| Variable | Entität | Periode | Eingabe / Formel | Typ | Quelle |
+|---|---|---|---|---|---|
+| `geburtsdatum` | Person | ETERNITY | Eingabe | Datum | KiBG 4.3 |
+| `wohnsitz_kanton_sg` | Person | MONTH | Eingabe | ja/nein | KiBG 4.1 |
+| `beschaeftigungsgrad` | Person | MONTH | Eingabe | % | KiBG 4.1 |
+| `me_steuerveranlagung` | Person | YEAR | Eingabe | Fr. | KiBG 5.3, KiBV 9 |
+| `me_aktuell` | Person | YEAR | Eingabe | Fr. (aufs Jahr gerechnet) | KiBG 5.4, KiBV 11 |
+| `besteuerungsart` | Person | YEAR | Eingabe | Kategorie | KiBV 10.1 |
+| `kibg_einrichtungstyp` | Person (Kind) | MONTH | Eingabe | Kategorie | KiBG 3.2 |
+| `kibg_einrichtung_anerkannt` | Person (Kind) | MONTH | Eingabe | ja/nein | KiBG 3.2 |
+| `kibg_einrichtung_angemeldet` | Person (Kind) | MONTH | Eingabe | ja/nein | KiBG 3.3 |
+| `kibg_einrichtung_berechtigt` | Person (Kind) | MONTH | Formel | ja/nein | KiBG 3.1 |
+| `eingeschult` | Person (Kind) | MONTH | Eingabe | ja/nein | KiBV 14 |
+| `primarschule_abgeschlossen` | Person (Kind) | MONTH | Eingabe | ja/nein | KiBG 4.3 |
+| `kibg_altersstufe` | Person (Kind) | MONTH | Formel | Kategorie | KiBV 14.1–3 |
+| `kibg_hoechstbeitrag` | Person (Kind) | MONTH | Formel | Fr. pro Stunde | KiBV 14 |
+| `betreuungsstunden` | Person (Kind) | MONTH | Eingabe | Stunden | KiBV 14.4 |
+| `betreuungstage_mit_obhut` | Person (Kind) | MONTH | Eingabe | Tage | KiBV 7, 14.4 |
+| `kibg_subventionierte_stunden` | Person (Kind) | MONTH | Formel | Stunden | KiBV 14.4 |
+| `kibg_betreuungskosten` | Person (Kind) | MONTH | Eingabe | Fr. | KiBG 6.2 |
+| `kibg_anspruch` | Person (Kind) | MONTH | Formel | ja/nein | KiBG 4 |
+| `kibg_beitrag_pro_stunde` | Person (Kind) | MONTH | Formel | Fr. pro Stunde | KiBV 13, Anhang |
+| `kibg_mindestbeitrag` | Person (Kind) | MONTH | Formel | Fr. | KiBG 6, 20.1 |
+| `kibg_zusatzbeitrag` | Person (Kind) | MONTH | Formel | Fr. | KiBG 20.2, KiBV 24 |
+| `kibg_beitrag_total` | Person (Kind) | MONTH | Formel | Fr. | KiBG 20.3 |
+| `kibg_restkosten_eltern` | Person (Kind) | MONTH | Formel | Fr. | KiBG 12.2 |
+| `kibg_anteil_kanton` | Person (Kind) | MONTH | Formel | Fr. | KiBG 18.1 |
+| `kibg_anteil_gemeinde` | Person (Kind) | MONTH | Formel | Fr. | KiBG 18.1, 20.2 |
+| `betreuungsbeginn` | Person (Kind) | ETERNITY | Eingabe | Datum | KiBG 9.2 |
+| `gesuchsdatum` | Person (Kind) | ETERNITY | Eingabe | Datum | KiBG 9.1 |
+| `kibg_beitragsbeginn` | Person (Kind) | ETERNITY | Formel (optional) | Datum | KiBG 9.2, KiBV 25 |
+| `kibg_verfuegung_ende` | Person (Kind) | ETERNITY | Formel (optional) | Datum | KiBV 16 |
+| `gemeinsamer_haushalt` | Haushalt | MONTH | Eingabe | ja/nein | KiBG 4.1b |
+| `kibg_beschaeftigung_erfuellt` | Haushalt | MONTH | Formel | ja/nein | KiBG 4.1 |
+| `kibg_ausnahme_bewilligt` | Haushalt | MONTH | Eingabe | ja/nein | KiBG 4.2 |
+| `kibg_ausnahmegrund` | Haushalt | MONTH | Eingabe | Kategorie | KiBV 12 |
+| `verheiratet_oder_eingetragen` | Haushalt | MONTH | Eingabe | ja/nein | KiBV 8.2a |
+| `beginn_gemeinsamer_haushalt` | Haushalt | ETERNITY | Eingabe | Datum | KiBV 8.2b |
+| `gefestigte_lebensgemeinschaft` | Haushalt | MONTH | Formel | ja/nein | KiBV 8.2 |
+| `antrag_aktuelle_gegebenheiten` | Haushalt | YEAR | Eingabe | ja/nein | KiBV 11.1 |
+| `kibg_massgebendes_einkommen` | Haushalt | YEAR | Formel (Summe der Eingaben) | Fr. | KiBG 5, KiBV 8–11 |
+| `wohngemeinde` | Haushalt | MONTH | Eingabe | Kategorie | KiBV 2 |
+| `gemeinde_z1` | Haushalt | MONTH | Eingabe | Fr. pro Stunde | KiBG 20.2, KiBV 24 |
+| `gemeinde_z2` | Haushalt | MONTH | Eingabe | Fr. pro Stunde | KiBG 20.2, KiBV 24 |
 
 ---
 
@@ -53,7 +113,7 @@ Jede Bestimmung des Gesetzes (KiBG, `Gesetz.pdf`) und der Verordnung (KiBV, `Ver
 | Art. 4.3 | Bis zum Abschluss der Primarschule | Variable, Eingabe (ja/nein) | `primarschule_abgeschlossen` (Kind) | Eine Tatsache, kein Alter |
 | Art. 4 | Anspruch gesamt | Variable, Formel | `kibg_anspruch` (Kind) | Wohnsitz UND (Beschäftigung ODER Ausnahme) UND Alter UND Einrichtung |
 | Art. 5.1–5.2 | Abhängig von massgebendem Einkommen und Vermögen (ME) | Variable | `kibg_massgebendes_einkommen` (Haushalt, jährlich) | Zusammengesetzt gemäss KiBV 8–11 |
-| Art. 5.3 | Grundlage: letzte definitive Steuerveranlagung | Variable, Eingabe | `me_steuerveranlagung` (Person, jährlich) | In einem anderen Erlass definiert, der V EG-KVG (O5) |
+| Art. 5.3 | Grundlage: letzte definitive Steuerveranlagung | Variable, Eingabe | `me_steuerveranlagung` (Person, jährlich) | In einem anderen Erlass definiert, der V EG-KVG (O5). **Entscheid: direkte Eingabe** |
 | Art. 5.4 | Wesentliche Veränderung, daher aktuelle Gegebenheiten | Variable, Eingabe + Formel | `me_aktuell` (Person) | Schwelle in KiBV 11 |
 | Art. 6.1 | Lineares Modell | Variable, Formel | `kibg_beitrag_pro_stunde` | Formel im Anhang der KiBV |
 | Art. 6.2 | Beitrag höchstens so hoch wie die tatsächlichen Kosten | Variable, Eingabe + Formel | `kibg_betreuungskosten` (Kind, monatlich), `kibg_mindestbeitrag` | min(Beitrag, Kosten) |
@@ -162,7 +222,7 @@ Jede Bestimmung des Gesetzes (KiBG, `Gesetz.pdf`) und der Verordnung (KiBV, `Ver
 | Art. 14.1–3 | Massgebender Höchstbeitrag | Variable, Formel | `kibg_hoechstbeitrag` (Kind) | Altersstufe × Einrichtungstyp |
 | Art. 14.4 | Höchstens 12 subventionierte Stunden pro Tag | Parameter | `kibg.betreuung.max_stunden_pro_tag = 12` | — |
 | Art. 14.4 | Höchstens 5 Tage pro Woche | Parameter | `kibg.betreuung.max_tage_pro_woche = 5` | — |
-| Art. 14.4 | Subventionierte Stunden | Variable, Eingabe + Formel | `betreuungsstunden` (Kind, monatlich), `kibg_subventionierte_stunden` | Umrechnung Woche auf Monat (O7) |
+| Art. 14.4 | Subventionierte Stunden | Variable, Eingabe + Formel | `betreuungsstunden` (Kind, monatlich), `kibg_subventionierte_stunden` | **Entscheid: Stunden pro Monat als Eingabe**; min(Stunden, Betreuungstage × 12). Tagesgrenze pro Woche offen (O7) |
 | Art. 14.5 | Betreuungsmodule und Monatspauschalen per Richtlinien | Ausserhalb des Umfangs | — | Die Richtlinien liegen nicht vor (O7) |
 | Art. 15.1 | Kleinstes ME Fr. 40'000; bis dahin voller Beitrag | Parameter + Formel | `kibg.einkommen.min = 40_000` | Faktor nach oben begrenzt |
 | Art. 15.2 | Höchstes ME Fr. 154'000; darüber kein Beitrag | Parameter + Formel | `kibg.einkommen.max = 154_000` | Was gilt hier für Z2? (O4) |
@@ -247,9 +307,9 @@ Diese Bestimmungen modellieren wir anfangs bewusst nicht. Sie sind aber wichtig 
 | O2 | Ein Kind mit genau 18 Monaten fällt zwischen «unter 18» und «über 18» | KiBV 14.1–14.2 |
 | O3 | Braucht es bei 120 % zusammen zusätzlich mindestens 20 % pro Elternteil? Und gilt «a» nur für Alleinerziehende? | KiBG 4.1 |
 | O4 | Gilt Z2 (einkommensunabhängig) auch über Fr. 154'000? | KiBV 15.2 vs. Anhang |
-| O5 | Das massgebende Einkommen ist in einem anderen Erlass definiert (V EG-KVG, sGS 331.111), der in den Unterlagen fehlt. Text beschaffen oder Einkommen als Eingabe behandeln | KiBV 9–10 |
+| O5 | Das massgebende Einkommen ist in einem anderen Erlass definiert (V EG-KVG, sGS 331.111), der in den Unterlagen fehlt. **Vorläufig entschieden:** Einkommen pro Person ist eine Eingabe | KiBV 9–10 |
 | O6 | Das Gesetzes-PDF ist die **Fassung der ersten Lesung (16. September 2025)**, die KiBV verweist aber auf das Gesetz vom 14. Juni 2026. Bei den Organisatoren nachfragen, ob der Schlusstext abweicht | KiBG Titelseite |
-| O7 | Umrechnung der Wochenobergrenzen auf einen Monat; Betreuungsmodule und Monatspauschalen sind Richtlinien überlassen, die nicht öffentlich sind | KiBV 14.4–14.5 |
+| O7 | Umrechnung der Wochenobergrenzen auf einen Monat; Betreuungsmodule und Monatspauschalen sind Richtlinien überlassen, die nicht öffentlich sind. **Vorläufig entschieden:** Stunden pro Monat sind eine Eingabe; die Grenze von 5 Tagen pro Woche bleibt offen | KiBV 14.4–14.5 |
 | O8 | Welcher Elternteil muss im Kanton wohnen, und welche Gemeinde ist zuständig, wenn die Eltern getrennt leben? | KiBG 4.1, KiBV 2 |
 | O9 | Das Datum des Schuljahresbeginns steht nicht im Text | KiBV 16.2 |
 | O10 | Getrennte Eltern mit alternierender Obhut: Wer stellt das Gesuch, und wie werden die Tage aufgeteilt? | KiBV 7, 8.1b |
