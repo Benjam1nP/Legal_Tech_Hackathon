@@ -5,7 +5,7 @@
 
 Raw material for the legal and technical documentation. Sections follow the evaluation criteria in the course syllabus.
 
-_State as of commit `8789ae5` (2026-11-07 13:16)._
+_State as of commit `ade2141` (2026-11-07 13:36)._
 
 ## 1. Functionality and prototype quality
 
@@ -28,7 +28,11 @@ _Syllabus: the technical structure is understandable, fits the goal and rests on
 
 **Decisions**
 
-_No decisions recorded yet._
+| Date | Decision | Reason | Source | Commit | By |
+|---|---|---|---|---|---|
+| 2026-11-07 | Template demo files are replaced by KiBG rules; a copy is kept in docs/openfisca-template-reference/ as format reference | Template rules are fictional; we only need their format | team decision | `8789ae5`, `ade2141` | Benjamin Pfister |
+| 2026-11-07 | Missing or placeholder legal references only warn, format errors block the push | Agreed strictness for the hackathon | team decision | `8789ae5`, `ade2141` | Benjamin Pfister |
+| 2026-11-07 | Variables and parameters are named with the German legal terms of the text (snake_case, ASCII) | Lawyers in the team can compare code and text line by line | team decision; OpenFisca principle "line-to-line match" | `ade2141` | Benjamin Pfister |
 
 ## 3. Legal and technical integration
 
@@ -53,7 +57,10 @@ _None recorded yet._
 
 **Decisions**
 
-_No decisions recorded yet._
+| Date | Decision | Reason | Source | Commit | By |
+|---|---|---|---|---|---|
+| 2026-11-07 | Placeholder start date 1 August 2028 (formula_2028_08, values from 2028-08-01) until the Vollzugsbeginn is set | The Vollzugsbeginn is still open ("ab ●●") | KiBG Ziff. IV Nr. 1; KiBV Ziff. IV (Entwurf) | `ade2141` | Benjamin Pfister |
+| 2026-11-07 | The ordinance is cited as KiBV and always marked "(Entwurf)" | Own abbreviation of the ordinance; it is a draft and not in force | KiBV footnote 2 (Entwurf, RRB 2026/733) | `ade2141` | Benjamin Pfister |
 
 ## 4. Responsible and ethical technology design
 
@@ -86,7 +93,9 @@ cd openfisca-CH-SG && make serve-local    # OpenFisca Web API on :5000
 
 **Decisions**
 
-_No decisions recorded yet._
+| Date | Decision | Reason | Source | Commit | By |
+|---|---|---|---|---|---|
+| 2026-11-07 | Documentation file is structured along the evaluation criteria for the legal and technical documentation | Direct preparation of the report | Course syllabus, "Submission of legal and technical documentation" | `ade2141` | Benjamin Pfister |
 
 ## 6. Team contribution and transparency
 
@@ -97,36 +106,40 @@ _Syllabus: each member's contribution, and disclosure of AI tools, open-source c
 | Member | Commits | First | Last | Files changed per area |
 |---|---|---|---|---|
 | Karla Ruggaber | 8 | 2026-11-04 | 2026-11-07 | other (62), rules (60), tests (45), tooling (18), docs (14), materials (4) |
-| Benjamin Pfister | 5 | 2026-10-10 | 2026-11-07 | docs (54), tooling (6), other (3) |
+| Benjamin Pfister | 6 | 2026-10-10 | 2026-11-07 | docs (56), tooling (10), other (5) |
 
 _Add contributions that don't show in git (legal analysis, testing by hand, pitch, ...) by hand in the report._
 
 **AI use** (from `AI:` lines; basis for the Statement of Author Contribution and AI Use):
 
-_None recorded yet._
+- Claude Code (Anthropic): drafted RULEBOOK.md, the checker, the documentation generator, hooks and GitHub workflows (8789ae5 and this commit) on the team's instructions (`ade2141`, Benjamin Pfister, 2026-11-07)
 
 **Open-source components and external resources** (from `External:` lines):
 
-_None recorded yet._
+- OpenFisca country template (openfisca-CH-SG, AGPL-3.0): model scaffold and format reference (`ade2141`, Benjamin Pfister, 2026-11-07)
+- uv, pre-commit, ruff, yamllint: environment and automated checks (`ade2141`, Benjamin Pfister, 2026-11-07)
 
 **Decisions**
 
-_No decisions recorded yet._
-
-## Decisions without area
-
-_Restate them in a commit with an `Area:` line to sort them._
-
 | Date | Decision | Reason | Source | Commit | By |
 |---|---|---|---|---|---|
-| 2026-11-07 | Template demo files are replaced by KiBG rules; a copy is kept in docs/openfisca-template-reference/ as format reference | Template rules are fictional; we only need their format | team decision | `8789ae5` | Benjamin Pfister |
-| 2026-11-07 | Missing or placeholder legal references only warn, format errors block the push | Agreed strictness for the hackathon | team decision | `8789ae5` | Benjamin Pfister |
-| 2026-11-07 | Change and decision log is rebuilt by GitHub Actions after every push to main | Git has no local post-push hook; regenerating from history avoids merge conflicts | team decision | `8789ae5` | Benjamin Pfister |
+| 2026-11-07 | ~~Change and decision log is rebuilt by GitHub Actions after every push to main~~ (superseded by on-demand rebuild (see below)) | Git has no local post-push hook; regenerating from history avoids merge conflicts | team decision | `8789ae5`, `ade2141` | Benjamin Pfister |
+| 2026-11-07 | Documentation file is rebuilt on demand (GitHub button or local command), at least once before the submission on 8 Nov; everyone uses pull.rebase | A bot commit after every push left local copies one commit behind and caused merge commits | team decision | `ade2141` | Benjamin Pfister |
 
 ## Appendix: Change log
 
 ### 2026-11-07
 
+- **Structure documentation file along syllabus criteria, fix rulebook** (`ade2141`, Benjamin Pfister, 13:36)
+  - Decision: Template demo files are replaced by KiBG rules; a copy is kept in docs/openfisca-template-reference/ as format reference
+  - Decision: Missing or placeholder legal references only warn, format errors block the push
+  - Decision: Change and decision log is rebuilt by GitHub Actions after every push to main
+  - Decision: Documentation file is rebuilt on demand (GitHub button or local command), at least once before the submission on 8 Nov; everyone uses pull.rebase
+  - Decision: Documentation file is structured along the evaluation criteria for the legal and technical documentation
+  - Decision: Placeholder start date 1 August 2028 (formula_2028_08, values from 2028-08-01) until the Vollzugsbeginn is set
+  - Decision: Variables and parameters are named with the German legal terms of the text (snake_case, ASCII)
+  - Decision: The ordinance is cited as KiBV and always marked "(Entwurf)"
+  - Files: `.github/workflows/changelog.yaml` (changed), `.gitmessage` (changed), `.mailmap` (added), `RULEBOOK.md` (changed), `docs/CHANGELOG_DECISIONS.md` (changed), `tools/build_changelog.py` (changed), `tools/check_openfisca.py` (changed), `tools/setup.sh` (changed)
 - **Add rulebook with pre-commit/pre-push checks and decision log** (`8789ae5`, Benjamin Pfister, 13:16)
   - Decision: Template demo files are replaced by KiBG rules; a copy is kept in docs/openfisca-template-reference/ as format reference
   - Decision: Missing or placeholder legal references only warn, format errors block the push
