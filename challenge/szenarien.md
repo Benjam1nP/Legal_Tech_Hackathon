@@ -375,17 +375,19 @@ Hinweis für den Code: Mit Gleitkommazahlen kann 274.025 intern als 274.02499…
 
 ### Beschäftigungsgrad und Ausnahme (KiBG 4.1–4.2, KiBV 12)
 
-| Nr. | Änderung | `kibg_beschaeftigung_erfuellt` | `kibg_anspruch` | Status |
-|---|---|---|---|---|
-| G30 | Mutter allein, 20 % | ja | ja | A6 |
-| G31 | Mutter allein, 19 % | nein | nein | A6 |
-| G32 | Paar, 100 % + 20 % = 120 % | ja | ja | A6 |
-| G33 | Paar, 100 % + 19 % = 119 % | nein | nein | A6 |
-| G34 | Paar, 60 % + 60 % | ja | ja | A6 |
-| G35 | Paar, 110 % + 10 % = 120 % | nein (Vater unter 20 %) | nein | Entscheid O3 |
-| G36 | Paar, 100 % + 0 %, Ausnahme bewilligt (`kibg_ausnahme_bewilligt`) | nein | ja | fest |
-| G37 | wie P2, aber Mutter 0 % (Stellensuche), Ausnahme bewilligt, Grund berufliche Integration (KiBV 12a) | nein | ja, Beitrag 594.00 | fest |
-| G38 | wie P7, aber Partnerin 0 % | ja (nur der Vater zählt) | ja, Beitrag 270.00 | fest |
+lit. a und lit. b gelten kumulativ (Entscheid O3). lit. b ist nur bei gemeinsamem Haushalt anwendbar; sonst gilt sie als erfüllt. Die Ausnahme (KiBG 4.2) ersetzt den Beschäftigungsgrad, nicht die übrigen Voraussetzungen.
+
+| Nr. | Änderung | lit. a: jede Person ≥ 20 % | lit. b: zusammen ≥ 120 % bei gemeinsamem Haushalt | `kibg_beschaeftigung_erfuellt` | `kibg_anspruch` | Status |
+|---|---|---|---|---|---|---|
+| G30 | Mutter allein, 20 % | ja | ja (nicht anwendbar) | ja | ja | A6 |
+| G31 | Mutter allein, 19 % | nein | ja (nicht anwendbar) | nein | nein | A6 |
+| G32 | Paar, 100 % + 20 % = 120 % | ja | ja | ja | ja | A6 |
+| G33 | Paar, 100 % + 19 % = 119 % | nein | nein | nein | nein | A6 |
+| G34 | Paar, 60 % + 60 % | ja | ja | ja | ja | A6 |
+| G35 | Paar, 110 % + 10 % = 120 % | nein | ja | nein (Vater unter 20 %) | nein | Entscheid O3 |
+| G36 | Paar, 100 % + 0 %, Ausnahme bewilligt (`kibg_ausnahme_bewilligt`) | nein | nein | nein | ja | fest |
+| G37 | wie P2, aber Mutter 0 % (Stellensuche), Ausnahme bewilligt, Grund berufliche Integration (KiBV 12a) | nein | ja (nicht anwendbar) | nein | ja, Beitrag 594.00 | fest |
+| G38 | wie P7, aber Partnerin 0 % | ja | ja (nicht anwendbar) | ja (nur der Vater zählt) | ja, Beitrag 270.00 | fest |
 
 ### Zusatzbeiträge (KiBG 20, KiBV 24)
 

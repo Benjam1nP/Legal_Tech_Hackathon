@@ -574,6 +574,7 @@
     persons:
       lina:
         kibg_mindestbeitrag: 710.20
+        kibg_zusatzbeitrag: 0
         kibg_anteil_kanton: 355.10
         kibg_anteil_gemeinde: 355.10
         kibg_restkosten_eltern: 329.80
@@ -593,6 +594,7 @@
     persons:
       lina:
         kibg_mindestbeitrag: 548.05
+        kibg_zusatzbeitrag: 0
         kibg_anteil_kanton: 274.05
         kibg_anteil_gemeinde: 274.00
         kibg_restkosten_eltern: 491.95
@@ -655,6 +657,8 @@
       lina: *p1_lina
   output:
     household:
+      kibg_beschaeftigung_lit_a_erfuellt: true
+      kibg_beschaeftigung_lit_b_erfuellt: true
       kibg_beschaeftigung_erfuellt: true
     persons:
       lina:
@@ -672,6 +676,8 @@
       lina: *p1_lina
   output:
     household:
+      kibg_beschaeftigung_lit_a_erfuellt: false
+      kibg_beschaeftigung_lit_b_erfuellt: true
       kibg_beschaeftigung_erfuellt: false
     persons:
       lina:
@@ -690,6 +696,8 @@
       lina: *p1_lina
   output:
     household:
+      kibg_beschaeftigung_lit_a_erfuellt: true
+      kibg_beschaeftigung_lit_b_erfuellt: true
       kibg_beschaeftigung_erfuellt: true
     persons:
       lina:
@@ -730,6 +738,8 @@
       lina: *p1_lina
   output:
     household:
+      kibg_beschaeftigung_lit_a_erfuellt: true
+      kibg_beschaeftigung_lit_b_erfuellt: true
       kibg_beschaeftigung_erfuellt: true
     persons:
       lina:
@@ -772,6 +782,8 @@
       lina: *p1_lina
   output:
     household:
+      kibg_beschaeftigung_lit_a_erfuellt: false
+      kibg_beschaeftigung_lit_b_erfuellt: false
       kibg_beschaeftigung_erfuellt: false
     persons:
       lina:
@@ -803,6 +815,8 @@
         kibg_betreuungskosten: 1134
   output:
     household:
+      kibg_beschaeftigung_lit_a_erfuellt: false
+      kibg_beschaeftigung_lit_b_erfuellt: true
       kibg_beschaeftigung_erfuellt: false
     persons:
       noah:
@@ -822,6 +836,8 @@
       jonas: *p7_jonas
   output:
     household:
+      kibg_beschaeftigung_lit_a_erfuellt: true
+      kibg_beschaeftigung_lit_b_erfuellt: true
       kibg_beschaeftigung_erfuellt: true
     persons:
       jonas:
@@ -918,6 +934,7 @@
     persons: *p7_personen
   output:
     household:
+      kibg_gefestigte_lebensgemeinschaft: true
       kibg_massgebendes_einkommen: 97000
     persons:
       jonas:
@@ -975,6 +992,8 @@
       lina: *p1_lina
   output:
     household:
+      # Die Abweichung ist erreicht, zählt aber ohne Antrag nicht (Art. 11 Abs. 1 KiBV).
+      kibg_abweichung_wesentlich: true
       kibg_massgebendes_einkommen: 100000
 
 - name: G48 Paar, Abweichung von 25 % beim Einkommen des Haushalts (Art. 11 Abs. 2 KiBV)
@@ -996,6 +1015,9 @@
       lina: *p1_lina
   output:
     household:
+      kibg_me_steuerveranlagung_haushalt: 100000
+      kibg_me_aktuell_haushalt: 75000
+      kibg_abweichung_wesentlich: true
       kibg_massgebendes_einkommen: 75000
 
 # --- Mehrere Kinder und Perioden ---------------------------------------------
@@ -1273,6 +1295,9 @@
     persons:
       jonas:
         kibg_anspruch: false
+        kibg_beitrag_pro_stunde: 0
+        kibg_mindestbeitrag: 0
+        kibg_zusatzbeitrag: 0
         kibg_beitrag_total: 0
         kibg_restkosten_eltern: 864
         kibg_anteil_kanton: 0
