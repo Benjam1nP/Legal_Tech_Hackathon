@@ -1,0 +1,71 @@
+description: Höchster Beitrag je Kind und Betreuungsstunde (MaxV)
+altersgrenze_monate:
+  description: Alter in Monaten, ab dem der tiefere Höchstbeitrag gilt
+  metadata:
+    unit: month
+    reference: Art. 14 Abs. 1 und 2 KiBV (Entwurf)
+  values:
+    2028-08-01:
+      value: 18
+unter_18_monate:
+  description: Kinder unter 18 Monaten
+  kita:
+    description: Höchstbeitrag unter 18 Monaten in Kindertagesstätten
+    metadata:
+      unit: currency-CHF
+      reference: Art. 14 Abs. 1 lit. a KiBV (Entwurf)
+    values:
+      2028-08-01:
+        value: 11.00
+  tagesfamilie:
+    description: Höchstbeitrag unter 18 Monaten in Tagesfamilien
+    metadata:
+      unit: currency-CHF
+      reference: Art. 14 Abs. 1 lit. b KiBV (Entwurf)
+    values:
+      2028-08-01:
+        value: 8.30
+ab_18_monate:
+  description: Kinder über 18 Monaten bis zur Einschulung
+  kita:
+    description: Höchstbeitrag über 18 Monaten in Kindertagesstätten
+    metadata:
+      unit: currency-CHF
+      reference: Art. 14 Abs. 2 lit. a KiBV (Entwurf)
+    values:
+      2028-08-01:
+        value: 7.50
+  tagesfamilie:
+    description: Höchstbeitrag über 18 Monaten in Tagesfamilien
+    metadata:
+      unit: currency-CHF
+      reference: Art. 14 Abs. 2 lit. b KiBV (Entwurf)
+    values:
+      2028-08-01:
+        value: 5.50
+eingeschult:
+  description: Eingeschulte Kinder bis zum Ende der Primarstufe
+  kita:
+    description: Höchstbeitrag eingeschult in Kindertagesstätten
+    metadata:
+      unit: currency-CHF
+      reference: Art. 14 Abs. 3 lit. a KiBV (Entwurf)
+    values:
+      2028-08-01:
+        value: 7.50
+  schulergaenzend:
+    description: Höchstbeitrag eingeschult in Einrichtungen für schulergänzende Betreuung
+    metadata:
+      unit: currency-CHF
+      reference: Art. 14 Abs. 3 lit. b KiBV (Entwurf)
+    values:
+      2028-08-01:
+        value: 5.50
+  tagesfamilie:
+    description: Höchstbeitrag eingeschult in Tagesfamilien
+    metadata:
+      unit: currency-CHF
+      reference: Art. 14 Abs. 3 lit. c KiBV (Entwurf)
+    values:
+      2028-08-01:
+        value: 5.50

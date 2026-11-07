@@ -1,0 +1,19 @@
+description: Subventionierte Betreuung (Art. 14 Abs. 4 KiBV, Entwurf)
+max_stunden_pro_tag:
+  description: Höchstens subventionierte Betreuungsstunden je Kind und Betreuungstag
+  metadata:
+    unit: hour
+    reference: Art. 14 Abs. 4 KiBV (Entwurf)
+  values:
+    2028-08-01:
+      value: 12
+max_tage_pro_woche:
+  description: >-
+    Höchstens subventionierte Betreuungstage je Woche. Wird vorläufig nicht
+    angewendet, weil die Eingaben Monatswerte sind (Teamentscheid, A3).
+  metadata:
+    unit: day
+    reference: Art. 14 Abs. 4 KiBV (Entwurf)
+  values:
+    2028-08-01:
+      value: 5

@@ -1,0 +1,9 @@
+description: Finanzierung der Beiträge (Art. 18 KiBG)
+anteil_kanton:
+  description: Anteil des Kantons am Mindestbeitrag; den Rest trägt die politische Gemeinde
+  metadata:
+    unit: /1
+    reference: Art. 18 Abs. 1 KiBG
+  values:
+    2028-08-01:
+      value: 0.5

@@ -1,0 +1,25 @@
+description: Anspruchsberechtigung (Art. 4 KiBG)
+min_beschaeftigungsgrad:
+  description: Mindest-Beschäftigungsgrad jeder erziehungsberechtigten Person
+  metadata:
+    unit: /1
+    reference: Art. 4 Abs. 1 lit. a KiBG
+  values:
+    2028-08-01:
+      value: 0.20
+min_beschaeftigungsgrad_gemeinsam:
+  description: Mindest-Beschäftigungsgrad zusammen bei gemeinsamem Haushalt
+  metadata:
+    unit: /1
+    reference: Art. 4 Abs. 1 lit. b KiBG
+  values:
+    2028-08-01:
+      value: 1.20
+mindestalter_monate:
+  description: Mindestalter des Kindes in Monaten
+  metadata:
+    unit: month
+    reference: Art. 4 Abs. 3 KiBG
+  values:
+    2028-08-01:
+      value: 3

@@ -1,0 +1,9 @@
+description: >-
+  Rundungsschritt für Monatsbeträge in Franken (kaufmännisch auf 5 Rappen).
+  Teamentscheid, kein Rechtstext (challenge/szenarien.md, Annahme A4).
+metadata:
+  unit: currency-CHF
+  reference: Teamentscheid A4, challenge/szenarien.md (kein Rechtstext)
+values:
+  2028-08-01:
+    value: 0.05
