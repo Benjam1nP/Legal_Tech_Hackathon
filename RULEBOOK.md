@@ -77,7 +77,11 @@ lawyers in the team can compare code and text line by line:
 - snake_case, ASCII only: `massgebendes_einkommen`, `erziehungsberechtigte`,
   `kostenobergrenze` (ä → ae, ö → oe, ü → ue; the checker warns on umlauts).
 - `label` in German, close to the wording of the article.
-- No prefix needed: the template demo is being replaced.
+- Prefix `kibg_` for variables and parameters specific to the childcare
+  contribution (`kibg_anspruch`, `kibg.einkommen.min`); general facts without
+  prefix (`geburtsdatum`, `beschaeftigungsgrad`). See
+  `challenge/line-to-line-rules.md`.
+- Shares as fractions with unit `/1`: 80 % is `0.8`, 120 % is `1.20`.
 
 ### Start date
 

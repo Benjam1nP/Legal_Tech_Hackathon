@@ -10,7 +10,7 @@ Jede Bestimmung des Gesetzes (KiBG, `Gesetz.pdf`) und der Verordnung (KiBV, `Ver
 - Variablen sind entweder **Eingaben** (Tatsachen oder menschliche Entscheide, welche die Nutzerin oder der Nutzer eingibt) oder **Formeln** (von OpenFisca berechnet).
 - Die Namen sind Vorschläge und können geändert werden.
 - **O1, O2 …** verweisen auf die offenen Fragen am Schluss.
-- **Periode:** Alle Parameter gelten ab Vollzugsbeginn, der noch nicht feststeht (O1). Die Periode jeder Variable steht im Abschnitt «Variablen: Entität und Periode».
+- **Periode:** Alle Parameter gelten ab Vollzugsbeginn, der noch nicht feststeht; Platzhalter **2028-08-01** (O1). Die Periode jeder Variable steht im Abschnitt «Variablen: Entität und Periode».
 
 ---
 
@@ -42,7 +42,7 @@ Jede Bestimmung des Gesetzes (KiBG, `Gesetz.pdf`) und der Verordnung (KiBV, `Ver
 |---|---|---|---|---|---|
 | `geburtsdatum` | Person | ETERNITY | Eingabe | Datum | KiBG 4.3 |
 | `wohnsitz_kanton_sg` | Person | MONTH | Eingabe | ja/nein | KiBG 4.1 |
-| `beschaeftigungsgrad` | Person | MONTH | Eingabe | % | KiBG 4.1 |
+| `beschaeftigungsgrad` | Person | MONTH | Eingabe | Anteil (0.8 = 80 %) | KiBG 4.1 |
 | `me_steuerveranlagung` | Person | YEAR | Eingabe | Fr. | KiBG 5.3, KiBV 9 |
 | `me_aktuell` | Person | YEAR | Eingabe | Fr. (aufs Jahr gerechnet) | KiBG 5.4, KiBV 11 |
 | `besteuerungsart` | Person | YEAR | Eingabe | Kategorie | KiBV 10.1 |
@@ -104,9 +104,9 @@ Jede Bestimmung des Gesetzes (KiBG, `Gesetz.pdf`) und der Verordnung (KiBV, `Ver
 | Art. 3.2 (Kriterien) | Bewilligung, Qualitätskonzept, Leistungsvereinbarung | Variable, Eingabe (ja/nein) | `kibg_einrichtung_anerkannt` | Behördlicher Entscheid, daher Eingabe |
 | Art. 3.3 | Bei der kantonalen Stelle angemeldet | Variable, Eingabe (ja/nein) | `kibg_einrichtung_angemeldet` | Beginn gemäss KiBV 6 |
 | Art. 4.1 | Zivilrechtlicher Wohnsitz im Kanton | Variable, Eingabe (ja/nein) | `wohnsitz_kanton_sg` (Person) | Welcher Elternteil muss hier wohnen? (O8) |
-| Art. 4.1 | Selbständig oder unselbständig erwerbstätig, mit Beschäftigungsgrad | Variable, Eingabe (%) | `beschaeftigungsgrad` (Person) | — |
-| Art. 4.1a | Mindestens 20 Prozent | Parameter | `kibg.anspruch.min_beschaeftigungsgrad = 20` | — |
-| Art. 4.1b | Zusammen mindestens 120 Prozent bei gemeinsamem Haushalt | Parameter + Eingabe | `kibg.anspruch.min_beschaeftigungsgrad_gemeinsam = 120`, `gemeinsamer_haushalt` (Haushalt) | Braucht zusätzlich jeder Elternteil 20 %? (O3) |
+| Art. 4.1 | Selbständig oder unselbständig erwerbstätig, mit Beschäftigungsgrad | Variable, Eingabe (Anteil) | `beschaeftigungsgrad` (Person) | Als Anteil: 80 % = 0.8 |
+| Art. 4.1a | Mindestens 20 Prozent | Parameter | `kibg.anspruch.min_beschaeftigungsgrad = 0.20` | Einheit `/1` (OpenFisca-Konvention) |
+| Art. 4.1b | Zusammen mindestens 120 Prozent bei gemeinsamem Haushalt | Parameter + Eingabe | `kibg.anspruch.min_beschaeftigungsgrad_gemeinsam = 1.20`, `gemeinsamer_haushalt` (Haushalt) | Braucht zusätzlich jeder Elternteil 20 %? (O3) |
 | Art. 4.1 | Beschäftigungsbedingung erfüllt | Variable, Formel | `kibg_beschaeftigung_erfuellt` (Haushalt) | a für einen Elternteil, b für einen gemeinsamen Haushalt |
 | Art. 4.2 | Ausnahme in begründeten Fällen | Variable, Eingabe (ja/nein) | `kibg_ausnahme_bewilligt` | Menschlicher Entscheid; Gründe in KiBV 12 |
 | Art. 4.3 | Ab drei Monaten | Parameter + Eingabe | `kibg.anspruch.mindestalter_monate = 3`, `geburtsdatum` | — |
@@ -303,7 +303,7 @@ Diese Bestimmungen modellieren wir anfangs bewusst nicht. Sie sind aber wichtig 
 
 | Nr. | Frage | Quelle |
 |---|---|---|
-| O1 | Kein Vollzugsbeginn («ab ●●»). Ein Platzhalterdatum wählen | KiBG IV.1, KiBV IV |
+| O1 | Kein Vollzugsbeginn («ab ●●»). **Entschieden:** Platzhalter 2028-08-01 (`formula_2028_08`), ersetzen sobald der Vollzugsbeginn feststeht | KiBG IV.1, KiBV IV |
 | O2 | Ein Kind mit genau 18 Monaten fällt zwischen «unter 18» und «über 18» | KiBV 14.1–14.2 |
 | O3 | Braucht es bei 120 % zusammen zusätzlich mindestens 20 % pro Elternteil? Und gilt «a» nur für Alleinerziehende? | KiBG 4.1 |
 | O4 | Gilt Z2 (einkommensunabhängig) auch über Fr. 154'000? | KiBV 15.2 vs. Anhang |
