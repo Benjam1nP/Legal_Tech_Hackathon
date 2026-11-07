@@ -108,7 +108,7 @@ Citation format for `reference`:
 - Law: `Art. 6 Abs. 2 KiBG`
 - Ordinance: `Art. 8 Abs. 1 lit. b KiBV (Entwurf)`
 - Add the official URL when available, e.g.
-  `reference = ["Art. 6 Abs. 2 KiBG", "https://www.sg.ch/..."]`
+  `reference = ("Art. 6 Abs. 2 KiBG", "https://www.sg.ch/...")`
 
 Every KiBV reference must say `(Entwurf)`, so rules in force and draft rules can
 always be told apart. The checker warns if it is missing.

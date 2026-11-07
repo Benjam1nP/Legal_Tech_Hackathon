@@ -1,0 +1,32 @@
+{
+    "persons": {
+        "mutter": {
+            "wohnsitz_kanton_sg": {"2028-09": true},
+            "beschaeftigungsgrad": {"2028-09": 1.0},
+            "me_steuerveranlagung": {"2028": 60000}
+        },
+        "vater": {
+            "wohnsitz_kanton_sg": {"2028-09": true},
+            "beschaeftigungsgrad": {"2028-09": 0.4},
+            "me_steuerveranlagung": {"2028": 37000}
+        },
+        "lina": {
+            "geburtsdatum": {"ETERNITY": "2027-09-01"},
+            "kibg_einrichtungstyp": {"2028-09": "kita"},
+            "kibg_einrichtung_anerkannt": {"2028-09": true},
+            "kibg_einrichtung_angemeldet": {"2028-09": true},
+            "betreuungsstunden": {"2028-09": 80},
+            "betreuungstage_mit_obhut": {"2028-09": 8},
+            "kibg_betreuungskosten": {"2028-09": 1040},
+            "kibg_beitrag_total": {"2028-09": null},
+            "kibg_restkosten_eltern": {"2028-09": null}
+        }
+    },
+    "households": {
+        "familie": {
+            "erziehungsberechtigte": ["mutter", "vater"],
+            "kinder": ["lina"],
+            "gemeinsamer_haushalt": {"2028-09": true}
+        }
+    }
+}

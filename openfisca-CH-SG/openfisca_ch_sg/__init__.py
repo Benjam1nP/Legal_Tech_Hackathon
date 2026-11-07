@@ -15,7 +15,7 @@ import os
 from openfisca_core.taxbenefitsystems import TaxBenefitSystem
 
 from openfisca_ch_sg import entities
-from openfisca_ch_sg.situation_examples import couple
+from openfisca_ch_sg.situation_examples import p1_paar_kita
 
 COUNTRY_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -41,7 +41,7 @@ class CountryTaxBenefitSystem(TaxBenefitSystem):
         # We define which variable, parameter and simulation example will be
         # used in the OpenAPI specification
         self.open_api_config = {
-            "variable_example": "disposable_income",
-            "parameter_example": "taxes.income_tax_rate",
-            "simulation_example": couple,
+            "variable_example": "kibg_beitrag_total",
+            "parameter_example": "kibg.einkommen.min",
+            "simulation_example": p1_paar_kita,
         }

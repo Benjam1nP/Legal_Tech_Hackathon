@@ -1,4 +1,4 @@
-"""This file provides a function to load json example situations."""
+"""Beispielsituationen für die Web-API (OpenAPI-Spezifikation)."""
 
 import json
 import os
@@ -13,5 +13,5 @@ def parse(file_name):
         return json.loads(file.read())
 
 
-single = parse("single.json")
-couple = parse("couple.json")
+# P1 aus challenge/szenarien.md: Paar, ein Kleinkind in der Kita
+p1_paar_kita = parse("p1_paar_kita.json")

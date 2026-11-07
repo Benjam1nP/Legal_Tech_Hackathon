@@ -1,0 +1,355 @@
+# Personas P1 bis P7b aus challenge/szenarien.md (Teil 1).
+# Erwartete Werte von Hand aus KiBG und KiBV gerechnet.
+
+- name: P1 Paar, ein Kleinkind in der Kita (Grundfall)
+  period: 2028-09
+  absolute_error_margin: 0.01
+  input:
+    household:
+      erziehungsberechtigte: [mutter, vater]
+      kinder: [lina]
+      gemeinsamer_haushalt: true
+    persons:
+      mutter:
+        wohnsitz_kanton_sg: true
+        beschaeftigungsgrad: 1.0
+        me_steuerveranlagung: {2028: 60000}
+      vater:
+        wohnsitz_kanton_sg: true
+        beschaeftigungsgrad: 0.4
+        me_steuerveranlagung: {2028: 37000}
+      lina:
+        geburtsdatum: 2027-09-01
+        kibg_einrichtungstyp: kita
+        kibg_einrichtung_anerkannt: true
+        kibg_einrichtung_angemeldet: true
+        betreuungsstunden: 80
+        betreuungstage_mit_obhut: 8
+        kibg_betreuungskosten: 1040
+  output:
+    # Enum-Werte lassen sich in OpenFisca 44 nur als Liste über alle Personen
+    # vergleichen (Reihenfolge mutter, vater, lina). Für Eltern ohne Bedeutung.
+    kibg_altersstufe: [ab_18_monate, ab_18_monate, unter_18_monate]
+    household:
+      kibg_wohnsitz_erfuellt: true
+      kibg_beschaeftigung_erfuellt: true
+      kibg_massgebendes_einkommen: 97000
+      kibg_einkommensfaktor: 0.5
+    persons:
+      mutter:
+        kibg_anspruch: false
+        kibg_beitrag_total: 0
+      lina:
+        kibg_alter_monate: 12
+        kibg_alter_erfuellt: true
+        kibg_einrichtung_berechtigt: true
+        kibg_anspruch: true
+        kibg_hoechstbeitrag: 11.00
+        kibg_beitrag_pro_stunde: 5.50
+        kibg_subventionierte_stunden: 80
+        kibg_mindestbeitrag: 440
+        kibg_zusatzbeitrag: 0
+        kibg_beitrag_total: 440
+        kibg_restkosten_eltern: 600
+        kibg_anteil_kanton: 220
+        kibg_anteil_gemeinde: 220
+
+- name: P2 Alleinerziehende Mutter, Tagesfamilie, tiefes Einkommen (Art. 4 Abs. 1 lit. a KiBG, Art. 15 Abs. 1 KiBV)
+  period: 2028-09
+  absolute_error_margin: 0.01
+  input:
+    household:
+      erziehungsberechtigte: [mutter]
+      kinder: [noah]
+      gemeinsamer_haushalt: false
+    persons:
+      mutter:
+        wohnsitz_kanton_sg: true
+        beschaeftigungsgrad: 0.5
+        me_steuerveranlagung: {2028: 30000}
+      noah:
+        geburtsdatum: 2026-03-01
+        kibg_einrichtungstyp: tagesfamilie
+        kibg_einrichtung_anerkannt: true
+        kibg_einrichtung_angemeldet: true
+        betreuungsstunden: 108
+        betreuungstage_mit_obhut: 12
+        kibg_betreuungskosten: 1134
+  output:
+    household:
+      kibg_einkommensfaktor: 1
+    persons:
+      noah:
+        kibg_hoechstbeitrag: 5.50
+        kibg_beitrag_pro_stunde: 5.50
+        kibg_beitrag_total: 594
+        kibg_restkosten_eltern: 540
+        kibg_anteil_kanton: 297
+        kibg_anteil_gemeinde: 297
+
+- name: P3 Paar, Baby in der Kita und Schulkind in der Tagesstruktur (Art. 14 Abs. 1 lit. a und Abs. 3 lit. b KiBV)
+  period: 2028-09
+  absolute_error_margin: 0.01
+  input:
+    household:
+      erziehungsberechtigte: [mutter, vater]
+      kinder: [mia, leo]
+      gemeinsamer_haushalt: true
+    persons:
+      mutter:
+        wohnsitz_kanton_sg: true
+        beschaeftigungsgrad: 0.8
+        me_steuerveranlagung: {2028: 40000}
+      vater:
+        wohnsitz_kanton_sg: true
+        beschaeftigungsgrad: 0.6
+        me_steuerveranlagung: {2028: 28500}
+      mia:
+        geburtsdatum: 2028-03-01
+        kibg_einrichtungstyp: kita
+        kibg_einrichtung_anerkannt: true
+        kibg_einrichtung_angemeldet: true
+        betreuungsstunden: 120
+        betreuungstage_mit_obhut: 12
+        kibg_betreuungskosten: 1500
+      leo:
+        geburtsdatum: 2021-05-01
+        eingeschult: true
+        kibg_einrichtungstyp: schulergaenzend
+        kibg_einrichtung_anerkannt: true
+        kibg_einrichtung_angemeldet: true
+        betreuungsstunden: 48
+        betreuungstage_mit_obhut: 16
+        kibg_betreuungskosten: 432
+  output:
+    household:
+      kibg_einkommensfaktor: 0.75
+    persons:
+      mia:
+        kibg_beitrag_pro_stunde: 8.25
+        kibg_beitrag_total: 990
+        kibg_restkosten_eltern: 510
+        kibg_anteil_kanton: 495
+        kibg_anteil_gemeinde: 495
+      leo:
+        kibg_hoechstbeitrag: 5.50
+        kibg_beitrag_pro_stunde: 4.125
+        kibg_beitrag_total: 198
+        kibg_restkosten_eltern: 234
+        kibg_anteil_kanton: 99
+        kibg_anteil_gemeinde: 99
+
+- name: P4 Paar mit hohem Einkommen (Art. 14 Abs. 2 lit. a und Art. 15 KiBV)
+  period: 2028-09
+  absolute_error_margin: 0.01
+  input:
+    household:
+      erziehungsberechtigte: [mutter, vater]
+      kinder: [elias]
+      gemeinsamer_haushalt: true
+    persons:
+      mutter:
+        wohnsitz_kanton_sg: true
+        beschaeftigungsgrad: 1.0
+        me_steuerveranlagung: {2028: 70000}
+      vater:
+        wohnsitz_kanton_sg: true
+        beschaeftigungsgrad: 1.0
+        me_steuerveranlagung: {2028: 55500}
+      elias:
+        geburtsdatum: 2026-09-01
+        kibg_einrichtungstyp: kita
+        kibg_einrichtung_anerkannt: true
+        kibg_einrichtung_angemeldet: true
+        betreuungsstunden: 200
+        betreuungstage_mit_obhut: 20
+        kibg_betreuungskosten: 2800
+  output:
+    household:
+      kibg_einkommensfaktor: 0.25
+    persons:
+      elias:
+        kibg_beitrag_pro_stunde: 1.875
+        kibg_beitrag_total: 375
+        kibg_restkosten_eltern: 2425
+        kibg_anteil_kanton: 187.50
+        kibg_anteil_gemeinde: 187.50
+
+- name: P5 Wie P1, die Gemeinde zahlt Zusatzbeiträge (Art. 20 KiBG, Art. 24 und Anhang KiBV)
+  period: 2028-09
+  absolute_error_margin: 0.01
+  input:
+    household:
+      erziehungsberechtigte: [mutter, vater]
+      kinder: [lina]
+      gemeinsamer_haushalt: true
+      kibg_zusatzbeitrag_z1: 2.00
+      kibg_zusatzbeitrag_z2: 1.00
+    persons:
+      mutter:
+        wohnsitz_kanton_sg: true
+        beschaeftigungsgrad: 1.0
+        me_steuerveranlagung: {2028: 60000}
+      vater:
+        wohnsitz_kanton_sg: true
+        beschaeftigungsgrad: 0.4
+        me_steuerveranlagung: {2028: 37000}
+      lina:
+        geburtsdatum: 2027-09-01
+        kibg_einrichtungstyp: kita
+        kibg_einrichtung_anerkannt: true
+        kibg_einrichtung_angemeldet: true
+        betreuungsstunden: 80
+        betreuungstage_mit_obhut: 8
+        kibg_betreuungskosten: 1040
+  output:
+    persons:
+      lina:
+        kibg_beitrag_pro_stunde: 7.50
+        kibg_mindestbeitrag: 440
+        kibg_zusatzbeitrag: 160
+        kibg_beitrag_total: 600
+        kibg_restkosten_eltern: 440
+        kibg_anteil_kanton: 220
+        kibg_anteil_gemeinde: 380
+
+- name: P6 Günstige Kita, die Kostenobergrenze greift (Art. 6 Abs. 2 KiBG)
+  period: 2028-09
+  absolute_error_margin: 0.01
+  input:
+    household:
+      erziehungsberechtigte: [vater]
+      kinder: [sara]
+      gemeinsamer_haushalt: false
+    persons:
+      vater:
+        wohnsitz_kanton_sg: true
+        beschaeftigungsgrad: 0.6
+        me_steuerveranlagung: {2028: 40000}
+      sara:
+        geburtsdatum: 2028-01-01
+        kibg_einrichtungstyp: kita
+        kibg_einrichtung_anerkannt: true
+        kibg_einrichtung_angemeldet: true
+        betreuungsstunden: 100
+        betreuungstage_mit_obhut: 10
+        kibg_betreuungskosten: 900
+  output:
+    persons:
+      sara:
+        kibg_mindestbeitrag: 900
+        kibg_beitrag_total: 900
+        kibg_restkosten_eltern: 0
+        kibg_anteil_kanton: 450
+        kibg_anteil_gemeinde: 450
+
+- name: P6b Wie P6 mit Kosten 1300 und Zusatzbeiträgen, gekürzt wird der Zusatzbeitrag (Art. 20 Abs. 3 KiBG, A2)
+  period: 2028-09
+  absolute_error_margin: 0.01
+  input:
+    household:
+      erziehungsberechtigte: [vater]
+      kinder: [sara]
+      gemeinsamer_haushalt: false
+      kibg_zusatzbeitrag_z1: 2.00
+      kibg_zusatzbeitrag_z2: 1.00
+    persons:
+      vater:
+        wohnsitz_kanton_sg: true
+        beschaeftigungsgrad: 0.6
+        me_steuerveranlagung: {2028: 40000}
+      sara:
+        geburtsdatum: 2028-01-01
+        kibg_einrichtungstyp: kita
+        kibg_einrichtung_anerkannt: true
+        kibg_einrichtung_angemeldet: true
+        betreuungsstunden: 100
+        betreuungstage_mit_obhut: 10
+        kibg_betreuungskosten: 1300
+  output:
+    persons:
+      sara:
+        kibg_mindestbeitrag: 1100
+        kibg_zusatzbeitrag: 200
+        kibg_beitrag_total: 1300
+        kibg_restkosten_eltern: 0
+        kibg_anteil_kanton: 550
+        kibg_anteil_gemeinde: 750
+
+- name: P7 Getrennter Vater mit Partnerin im Konkubinat seit über zwei Jahren (Art. 8 Abs. 1 lit. b und Abs. 2 lit. b KiBV)
+  period: 2028-09
+  absolute_error_margin: 0.01
+  input:
+    household:
+      erziehungsberechtigte: [vater]
+      partner: [partnerin]
+      kinder: [jonas]
+      gemeinsamer_haushalt: false
+      verheiratet_oder_eingetragen: false
+      beginn_gemeinsamer_haushalt: 2026-01-01
+    persons:
+      vater:
+        wohnsitz_kanton_sg: true
+        beschaeftigungsgrad: 0.8
+        me_steuerveranlagung: {2028: 51400}
+      partnerin:
+        wohnsitz_kanton_sg: true
+        beschaeftigungsgrad: 1.0
+        me_steuerveranlagung: {2028: 45600}
+      jonas:
+        geburtsdatum: 2024-09-01
+        kibg_einrichtungstyp: kita
+        kibg_einrichtung_anerkannt: true
+        kibg_einrichtung_angemeldet: true
+        betreuungsstunden: 72
+        betreuungstage_mit_obhut: 8
+        kibg_betreuungskosten: 864
+  output:
+    household:
+      kibg_gefestigte_lebensgemeinschaft: true
+      kibg_massgebendes_einkommen: 97000
+    persons:
+      jonas:
+        kibg_beitrag_total: 270
+        kibg_restkosten_eltern: 594
+        kibg_anteil_kanton: 135
+        kibg_anteil_gemeinde: 135
+
+- name: P7b Wie P7, Konkubinat erst seit 2027-06-01, nicht gefestigt (Art. 8 Abs. 2 lit. b KiBV)
+  period: 2028-09
+  absolute_error_margin: 0.01
+  input:
+    household:
+      erziehungsberechtigte: [vater]
+      partner: [partnerin]
+      kinder: [jonas]
+      gemeinsamer_haushalt: false
+      verheiratet_oder_eingetragen: false
+      beginn_gemeinsamer_haushalt: 2027-06-01
+    persons:
+      vater:
+        wohnsitz_kanton_sg: true
+        beschaeftigungsgrad: 0.8
+        me_steuerveranlagung: {2028: 51400}
+      partnerin:
+        wohnsitz_kanton_sg: true
+        beschaeftigungsgrad: 1.0
+        me_steuerveranlagung: {2028: 45600}
+      jonas:
+        geburtsdatum: 2024-09-01
+        kibg_einrichtungstyp: kita
+        kibg_einrichtung_anerkannt: true
+        kibg_einrichtung_angemeldet: true
+        betreuungsstunden: 72
+        betreuungstage_mit_obhut: 8
+        kibg_betreuungskosten: 864
+  output:
+    household:
+      kibg_gefestigte_lebensgemeinschaft: false
+      kibg_massgebendes_einkommen: 51400
+    persons:
+      jonas:
+        kibg_beitrag_total: 486
+        kibg_restkosten_eltern: 378
+        kibg_anteil_kanton: 243
+        kibg_anteil_gemeinde: 243

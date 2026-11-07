@@ -41,6 +41,7 @@ Jede Bestimmung des Gesetzes (KiBG, `Gesetz.pdf`) und der Verordnung (KiBV, `Ver
 | Variable | Entität | Periode | Eingabe / Formel | Typ | Quelle |
 |---|---|---|---|---|---|
 | `geburtsdatum` | Person | ETERNITY | Eingabe | Datum | KiBG 4.3 |
+| `kibg_alter_monate` | Person (Kind) | MONTH | Formel | volle Monate am Monatsersten (A1) | KiBG 4.3, KiBV 14 |
 | `wohnsitz_kanton_sg` | Person | MONTH | Eingabe | ja/nein | KiBG 4.1 |
 | `beschaeftigungsgrad` | Person | MONTH | Eingabe | Anteil (0.8 = 80 %) | KiBG 4.1 |
 | `me_steuerveranlagung` | Person | YEAR | Eingabe | Fr. | KiBG 5.3, KiBV 9 |
@@ -80,7 +81,7 @@ Jede Bestimmung des Gesetzes (KiBG, `Gesetz.pdf`) und der Verordnung (KiBV, `Ver
 | `beginn_gemeinsamer_haushalt` | Haushalt | ETERNITY | Eingabe | Datum | KiBV 8.2b |
 | `kibg_gefestigte_lebensgemeinschaft` | Haushalt | MONTH | Formel | ja/nein | KiBV 8.2 |
 | `kibg_antrag_aktuelle_gegebenheiten` | Haushalt | YEAR | Eingabe | ja/nein | KiBV 11.1 |
-| `kibg_massgebendes_einkommen` | Haushalt | YEAR | Formel (Summe der Eingaben) | Fr. | KiBG 5, KiBV 8–11 |
+| `kibg_massgebendes_einkommen` | Haushalt | MONTH | Formel (Summe der Eingaben) | Fr. | KiBG 5, KiBV 8–11. Monatlich, weil sich der Haushalt (Partner/in) im Jahr ändern kann; die Einkommen selbst sind Jahreswerte |
 | `kibg_einkommensfaktor` | Haushalt | MONTH | Formel | Anteil 0–1 | KiBV 15, Anhang |
 | `wohngemeinde` | Haushalt | MONTH | Eingabe | Kategorie | KiBV 2 |
 | `kibg_zusatzbeitrag_z1` | Haushalt | MONTH | Eingabe | Fr. pro Stunde | KiBG 20.2, KiBV 24 |
