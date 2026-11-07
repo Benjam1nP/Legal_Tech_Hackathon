@@ -1,7 +1,15 @@
 <script>
 	import '../app.css';
+	import { page } from '$app/state';
+	import { texte } from '#lib/darstellung.js';
 
 	let { children } = $props();
+
+	const TABS = [
+		{ href: '/', text: texte.navigation.home },
+		{ href: '/rechner', text: texte.navigation.rechner },
+		{ href: '/dashboard', text: texte.navigation.dashboard }
+	];
 </script>
 
 <svelte:head>
@@ -12,6 +20,16 @@
 	<div class="inhalt">
 		<p class="label">Prototyp · Kanton St. Gallen · Verordnung im Entwurf</p>
 		<h1>Kinderbetreuung: Beitrag berechnen</h1>
+		<nav aria-label="Hauptnavigation">
+			{#each TABS as tab (tab.href)}
+				<a
+					href={tab.href}
+					aria-current={page.url.pathname === tab.href ? 'page' : undefined}
+				>
+					{tab.text}
+				</a>
+			{/each}
+		</nav>
 	</div>
 </header>
 
@@ -24,7 +42,7 @@
 		background: var(--card);
 		border-top: 4px solid var(--gruen-wappen);
 		border-bottom: 1px solid var(--border);
-		padding: 1.5rem 0 1.25rem;
+		padding-top: 1.5rem;
 	}
 
 	header h1 {
@@ -36,6 +54,39 @@
 
 	.label {
 		margin: 0;
+	}
+
+	/* Tabs: aktiver Tab mit grüner Linie unten, wie die Navigation im Style-Kit */
+	nav {
+		display: flex;
+		gap: 0.25rem;
+		margin-top: 1rem;
+	}
+
+	nav a {
+		padding: 0.5rem 0.75rem;
+		border-bottom: 2px solid transparent;
+		color: var(--muted-foreground);
+		font-size: var(--text-sm);
+		font-weight: 500;
+		text-decoration: none;
+		transition:
+			color 100ms ease-out,
+			border-color 100ms ease-out;
+	}
+
+	nav a:hover {
+		color: var(--foreground);
+	}
+
+	nav a[aria-current='page'] {
+		color: var(--foreground);
+		border-bottom-color: var(--primary);
+	}
+
+	nav a:focus-visible {
+		outline: 3px solid var(--ring);
+		border-radius: var(--radius-md);
 	}
 
 	.inhalt {
