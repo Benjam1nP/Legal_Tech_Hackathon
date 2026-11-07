@@ -1,0 +1,3 @@
+[submodule "openfisca-CH-SG"]
+	path = openfisca-CH-SG
+	url = https://github.com/KarlaRuggaber/openfisca-CH-SG.git
