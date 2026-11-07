@@ -185,7 +185,9 @@ class kibg_restkosten_eltern(Variable):
     label = "Kosten, die den Erziehungsberechtigten nach Abzug des Beitrags bleiben"
     reference = "Art. 12 Abs. 2 KiBG"
 
-    def formula_2028_08(person, period, parameters):
+    def formula(person, period, parameters):
+        # Ohne Datum: Vor dem Vollzugsbeginn gibt es keinen Beitrag, die Eltern
+        # tragen die vollen Kosten (szenarien.md, X10).
         kosten = person("kibg_betreuungskosten", period)
         return kosten - person("kibg_beitrag_total", period)
 
