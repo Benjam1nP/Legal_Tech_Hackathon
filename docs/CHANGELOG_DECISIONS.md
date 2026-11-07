@@ -5,7 +5,7 @@
 
 Raw material for the legal and technical documentation. Sections follow the evaluation criteria in the course syllabus.
 
-_State as of commit `ade2141` (2026-11-07 13:36)._
+_State as of commit `93b5f81` (2026-11-07 15:06)._
 
 ## 1. Functionality and prototype quality
 
@@ -20,7 +20,9 @@ _Syllabus: the prototype demonstrates the core idea and shows that the solution 
 
 **Decisions**
 
-_No decisions recorded yet._
+| Date | Decision | Reason | Source | Commit | By |
+|---|---|---|---|---|---|
+| 2026-11-07 | The limit of 5 subsidised days per week is not enforced; inputs are assumed to stay within it, so care on more than 5 days a week (e.g. Saturdays) overstates the contribution | Inputs are monthly, so the weekly spread of care days is unknown; a fixed conversion (5 days x 4.33 weeks) would wrongly cut months with 23 working days. Most Kitas are open Monday to Friday only | Art. 14 Abs. 4 KiBV (Entwurf); team decision | `93b5f81` | Karla Ruggaber |
 
 ## 2. Technical design and architecture
 
@@ -33,6 +35,9 @@ _Syllabus: the technical structure is understandable, fits the goal and rests on
 | 2026-11-07 | Template demo files are replaced by KiBG rules; a copy is kept in docs/openfisca-template-reference/ as format reference | Template rules are fictional; we only need their format | team decision | `8789ae5`, `ade2141` | Benjamin Pfister |
 | 2026-11-07 | Missing or placeholder legal references only warn, format errors block the push | Agreed strictness for the hackathon | team decision | `8789ae5`, `ade2141` | Benjamin Pfister |
 | 2026-11-07 | Variables and parameters are named with the German legal terms of the text (snake_case, ASCII) | Lawyers in the team can compare code and text line by line | team decision; OpenFisca principle "line-to-line match" | `ade2141` | Benjamin Pfister |
+| 2026-11-07 | Care hours are entered per month; the limit of 12 hours per day is applied as at most care days x 12 | The contribution is computed per month; monthly input is simplest for users and tests | Art. 14 Abs. 4 KiBV (Entwurf); team decision | `93b5f81` | Karla Ruggaber |
+| 2026-11-07 | The massgebendes Einkommen is entered per person, not computed under the V EG-KVG; the model only adds up whose income counts under Art. 8 KiBV | The V EG-KVG (sGS 331.111) is not part of the challenge material | Art. 5 Abs. 3 KiBG; Art. 8-10 KiBV (Entwurf); team decision | `93b5f81` | Karla Ruggaber |
+| 2026-11-07 | Variables about care, costs and contributions are monthly, income is yearly, dates are eternal | Contributions are paid per month; income rests on the yearly tax assessment | Art. 5 Abs. 3 KiBG; Art. 17 KiBV (Entwurf); team decision | `93b5f81` | Karla Ruggaber |
 
 ## 3. Legal and technical integration
 
@@ -53,7 +58,7 @@ _33 element(s) in the model have no article reference (template demo or still to
 
 **Open legal questions and ambiguities** (from `Question:` lines):
 
-_None recorded yet._
+- How is the limit of 5 days per week converted to a month, and which care modules and monthly flat rates apply (guidelines not public)? (`93b5f81`, Karla Ruggaber, 2026-11-07)
 
 **Decisions**
 
@@ -105,7 +110,7 @@ _Syllabus: each member's contribution, and disclosure of AI tools, open-source c
 
 | Member | Commits | First | Last | Files changed per area |
 |---|---|---|---|---|
-| Karla Ruggaber | 8 | 2026-11-04 | 2026-11-07 | other (62), rules (60), tests (45), tooling (18), docs (14), materials (4) |
+| Karla Ruggaber | 11 | 2026-11-04 | 2026-11-07 | other (62), rules (60), tests (45), tooling (18), docs (17), materials (4) |
 | Benjamin Pfister | 6 | 2026-10-10 | 2026-11-07 | docs (56), tooling (10), other (5) |
 
 _Add contributions that don't show in git (legal analysis, testing by hand, pitch, ...) by hand in the report._
@@ -130,6 +135,16 @@ _Add contributions that don't show in git (legal analysis, testing by hand, pitc
 
 ### 2026-11-07
 
+- **Add periods of all variables and input decisions to rule inventory** (`93b5f81`, Karla Ruggaber, 15:06)
+  - Decision: The limit of 5 subsidised days per week is not enforced; inputs are assumed to stay within it, so care on more than 5 days a week (e.g. Saturdays) overstates the contribution
+  - Decision: Care hours are entered per month; the limit of 12 hours per day is applied as at most care days x 12
+  - Decision: The massgebendes Einkommen is entered per person, not computed under the V EG-KVG; the model only adds up whose income counts under Art. 8 KiBV
+  - Decision: Variables about care, costs and contributions are monthly, income is yearly, dates are eternal
+  - Files: `challenge/line-to-line-rules.md` (changed)
+- **Mark KiBG Art. 13 as deferred but relevant in rule inventory** (`fe86003`, Karla Ruggaber, 14:57)
+  - Files: `challenge/line-to-line-rules.md` (changed)
+- **Add line-to-line rule inventory for KiBG and KiBV** (`2613f11`, Karla Ruggaber, 13:41)
+  - Files: `challenge/line-to-line-rules.md` (added)
 - **Structure documentation file along syllabus criteria, fix rulebook** (`ade2141`, Benjamin Pfister, 13:36)
   - Decision: Template demo files are replaced by KiBG rules; a copy is kept in docs/openfisca-template-reference/ as format reference
   - Decision: Missing or placeholder legal references only warn, format errors block the push
