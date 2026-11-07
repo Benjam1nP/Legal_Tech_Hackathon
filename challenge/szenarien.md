@@ -570,6 +570,7 @@ Die Beispiele gehen von P1 aus (Faktor 0.5, Kita, 80 Stunden), wenn nichts ander
 | KiBG 9.2, KiBV 25 | Berechnung der Fristen | A7: sinngemäss Art. 77 OR |
 | KiBV 14.2–14.3, 16.1 | Ab wann ist ein Kind «eingeschult»? | A8: ab Kindergarten |
 | KiBG 9.2 | Beitragsbeginn mitten im Monat | A9: nur Stunden ab dem Stichtag |
+| KiBG 9.2 | Zählt der Eingang oder die Abgabe des Gesuchs? | A10: die Abgabe, auch per Post (U19) |
 | KiBV 14.4 | Höchstens 5 Tage pro Woche bei Monatswerten | A3: nicht geprüft (E1) |
 
 ### 7.2 Neu gefundene unklare Stellen
@@ -616,7 +617,7 @@ Die Beispiele gehen von P1 aus (Faktor 0.5, Kita, 80 Stunden), wenn nichts ander
 |---|---|---|---|---|---|
 | U17 | KiBG 9.2, KiBV 16.4 | «Datum der **Inanspruchnahme** des Betreuungsangebots»: der erste Tag der Betreuung überhaupt, der erste Tag in **dieser** Einrichtung oder der Beginn der neuen Verfügungsperiode bei einem **Folgegesuch**? | Verfügung endet 31.7.2029, Folgegesuch trifft am 15.9.2029 ein. Zählt die Frist ab dem ersten Betreuungsbeginn 2028, gibt es erst ab 15.9. Beiträge: August Fr. 300 und halber September Fr. 150 verloren | Betreuungsbeginn wird eingegeben; die Frage entscheidet, wer ihn eingibt | offen, Stellungnahme |
 | U18 | KiBV 16.1–16.2 | Ein **eingeschultes Kind in einer Kita** oder Tagesfamilie: Gilt die Verfügung 12 Monate (Abs. 1: Kita und Tagesfamilie) oder ein Schuljahr (Abs. 2: eingeschulte Kinder)? | Verfügung im Oktober: bis September des Folgejahres oder bis Ende Juli? | Dauer der Verfügung nicht umgesetzt (README) | offen, Stellungnahme |
-| U19 | KiBG 9.2 | «eingereicht»: Zählt der **Eingang** bei der Gemeinde oder schon die **Postaufgabe**? | Gesuch am Tag 30 aufgegeben, am Tag 31 eingetroffen: rückwirkend oder nicht | A10: Eingang | offen, Rechtsteam |
+| U19 | KiBG 9.2 | «eingereicht»: Zählt der **Eingang** bei der Gemeinde oder schon die **Postaufgabe**? | Gesuch am Tag 30 aufgegeben, am Tag 31 eingetroffen: rückwirkend oder nicht | A10: Die Abgabe zählt, auch die Postaufgabe; das Gesuch im Beispiel ist rechtzeitig | entschieden (Rechtsteam) |
 | U20 | KiBV 25.1 | Gilt die Übergangsfrist auch für Gesuche **vor** dem Vollzugsbeginn, und gibt es die Plattform dann schon? | Gesuch im Juli 2028 für eine Betreuung ab August | Ja, auch frühere Gesuche zählen (beim Umsetzen festgelegt und im Commit dokumentiert; vom Team zu bestätigen) | offen |
 
 #### Redaktionelles und Unvollständiges

@@ -362,7 +362,7 @@
     },
     "uebergangsfrist": {
       "wann": "kibg_gesuch_in_uebergangsfrist = ja",
-      "text": "Gesuche, die bis drei Monate nach Beginn der neuen Regelung eintreffen, gelten rückwirkend ab Beginn der Regelung, frühestens ab Betreuungsbeginn.",
+      "text": "Gesuche, die bis drei Monate nach Beginn der neuen Regelung eingereicht werden, gelten rückwirkend ab Beginn der Regelung, frühestens ab Betreuungsbeginn.",
       "artikel": "Art. 25 Abs. 1 KiBV (Entwurf)"
     },
     "teilnahme_einrichtung": {
