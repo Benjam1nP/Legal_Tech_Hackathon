@@ -57,6 +57,31 @@
       "eingeschult": "eingeschulte Kinder bis zum Ende der Primarstufe"
     }
   },
+  "formular": {
+    "einleitung": "Schätzen Sie den Beitrag des Kantons und Ihrer Gemeinde an die Kosten der familien- und schulergänzenden Kinderbetreuung. Alle Fragen beziehen sich auf den gewählten Monat.",
+    "monat": {
+      "frage": "Für welchen Monat möchten Sie rechnen?",
+      "hilfe": "Die neuen Regeln gelten im Rechner ab August 2028 (Platzhalter, der Kanton legt den Beginn noch fest)."
+    },
+    "abschnitt_haushalt": "1  Haushalt",
+    "abschnitt_personen": "2  Erziehungsberechtigte",
+    "abschnitt_kinder": "3  Kinder",
+    "person_einzeln": "Gesuchstellende Person",
+    "person": "Person {nr}",
+    "partner_titel": "Partnerin oder Partner",
+    "ja": "Ja",
+    "nein": "Nein",
+    "kind_hinzufuegen": "+ Kind hinzufügen",
+    "kind_entfernen": "Kind entfernen",
+    "berechnen": "Berechnen",
+    "rechnet": "Wird berechnet …",
+    "pflicht": "Bitte beantworten Sie diese Frage.",
+    "ungueltig": "Bitte geben Sie eine Zahl ab 0 ein.",
+    "monat_zu_frueh": "Bitte wählen Sie August 2028 oder später.",
+    "fehlt_titel": "Bitte ergänzen Sie noch folgende Angaben:",
+    "ergebnis_titel": "Ergebnis",
+    "veraltet": "Sie haben Angaben geändert. Bitte berechnen Sie neu."
+  },
   "fragebogen": {
     "haushalt": {
       "titel": "Ihr Haushalt",
@@ -77,6 +102,13 @@
       },
       "beginn_gemeinsamer_haushalt": {
         "frage": "Seit wann führen Sie mit dieser Person einen gemeinsamen Haushalt?"
+      },
+      "partner_einkommen": {
+        "frage": "Massgebendes Einkommen und Vermögen der Partnerin oder des Partners in Franken",
+        "hilfe": "Steht auf der letzten definitiven Steuerveranlagung (Kantons- und Gemeindesteuern)."
+      },
+      "partner_aktuell": {
+        "frage": "Aktuelles massgebendes Einkommen und Vermögen der Partnerin oder des Partners in Franken (aufs Jahr gerechnet)"
       }
     },
     "personen": {
