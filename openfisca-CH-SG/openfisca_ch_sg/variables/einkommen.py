@@ -105,8 +105,14 @@ class kibg_abweichung_wesentlich(Variable):
         # Der Rechner schätzt den Monat der Gesuchstellung; me_aktuell ist der
         # Wert zu diesem Zeitpunkt. Die Neubestimmung während einer laufenden
         # Verfügung (Art. 11 Abs. 3 KiBV) ist nicht umgesetzt (README).
-        # Abweichung in beide Richtungen (Entscheid O12), gemessen am
-        # Einkommen des Haushalts.
+        # Abweichung in beide Richtungen (Entscheid O12). Gemessen wird am
+        # massgebenden Einkommen nach Art. 8 Abs. 1 KiBV: bei gemeinsamem
+        # Haushalt am Einkommen beider Eltern zusammen (lit. a). Bei getrenntem
+        # Haushalt nur am Einkommen der gesuchstellenden Person, nicht an dem
+        # des anderen Elternteils (lit. b). Lebt die gesuchstellende Person mit
+        # einer neuen Partnerin oder einem neuen Partner in gefestigter
+        # Lebensgemeinschaft, die oder der nicht erziehungsberechtigt ist,
+        # zählt deren Einkommen nach lit. b mit (P7).
         schwelle = parameters(period).kibg.einkommen.schwelle_abweichung
         veranlagt = household("kibg_me_steuerveranlagung_haushalt", period)
         aktuell = household("kibg_me_aktuell_haushalt", period)

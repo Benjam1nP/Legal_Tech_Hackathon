@@ -1462,3 +1462,30 @@
         kibg_einkommen_zaehlt_lit_b: true
       mutter:
         kibg_einkommen_zaehlt_lit_b: false
+
+- name: Zusatzfall getrennte Eltern, die Abweichung zählt nur beim Einkommen der gesuchstellenden Person (Art. 8 Abs. 1 lit. b und Art. 11 Abs. 2 KiBV)
+  period: 2028-09
+  absolute_error_margin: 0.01
+  input:
+    household:
+      erziehungsberechtigte: [vater, mutter]
+      kinder: [jonas]
+      gemeinsamer_haushalt: false
+      kibg_antrag_aktuelle_gegebenheiten: {2028: true}
+    persons:
+      vater:
+        <<: *p7_vater
+        kibg_gesuchstellend: true
+        me_steuerveranlagung: {2028: 80000}
+        me_aktuell: {2028: 60000}
+      mutter:
+        wohnsitz_kanton_sg: true
+        beschaeftigungsgrad: 1.0
+        me_steuerveranlagung: {2028: 50000}
+        me_aktuell: {2028: 50000}
+      jonas: *p7_jonas
+  output:
+    household:
+      # Nur der Vater: 80'000 → 60'000 = −25 %. Beide zusammen wären −15 %.
+      kibg_abweichung_wesentlich: true
+      kibg_massgebendes_einkommen: 60000

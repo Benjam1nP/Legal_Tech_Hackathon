@@ -76,8 +76,10 @@ class kibg_hoechstbeitrag(Variable):
 
         # Für Kombinationen ohne Ansatz in Art. 14 KiBV (z. B. schulergänzende
         # Betreuung vor der Einschulung) ist der Höchstbeitrag 0: Der Anspruch
-        # kann erfüllt sein, der Beitrag ist trotzdem Fr. 0. Das Interface
-        # erklärt diesen Fall (docs/output-konzept.md).
+        # kann erfüllt sein, der Beitrag ist trotzdem Fr. 0. Teamentscheid:
+        # Schulergänzende Betreuung setzt die Schulzeit voraus, vor der
+        # Einschulung gibt es dafür keinen Beitrag. Das Interface erklärt
+        # diesen Fall (docs/output-konzept.md).
         return select(
             [
                 unter_18 * kita,
