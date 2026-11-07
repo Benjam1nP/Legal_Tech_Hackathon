@@ -26,7 +26,7 @@ Reihenfolge:
    Steuerveranlagung; allenfalls Antrag und aktuelles Einkommen
    (Art. 5 Abs. 4 KiBG).
 3. **Pro Kind ein Block:** Geburtsdatum, Betreuungsbeginn, Tag, an dem das Gesuch
-   bei der Gemeinde eintrifft (auch geplant, A10), eingeschult (ab Kindergarten, A8),
+   abgegeben wird (bei der Gemeinde oder per Post, auch geplant, A10), eingeschult (ab Kindergarten, A8),
    Primarschule abgeschlossen, Einrichtungstyp, anerkannt und angemeldet
    (freiwillig: Datum der Bestätigung der Einrichtung, Art. 6 KiBV),
    Betreuungsstunden und -tage im Monat, Kosten im Monat.

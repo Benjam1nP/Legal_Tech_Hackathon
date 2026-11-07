@@ -62,7 +62,7 @@ Wenn bei einem Szenario nichts anderes steht, gilt:
 - Einrichtung anerkannt und angemeldet; Kind nicht eingeschult, Primarschule nicht abgeschlossen.
 - Keine Zusatzbeiträge der Gemeinde (`kibg_zusatzbeitrag_z1` = `kibg_zusatzbeitrag_z2` = 0); keine Ausnahme nach KiBG 4.2; kein Antrag auf aktuelle Gegebenheiten.
 - Massgebendes Einkommen als Eingabe für das Jahr 2028.
-- Jedes Kind: Betreuungsbeginn **2028-08-01**, Gesuch trifft am **2028-08-15** bei der Gemeinde ein. Das liegt in der Übergangsfrist; die Beiträge beginnen am 2028-08-01. Beide Daten sind Pflicht (siehe F10, F11).
+- Jedes Kind: Betreuungsbeginn **2028-08-01**, Gesuch wird am **2028-08-15** abgegeben. Das liegt in der Übergangsfrist; die Beiträge beginnen am 2028-08-01. Beide Daten sind Pflicht (siehe F10, F11).
 - Bei getrennt lebenden Eltern enthält der Haushalt im Modell nur die gesuchstellende Person (und allenfalls ihre Partnerin oder ihren Partner).
 - Bei zwei Erziehungsberechtigten im Haushalt stellt die Mutter das Gesuch (`kibg_gesuchstellend`). Diese Angabe ist Pflicht (siehe F2).
 - Jedes Kind hat ein Geburtsdatum. Diese Angabe ist Pflicht (siehe F1).
@@ -80,7 +80,7 @@ Wenn bei einem Szenario nichts anderes steht, gilt:
 | A7 | **Fristen:** Eine Frist in Tagen beginnt am Tag nach dem Ereignis; eine Frist in Monaten endet am Tag mit derselben Zahl (sinngemäss Art. 77 OR) | Der Text regelt die Berechnung nicht | D1–D2, D7 | bestätigt |
 | A8 | **Eingeschult** ist ein Kind ab dem Eintritt in den obligatorischen Kindergarten | KiBV 16.1 knüpft an das Jahr an, in dem das Kind «schulpflichtig wird»; im Kanton St. Gallen beginnt die Schulpflicht mit dem Kindergarten | G14 | bestätigt |
 | A9 | Im Monat, in dem die Beiträge beginnen, geben die Eltern **nur die Betreuungstage und -stunden ab diesem Tag** ein. Vor dem Beitragsbeginn gibt es keinen Anspruch | KiBG 9.2: Beiträge «ab dem Zeitpunkt der Gesuchstellung»; der Rechner rechnet pro Monat | D4, D5, F13 | bestätigt |
-| A10 | Das **Gesuchsdatum** ist der Tag, an dem das Gesuch bei der Gemeinde eintrifft. Es ist Pflicht, ebenso der Betreuungsbeginn | Teamentscheid; offen fürs Rechtsteam: ob nach dem St. Galler Verwaltungsrechtspflegegesetz schon die Postaufgabe die Frist wahrt | D1–D7, D10–D11, F10–F11 | bestätigt |
+| A10 | Das **Gesuchsdatum** ist der Tag, an dem das Gesuch **abgegeben** wird (bei der Gemeinde oder durch Postaufgabe). Es ist Pflicht, ebenso der Betreuungsbeginn | Nach Verwaltungsrecht wahrt die Abgabe die Frist, nicht erst der Eingang (Entscheid des Rechtsteams) | D1–D7, D10–D11, F10–F11 | bestätigt |
 
 ---
 
@@ -475,7 +475,7 @@ Ohne diese Angaben lässt sich der Text nicht anwenden. Der Rechner liefert dann
 | F10 | P1, aber ohne Betreuungsbeginn | Fehler beim Feld `betreuungsbeginn` | Ohne ihn lässt sich der Beitragsbeginn nicht bestimmen (KiBG 9.2) |
 | F11 | P1, aber ohne Gesuchsdatum | Fehler beim Feld `kibg_gesuchsdatum` | Ohne es lässt sich der Beitragsbeginn nicht bestimmen (KiBG 9.2, KiBV 25) |
 | F12 | P1, Kita am 2028-09-01 bestätigt, im September aber als angemeldet angegeben | Fehler beim Feld `kibg_einrichtung_angemeldet` | Nach KiBV 6 nimmt die Kita erst ab 2028-10-01 teil |
-| F13 | Gesuch trifft am 2028-11-15 ein, im November 20 Betreuungstage | Fehler beim Feld `betreuungstage_mit_obhut` | Ab dem 15. November bleiben nur 16 Tage (A9); mit 16 Tagen ist es kein Fehler |
+| F13 | Gesuch wird am 2028-11-15 abgegeben, im November 20 Betreuungstage | Fehler beim Feld `betreuungstage_mit_obhut` | Ab dem 15. November bleiben nur 16 Tage (A9); mit 16 Tagen ist es kein Fehler |
 
 ---
 
@@ -544,7 +544,7 @@ D1, D2 und D10 liegen bewusst im Jahr 2029, ausserhalb der Übergangsfrist, dami
 
 ## Anhang: P1 als OpenFisca-Test
 
-So wird ein Szenario zum Test. Die Rollennamen (`erziehungsberechtigte`, `kinder`) sind vorläufig und müssen mit Benjamins `entities.py` übereinstimmen.
+So wird ein Szenario zum Test. Bei zwei Erziehungsberechtigten ist `kibg_gesuchstellend` Pflicht, für jedes Kind `betreuungsbeginn` und `kibg_gesuchsdatum` (Abgabedatum, A10). Dieselben Angaben stehen als echter Test in `openfisca-CH-SG/openfisca_ch_sg/tests/personas.yaml`.
 
 ```yaml
 - name: P1 Paar, ein Kleinkind in der Kita
@@ -559,6 +559,7 @@ So wird ein Szenario zum Test. Die Rollennamen (`erziehungsberechtigte`, `kinder
       mutter:
         wohnsitz_kanton_sg: true
         beschaeftigungsgrad: 1.0
+        kibg_gesuchstellend: true
         me_steuerveranlagung:
           2028: 60000
       vater:
@@ -568,6 +569,8 @@ So wird ein Szenario zum Test. Die Rollennamen (`erziehungsberechtigte`, `kinder
           2028: 37000
       lina:
         geburtsdatum: 2027-09-01
+        betreuungsbeginn: 2028-08-01
+        kibg_gesuchsdatum: 2028-08-15
         kibg_einrichtungstyp: kita
         kibg_einrichtung_anerkannt: true
         kibg_einrichtung_angemeldet: true

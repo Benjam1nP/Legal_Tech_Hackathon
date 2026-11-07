@@ -82,6 +82,8 @@
     "pflicht": "Bitte beantworten Sie diese Frage.",
     "ungueltig": "Bitte geben Sie eine Zahl ab 0 ein.",
     "monat_zu_frueh": "Bitte wählen Sie August 2028 oder später.",
+    "monat_vor_betreuungsbeginn": "{kind}: Der gewählte Monat liegt vor dem Betreuungsbeginn. Für diesen Monat gibt es noch keinen Beitrag.",
+    "monat_uebernehmen": "Mit {monat} rechnen",
     "fehlt_titel": "Bitte ergänzen Sie noch folgende Angaben:",
     "ergebnis_titel": "Ergebnis",
     "veraltet": "Sie haben Angaben geändert. Bitte berechnen Sie neu."
@@ -150,8 +152,8 @@
         "hilfe": "Erster Tag der Betreuung (Art. 9 Abs. 2 KiBG)."
       },
       "kibg_gesuchsdatum": {
-        "frage": "An welchem Tag trifft Ihr Gesuch bei der Gemeinde ein?",
-        "hilfe": "Auch ein geplantes Datum. Massgebend ist der Tag, an dem das Gesuch bei der Gemeinde eintrifft. Trifft es innert 30 Tagen nach Betreuungsbeginn ein, gibt es den Beitrag rückwirkend ab Betreuungsbeginn, sonst erst ab dem Gesuch (Art. 9 Abs. 2 KiBG)."
+        "frage": "An welchem Tag geben Sie Ihr Gesuch ab?",
+        "hilfe": "Auch ein geplantes Datum. Massgebend ist der Tag der Abgabe bei der Gemeinde oder der Postaufgabe. Geben Sie das Gesuch innert 30 Tagen nach Betreuungsbeginn ab, gibt es den Beitrag rückwirkend ab Betreuungsbeginn, sonst erst ab dem Gesuch (Art. 9 Abs. 2 KiBG)."
       },
       "eingeschult": {
         "frage": "Besucht das Kind den Kindergarten oder die Schule?"
@@ -205,7 +207,7 @@
     "me_aktuell": "Das aktuelle Einkommen kann nicht negativ sein. Bitte prüfen Sie die Angabe.",
     "allgemein": "Die Berechnung ist mit diesen Angaben nicht möglich. Bitte prüfen Sie Ihre Eingaben.",
     "betreuungsbeginn": "Bitte geben Sie an, seit wann {kind} betreut wird. Ohne dieses Datum lässt sich nicht bestimmen, ab wann es Beiträge gibt.",
-    "kibg_gesuchsdatum": "Bitte geben Sie an, an welchem Tag Ihr Gesuch für {kind} bei der Gemeinde eintrifft (auch ein geplantes Datum). Davon hängt ab, ab wann es Beiträge gibt.",
+    "kibg_gesuchsdatum": "Bitte geben Sie an, an welchem Tag Sie das Gesuch für {kind} abgeben (bei der Gemeinde oder per Post, auch ein geplantes Datum). Davon hängt ab, ab wann es Beiträge gibt.",
     "kibg_einrichtung_angemeldet": "Nach dem Datum der Bestätigung nimmt die Einrichtung im gewählten Monat noch nicht teil. Sie nimmt ab dem Ersten des Folgemonats teil. Bitte prüfen Sie die Angaben zur Anmeldung.",
     "betreuungstage_ab_beitragsbeginn": "Die Beiträge für {kind} beginnen mitten im gewählten Monat. Geben Sie nur die Betreuungstage und -stunden ab diesem Tag an."
   },
@@ -355,7 +357,7 @@
     },
     "gesuch_zu_spaet": {
       "wann": "kibg_gesuch_innert_frist = nein und kibg_gesuch_in_uebergangsfrist = nein",
-      "text": "Ihr Gesuch trifft mehr als 30 Tage nach Betreuungsbeginn bei der Gemeinde ein. Deshalb gibt es Beiträge erst ab dem Tag des Gesuchs, nicht rückwirkend ab Betreuungsbeginn.",
+      "text": "Sie geben Ihr Gesuch mehr als 30 Tage nach Betreuungsbeginn ab. Deshalb gibt es Beiträge erst ab dem Tag des Gesuchs, nicht rückwirkend ab Betreuungsbeginn.",
       "artikel": "Art. 9 Abs. 2 KiBG"
     },
     "uebergangsfrist": {

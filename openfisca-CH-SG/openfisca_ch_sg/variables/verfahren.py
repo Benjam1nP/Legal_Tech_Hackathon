@@ -9,8 +9,9 @@ Jede Bestimmung ist eine eigene Variable:
 - Art. 6 KiBV: Teilnahme der Einrichtung ab dem ersten Tag des Folgemonats
   nach der Bestätigung
 
-Teamentscheide: Das Gesuchsdatum ist der Tag, an dem das Gesuch bei der
-Behörde eintrifft (A10). Im Monat des Beitragsbeginns geben die Eltern nur die
+Teamentscheide: Das Gesuchsdatum ist der Tag, an dem das Gesuch abgegeben
+wird, bei der Gemeinde oder durch Postaufgabe; nach Verwaltungsrecht wahrt die
+Abgabe die Frist (A10). Im Monat des Beitragsbeginns geben die Eltern nur die
 Stunden ab diesem Tag ein (A9). In Monaten vor dem Beitragsbeginn besteht kein
 Anspruch.
 """
@@ -47,8 +48,8 @@ class kibg_gesuchsdatum(Variable):
     entity = Person
     definition_period = ETERNITY
     label = (
-        "Tag, an dem das Gesuch bei der zuständigen kommunalen Stelle eintrifft "
-        "(Pflichtangabe für jedes Kind, Annahme A10)"
+        "Tag, an dem das Gesuch abgegeben wird (bei der zuständigen kommunalen "
+        "Stelle oder durch Postaufgabe; Pflichtangabe für jedes Kind, Annahme A10)"
     )
     reference = ("Art. 9 Abs. 1 und 2 KiBG", "Art. 25 Abs. 1 KiBV (Entwurf)")
 
@@ -111,8 +112,8 @@ class kibg_beitragsbeginn(Variable):
             person,
             ist_kind * (gesuch == FEHLT),
             "kibg_gesuchsdatum",
-            "Das Gesuchsdatum fehlt (Tag, an dem das Gesuch bei der Gemeinde "
-            "eintrifft). Ohne es lässt sich nicht bestimmen, ab wann Beiträge "
+            "Das Gesuchsdatum fehlt (Tag, an dem das Gesuch abgegeben wird). "
+            "Ohne es lässt sich nicht bestimmen, ab wann Beiträge "
             "ausgerichtet werden (Art. 9 Abs. 2 KiBG, Art. 25 KiBV); es wird "
             "kein Beitrag berechnet.",
         )

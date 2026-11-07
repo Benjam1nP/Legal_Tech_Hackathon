@@ -63,6 +63,23 @@ start, parents enter only the care days and hours from that day on
 2028-08-01 is a placeholder (O1). Tests: `tests/datumsregeln.yaml` (D1 to
 D11).
 
+## Changing the start date (Vollzugsbeginn)
+
+KiBG and KiBV apply "ab ●●" (Ziff. IV); the government has not set the date
+yet. The model uses the placeholder **1 August 2028** (decision O1). Once the
+date is known, change it in three places:
+
+1. `VOLLZUGSBEGINN` in `openfisca_ch_sg/hilfsfunktionen.py` (date rules,
+   transition period of Art. 25 KiBV)
+2. the names `formula_2028_08` in `openfisca_ch_sg/variables/*.py`
+   (e.g. `formula_2029_01`)
+3. the first date `2028-08-01` in `openfisca_ch_sg/parameters/kibg/*.yaml`
+
+`tests/test_vollzugsbeginn.py` fails if the three do not match. The test
+periods (`period: 2028-09` …) and the scenarios in `challenge/szenarien.md`
+must then be moved to months after the new date. Record the change as a
+`Decision:`.
+
 ## Provisions not encoded
 
 Line-to-line coding means that every provision is either encoded or listed

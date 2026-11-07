@@ -76,6 +76,11 @@
 
 	const leer = (wert) => wert === null || wert === '' || Number.isNaN(wert);
 	const kindName = (index) => `${index + 1}. Kind`;
+	const monatsname = (datum) =>
+		new Date(`${datum.slice(0, 7)}-01T00:00:00`).toLocaleDateString('de-CH', {
+			month: 'long',
+			year: 'numeric'
+		});
 	const personName = (index) =>
 		anzahlEltern === 1 ? f.person_einzeln : einsetzen(f.person, { nr: index + 1 });
 
@@ -430,6 +435,20 @@
 					bind:wert={kind.betreuungsbeginn}
 					fehler={fehler[`kind_${i + 1}.betreuungsbeginn`]}
 				/>
+				{#if kind.betreuungsbeginn && monat && monat < kind.betreuungsbeginn.slice(0, 7)}
+					<!-- Nur ein Hinweis zur Eingabe; ab wann Beiträge fliessen, rechnet
+					     OpenFisca (Art. 9 Abs. 2 KiBG, Art. 25 KiBV). -->
+					<p class="hinweis-monat">
+						{einsetzen(f.monat_vor_betreuungsbeginn, { kind: kindName(i) })}
+						<button
+							type="button"
+							class="link"
+							onclick={() => (monat = kind.betreuungsbeginn.slice(0, 7))}
+						>
+							{einsetzen(f.monat_uebernehmen, { monat: monatsname(kind.betreuungsbeginn) })}
+						</button>
+					</p>
+				{/if}
 				<Feld
 					id="gesuchsdatum-{kind.nr}"
 					typ="date"
@@ -649,6 +668,13 @@
 		color: var(--schwarz);
 		text-decoration: underline;
 		padding: 0;
+	}
+
+	.hinweis-monat {
+		margin: -0.25rem 0 1rem;
+		padding: 0.5rem 0.7rem;
+		border-left: 4px solid var(--schwarz);
+		background: var(--grau-hell);
 	}
 
 	.fehlerliste {

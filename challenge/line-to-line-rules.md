@@ -73,7 +73,7 @@ Jede Bestimmung des Gesetzes (KiBG, `Gesetz.pdf`) und der Verordnung (KiBV, `Ver
 | `kibg_anteil_kanton` | Person (Kind) | MONTH | Formel | Fr. | KiBG 18.1 |
 | `kibg_anteil_gemeinde` | Person (Kind) | MONTH | Formel | Fr. | KiBG 18.1, 20.2 |
 | `betreuungsbeginn` | Person (Kind) | ETERNITY | Eingabe, **Pflicht für jedes Kind** | Datum | KiBG 9.2 |
-| `kibg_gesuchsdatum` | Person (Kind) | ETERNITY | Eingabe, **Pflicht für jedes Kind**: Tag des Eingangs bei der Gemeinde (A10) | Datum | KiBG 9.1–9.2, KiBV 25.1 |
+| `kibg_gesuchsdatum` | Person (Kind) | ETERNITY | Eingabe, **Pflicht für jedes Kind**: Tag der Abgabe (bei der Gemeinde oder Postaufgabe; A10) | Datum | KiBG 9.1–9.2, KiBV 25.1 |
 | `kibg_gesuch_innert_frist` | Person (Kind) | MONTH | Formel | ja/nein | KiBG 9.2 Satz 1 |
 | `kibg_gesuch_in_uebergangsfrist` | Person (Kind) | MONTH | Formel | ja/nein | KiBV 25.1 |
 | `kibg_beitragsbeginn` | Person (Kind) | MONTH | Formel | Datum | KiBG 9.2, KiBV 25.1 |
@@ -333,7 +333,7 @@ Diese Bestimmungen modellieren wir anfangs bewusst nicht. Sie sind aber wichtig 
 | O6 | Das Gesetzes-PDF ist die **Fassung der ersten Lesung (16. September 2025)**, die KiBV verweist aber auf das Gesetz vom 14. Juni 2026. Bei den Organisatoren nachfragen, ob der Schlusstext abweicht | KiBG Titelseite |
 | O7 | Umrechnung der Wochenobergrenzen auf einen Monat; Betreuungsmodule und Monatspauschalen sind Richtlinien überlassen, die nicht öffentlich sind. **Vorläufig entschieden:** Stunden pro Monat sind eine Eingabe; die Grenze von 5 Tagen pro Woche bleibt offen | KiBV 14.4–14.5 |
 | O8 | Welcher Elternteil muss im Kanton wohnen, und welche Gemeinde ist zuständig, wenn die Eltern getrennt leben? **Entschieden:** Die gesuchstellende Person muss im Kanton wohnen; zuständig ist ihre Wohngemeinde | KiBG 4.1, KiBV 2 |
-| O9 | Das Datum des Schuljahresbeginns steht nicht im Text. **Vorläufig:** 1. August; nur für die optionalen Datumsregeln nötig | KiBV 16.2 |
+| O9 | Das Datum des Schuljahresbeginns steht nicht im Text. **Entschieden: 1. August.** Nötig für die Dauer der Verfügung bei eingeschulten Kindern (KiBV 16), die noch nicht umgesetzt ist | KiBV 16.2 |
 | O10 | Getrennte Eltern mit alternierender Obhut: Wer stellt das Gesuch, und wie werden die Tage aufgeteilt? **Entschieden:** Jeder Elternteil stellt das Gesuch für die eigenen Obhutstage und gibt nur diese ein | KiBV 7, 8.1b |
 | O11 | ~~Private Sonderschulen (KiBG 3.2d): welcher Ansatz?~~ **Erledigt:** Der Anspruch folgt aus KiBG 3.2d; der Betrag richtet sich nach der Betreuungsform (KiBV 14.3) | KiBG 3.2d, KiBV 14.3 |
 | O12 | Zählt die Abweichung von 25 % in beide Richtungen (nach oben und unten)? **Entschieden: ja**, wie im Wortlaut («Abweichung») | KiBV 11.2–11.3 |
@@ -344,4 +344,4 @@ Diese Bestimmungen modellieren wir anfangs bewusst nicht. Sie sind aber wichtig 
 
 1. Zuerst der Kern: Anspruch (KiBG 3–4), massgebendes Einkommen (KiBV 8 und 11), die Formel mit Ansätzen und Grenzen (KiBV 13–15, Anhang), die Stundenobergrenzen und die Kostenobergrenze.
 2. Danach die Aufteilung der Finanzierung und die Restkosten.
-3. Optional: die Datumsregeln (KiBG 9.2, KiBV 16, 25) und die Budgetsimulation (KiBG 17).
+3. Die Datumsregeln: KiBG 9.2, KiBV 25 und KiBV 6 sind umgesetzt (`variables/verfahren.py`). Offen: die Dauer der Verfügung (KiBG 11.2, KiBV 16, 25.2) und die Budgetsimulation (KiBG 17).
