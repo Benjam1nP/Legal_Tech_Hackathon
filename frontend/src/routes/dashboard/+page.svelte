@@ -73,7 +73,6 @@
 	let kinder = $state([neuesKind({ geburtsdatum: '2027-09-01', eingeschult: false, form: 'kita' })]);
 	let vergleichKind = $state(0);
 
-	let ansicht = $state('kurz');
 	let ziel = $state(60);
 	let balkenForm = $state('beste');
 
@@ -262,8 +261,8 @@
 	let stufenErgebnis = $derived(
 		ergebnis ? [...new Set(ergebnis.ergebnisse.map((e) => e.stufe))].sort((a, b) => a - b) : []
 	);
-	const fall = (form, stufe, welche = ansicht) =>
-		ergebnis?.ergebnisse.find((e) => e.ansicht === welche && e.form === form && e.stufe === stufe);
+	const fall = (form, stufe) =>
+		ergebnis?.ergebnisse.find((e) => e.form === form && e.stufe === stufe);
 	const lohnHeute = () => Number(JSON.parse(berechnetMit).lohn100);
 	function bleibt(form, stufe) {
 		const e = fall(form, stufe);
@@ -466,21 +465,11 @@
 		{#if veraltet}<p class="hinweis veraltet">{t.veraltet}</p>{/if}
 
 		<div class="steuerung">
-			<Auswahl
-				name="ansicht"
-				frage={t.ansicht.frage}
-				optionen={[
-					{ wert: 'kurz', text: t.ansicht.kurz },
-					{ wert: 'lang', text: t.ansicht.lang }
-				]}
-				bind:wert={ansicht}
-			/>
 			<div class="regler">
 				<label for="ziel">{t.ziel.frage}: <strong class="figur">{ziel} %</strong></label>
 				<input id="ziel" type="range" min="0" max="100" step="10" bind:value={ziel} />
 			</div>
 		</div>
-		<p class="hinweis">{ansicht === 'kurz' ? t.ansicht.kurz_text : t.ansicht.lang_text}</p>
 
 		<div class="karte">
 			<p class="tabellentitel">{einsetzen(t.wochenplan.bei_stufe, { pensum: ziel, person: personName })}</p>
@@ -553,7 +542,7 @@
 		</div>
 
 		<div class="karte">
-			<p class="tabellentitel">{t.tabelle.titel} ({ansicht === 'kurz' ? t.ansicht.kurz : t.ansicht.lang})</p>
+			<p class="tabellentitel">{t.tabelle.titel}</p>
 			<div class="tabelle-rahmen">
 				<table class="vergleich">
 					<thead>

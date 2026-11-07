@@ -28,10 +28,10 @@ Auf macOS ist Port 5000 oft durch AirPlay belegt. Dann die API mit
 | `src/lib/texte.de.json` | Alle Texte (Fragen, Hilfen, Ergebnis, Hinweise). Ohne Code bearbeitbar |
 | `src/routes/+page.svelte` | Tab «Home» (`/`), noch leer |
 | `src/routes/rechner/+page.svelte` | Tab «Rechner» (`/rechner`): Fragebogen (Haushalt, Erziehungsberechtigte, Kinder), Pflichtangaben, Berechnen |
-| `src/routes/dashboard/+page.svelte` | Tab «Dashboard» (`/dashboard`): Vergleich «Mehr arbeiten – welche Betreuung – was bleibt?». Pensum einer frei wählbaren Person × Betreuungsform (Kita, Tagesfamilie, schulergänzend), kurz- und längerfristig; Kennzahlen, Linien- und Balken-Chart, Tabelle |
+| `src/routes/dashboard/+page.svelte` | Tab «Dashboard» (`/dashboard`): Vergleich «Mehr arbeiten – welche Betreuung – was bleibt?». Pensum einer frei wählbaren Person × Betreuungsform (Kita, Tagesfamilie, schulergänzend), mit dem Einkommen laut letzter Steuerveranlagung; Wochenplan, Kennzahlen, Linien- und Balken-Chart, Tabelle |
 | `src/lib/vergleich.js` | Wochenplan mit Halbtagen (Mo–Fr, Vormittag und Nachmittag; 1 Halbtag = 10 % Pensum): Betreuung nötig, wenn alle Eltern arbeiten, niemand sonst hilft und das Kind nicht in der Schule ist; Pläne bei anderem Pensum (dazu ab Montag Vormittag, weg ab Freitag Nachmittag); Umrechnung in Monatswerte; Vorgaben für Preise und Stunden pro Halbtag |
 | `src/lib/Wochenplan.svelte` | Wochenplan zum Anklicken (heute) und zur Anzeige (beim neuen Pensum); auf dem Handy mit Titel über der Zeile |
-| `src/lib/server/vergleich.js` | Ein Haushalt je Stufe × Form × Ansicht in einer OpenFisca-Anfrage; Annahmen: Wohnsitz, anerkannte und angemeldete Einrichtung, rechtzeitiges Gesuch, keine Zusatzbeiträge, ohne Steuern |
+| `src/lib/server/vergleich.js` | Ein Haushalt je Stufe × Form in einer OpenFisca-Anfrage; Annahmen: Wohnsitz, anerkannte und angemeldete Einrichtung, rechtzeitiges Gesuch, keine Zusatzbeiträge, ohne Steuern |
 | `src/routes/api/vergleich/+server.js` | Ruft OpenFisca `/calculate` für den Vergleich auf; speichert nichts |
 | `src/lib/LinienChart.svelte`, `BalkenChart.svelte` | Charts als SVG, ohne zusätzliche Bibliothek |
 | `src/lib/Feld.svelte`, `Auswahl.svelte` | Eingabefeld mit Info-Text beim Fokus; Auswahlknöpfe |

@@ -450,13 +450,6 @@
     "fehlt": "Bitte ergänzen Sie die markierten Angaben.",
     "pflicht": "Bitte ausfüllen.",
     "kleinkind_eingeschult": "Ein Kind unter 18 Monaten kann noch nicht eingeschult sein.",
-    "ansicht": {
-      "frage": "Ansicht",
-      "kurz": "Kurzfristig",
-      "lang": "Längerfristig",
-      "kurz_text": "Das massgebende Einkommen bleibt wie in der letzten Steuerveranlagung. Nur die Betreuung ändert sich (Art. 5 Abs. 3 KiBG).",
-      "lang_text": "Der zusätzliche Jahreslohn fliesst in das massgebende Einkommen ein, wie nach einer späteren Steuerveranlagung. Vereinfacht: In Wirklichkeit steigt es wegen Abzügen meist weniger."
-    },
     "ziel": {
       "frage": "Neues Pensum"
     },

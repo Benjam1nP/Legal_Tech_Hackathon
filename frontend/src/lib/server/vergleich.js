@@ -1,6 +1,7 @@
 // Baut für den Vergleich im Dashboard eine Situation mit vielen Haushalten:
-// einen Haushalt je Pensumstufe × Betreuungsform × Ansicht (kurzfristig,
-// längerfristig). OpenFisca rechnet alle in einer Anfrage (/calculate).
+// einen Haushalt je Pensumstufe × Betreuungsform. OpenFisca rechnet alle in
+// einer Anfrage (/calculate). Das massgebende Einkommen bleibt wie in der
+// letzten Steuerveranlagung (Art. 5 Abs. 3 KiBG).
 //
 // Annahmen, damit nur Pensum und Betreuung den Unterschied machen: Wohnsitz
 // im Kanton, Einrichtung anerkannt und angemeldet, Gesuch rechtzeitig
@@ -8,8 +9,6 @@
 // Gemeinde. Bei zwei Eltern stellt Elternteil 1 das Gesuch.
 
 import { STUFEN, formenFuer, monatswerte } from '#lib/vergleich.js';
-
-export const ANSICHTEN = ['kurz', 'lang'];
 
 const ERGEBNISSE_KIND = [
 	'kibg_anspruch',
@@ -34,18 +33,16 @@ function betreuungProWoche(angaben, stufe, kindIndex) {
 	return angaben.betreuung?.[stufe]?.[kindIndex] ?? { tage: 0, halbtage: 0 };
 }
 
-/** Alle Fälle, die gerechnet werden: je Stufe, Form des Vergleichskinds und Ansicht. */
+/** Alle Fälle, die gerechnet werden: je Stufe und Form des Vergleichskinds. */
 export function faelle(angaben) {
 	const heute = zahl(angaben.eltern[angaben.variiert].pensum);
 	const formen = formenFuer(angaben.kinder[angaben.vergleichKind]);
 	// Ausgangslage: heutiges Pensum und heutige Betreuung (auch «keine»).
 	const kind = angaben.kinder[angaben.vergleichKind];
-	const liste = [{ id: 'fall_heute', ansicht: 'kurz', form: kind.form, stufe: heute }];
-	for (const ansicht of ANSICHTEN) {
-		for (const form of formen) {
-			for (const stufe of STUFEN) {
-				liste.push({ id: `fall_${liste.length}`, ansicht, form, stufe });
-			}
+	const liste = [{ id: 'fall_heute', form: kind.form, stufe: heute }];
+	for (const form of formen) {
+		for (const stufe of STUFEN) {
+			liste.push({ id: `fall_${liste.length}`, form, stufe });
 		}
 	}
 	return liste;
@@ -56,7 +53,6 @@ export function situation(angaben, liste) {
 	const monat = angaben.monat;
 	const jahr = monat.slice(0, 4);
 	const tag = `${monat}-01`;
-	const heute = zahl(angaben.eltern[angaben.variiert].pensum);
 	const persons = {};
 	const households = {};
 
@@ -65,16 +61,10 @@ export function situation(angaben, liste) {
 			const id = `${fall.id}_elternteil_${index + 1}`;
 			const variiert = index === angaben.variiert;
 			const pensum = variiert ? fall.stufe : zahl(person.pensum);
-			// Längerfristig fliesst der zusätzliche Jahreslohn in das massgebende
-			// Einkommen ein (Art. 5 Abs. 3 KiBG: mit einer späteren Veranlagung).
-			const zusatz =
-				variiert && fall.ansicht === 'lang'
-					? 12 * zahl(angaben.lohn100) * ((fall.stufe - heute) / 100)
-					: 0;
 			persons[id] = {
 				wohnsitz_kanton_sg: { [monat]: true },
 				beschaeftigungsgrad: { [monat]: pensum / 100 },
-				me_steuerveranlagung: { [jahr]: Math.max(0, zahl(person.einkommen) + zusatz) }
+				me_steuerveranlagung: { [jahr]: zahl(person.einkommen) }
 			};
 			if (angaben.eltern.length === 2 && index === 0) {
 				persons[id].kibg_gesuchstellend = { [monat]: true };
