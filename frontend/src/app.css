@@ -57,6 +57,8 @@ html {
 
 body {
 	margin: 0;
+	/* Bildband auf Home geht über die ganze Breite: kein seitliches Scrollen */
+	overflow-x: clip;
 	background: var(--background);
 	color: var(--foreground);
 	font-size: var(--text-base);
