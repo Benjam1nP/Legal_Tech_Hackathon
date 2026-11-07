@@ -14,7 +14,11 @@ class kibg_gesuchsteller(Variable):
     entity = Person
     definition_period = MONTH
     label = "Gesuchstellende erziehungsberechtigte Person"
-    reference = ("Art. 9 Abs. 1 KiBG", "Art. 8 Abs. 1 lit. b KiBV (Entwurf)")
+    reference = (
+        "Art. 2 Abs. 1 KiBG",
+        "Art. 9 Abs. 1 KiBG",
+        "Art. 8 Abs. 1 lit. b KiBV (Entwurf)",
+    )
 
     def formula_2028_08(person, period, parameters):
         eltern = Household.ERZIEHUNGSBERECHTIGT

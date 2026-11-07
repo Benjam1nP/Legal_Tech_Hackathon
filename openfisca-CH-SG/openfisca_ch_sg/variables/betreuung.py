@@ -24,7 +24,9 @@ class kibg_einrichtungstyp(Variable):
     entity = Person
     definition_period = MONTH
     label = "Art der Einrichtung, in der das Kind betreut wird"
-    reference = "Art. 3 Abs. 2 KiBG"
+    # Art. 2 Abs. 2 KiBG: Tagesfamilienorganisationen koordinieren und
+    # vermitteln die Betreuung in Tagesfamilien (Wert «tagesfamilie»).
+    reference = ("Art. 3 Abs. 2 KiBG", "Art. 2 Abs. 2 KiBG")
 
 
 class kibg_einrichtung_anerkannt(Variable):
