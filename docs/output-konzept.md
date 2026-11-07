@@ -17,9 +17,10 @@ Bedingung («wann»), unter der ein Text erscheint.
 
 Reihenfolge:
 
-1. **Haushalt:** gemeinsamer Haushalt der Erziehungsberechtigten; bei zwei
-   Erziehungsberechtigten, wer das Gesuch stellt (`kibg_gesuchstellend`);
-   allenfalls Partnerin oder Partner, die oder der nicht erziehungsberechtigt
+1. **Haushalt:** gemeinsamer Haushalt der Erziehungsberechtigten. Wer das
+   Gesuch stellt, wird nicht gefragt: Es genügt, dass eine Person im Kanton
+   wohnt; das Interface setzt die erste Person mit Wohnsitz im Kanton als
+   gesuchstellend (`kibg_gesuchstellend`). Allenfalls Partnerin oder Partner, die oder der nicht erziehungsberechtigt
    ist (Ehe/eingetragene Partnerschaft oder Beginn des gemeinsamen Haushalts).
 2. **Pro erziehungsberechtigter Person** (und Partner/in): Wohnsitz im Kanton,
    Beschäftigungsgrad, massgebendes Einkommen und Vermögen gemäss letzter
@@ -35,9 +36,8 @@ Nicht abgefragt werden Namen, AHV-Nummer und Adresse (Datenminimierung; die
 Plattform nach Art. 21 KiBV braucht sie, der Rechner nicht). Zusatzbeiträge der
 Gemeinde (Z1, Z2) werden nicht abgefragt und sind 0.
 
-**Pflichtangaben:** Geburtsdatum, Betreuungsbeginn und Gesuchsdatum jedes Kindes, bei zwei Erziehungsberechtigten
-die gesuchstellende Person (OpenFisca meldet sonst Fehler 400 mit dem Feld) und
-das massgebende Einkommen. Fehlt eine davon, zeigt das Interface keinen Betrag,
+**Pflichtangaben:** Geburtsdatum, Betreuungsbeginn und Gesuchsdatum jedes Kindes
+(OpenFisca meldet sonst Fehler 400 mit dem Feld) und das massgebende Einkommen. Fehlt eine davon, zeigt das Interface keinen Betrag,
 sondern bittet um die Angabe. Beim Einkommen steht der Hinweis: «Diese Zahl
 finden Sie auf Ihrer letzten definitiven Steuerveranlagung (Kantons- und
 Gemeindesteuern), Art. 5 Abs. 3 KiBG.»

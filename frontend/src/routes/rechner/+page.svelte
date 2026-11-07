@@ -36,7 +36,6 @@
 	// Angaben im Formular
 	let monat = $state('2028-09');
 	let gemeinsam = $state(null);
-	let gesuchsteller = $state(null);
 	let eltern = $state([neuerElternteil(), neuerElternteil()]);
 	let partner = $state({ vorhanden: null, verheiratet: null, seit: '', einkommen: null, aktuell: null });
 	let antragAktuell = $state(false);
@@ -58,10 +57,17 @@
 	let anzahlEltern = $derived(gemeinsam === true ? 2 : 1);
 	let mitPartner = $derived(gemeinsam === false && partner.vorhanden === true);
 
+	// Wer das Gesuch stellt, wird nicht gefragt (Teamentscheid): Es genügt, dass
+	// eine der beiden Personen im Kanton St. Gallen wohnt. Gesuchstellend ist
+	// deshalb die erste Person mit Wohnsitz im Kanton, sonst Person 1.
+	let gesuchstellerIndex = $derived(
+		Math.max(0, eltern.slice(0, anzahlEltern).findIndex((p) => p.wohnsitz === true))
+	);
+
 	let angaben = $derived({
 		monat,
 		gemeinsam,
-		gesuchsteller: anzahlEltern === 2 ? gesuchsteller : 0,
+		gesuchsteller: anzahlEltern === 2 ? gesuchstellerIndex : 0,
 		eltern: eltern.slice(0, anzahlEltern),
 		partner: { ...partner, vorhanden: mitPartner },
 		antragAktuell,
@@ -99,7 +105,6 @@
 		if (leer(monat)) meldungen.monat = f.pflicht;
 		else if (monat < '2028-08') meldungen.monat = f.monat_zu_frueh;
 		pflicht('gemeinsam', gemeinsam);
-		if (gemeinsam === true) pflicht('gesuchsteller', gesuchsteller);
 		if (gemeinsam === false) {
 			pflicht('partner.vorhanden', partner.vorhanden);
 			if (partner.vorhanden === true) {
@@ -285,19 +290,6 @@
 			bind:wert={gemeinsam}
 			fehler={fehler.gemeinsam}
 		/>
-		{#if gemeinsam === true}
-			<Auswahl
-				name="gesuchsteller"
-				frage={fb.haushalt.kibg_gesuchstellend.frage}
-				hilfe={fb.haushalt.kibg_gesuchstellend.hilfe}
-				optionen={[
-					{ wert: 0, text: einsetzen(f.person, { nr: 1 }) },
-					{ wert: 1, text: einsetzen(f.person, { nr: 2 }) }
-				]}
-				bind:wert={gesuchsteller}
-				fehler={fehler.gesuchsteller}
-			/>
-		{/if}
 		{#if gemeinsam === false}
 			<Auswahl
 				name="partner"
