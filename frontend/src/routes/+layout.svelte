@@ -18,7 +18,7 @@
 
 <header>
 	<div class="inhalt">
-		<p class="label">Prototyp · Kanton St. Gallen · Verordnung im Entwurf</p>
+		<p class="label">Prototyp Kanton St. Gallen</p>
 		<h1>Kinderbetreuung: Beitrag berechnen</h1>
 		<nav aria-label="Hauptnavigation">
 			{#each TABS as tab (tab.href)}
