@@ -91,8 +91,12 @@ def test_f5_getrennte_eltern_beide_erfasst():
     # Art. 2 Abs. 1 KiBG: Bei getrennten Eltern ist nur die gesuchstellende
     # Person erziehungsberechtigt; der andere Elternteil wird nicht erfasst.
     simulation = p1(gemeinsam=False)
-    with pytest.raises(SituationParsingError, match="nur die gesuchstellende Person"):
+    with pytest.raises(
+        SituationParsingError, match="nur die gesuchstellende Person"
+    ) as fehler:
         simulation.calculate("kibg_beitrag_total", MONAT)
+    # Der Fehler zeigt auf das Feld des Haushalts, nicht auf eine Person.
+    assert "gemeinsamer_haushalt" in fehler.value.error["households"]["familie"]
 
 
 def test_f6_gemeinsamer_haushalt_mit_einer_person():
@@ -122,8 +126,11 @@ def test_f6_gemeinsamer_haushalt_mit_einer_person():
     simulation = SimulationBuilder().build_from_entities(
         SYSTEM, {"persons": personen, "households": {"familie": haushalt}}
     )
-    with pytest.raises(SituationParsingError, match="zwei Erziehungsberechtigte"):
+    with pytest.raises(
+        SituationParsingError, match="zwei Erziehungsberechtigte"
+    ) as fehler:
         simulation.calculate("kibg_beitrag_total", MONAT)
+    assert "gemeinsamer_haushalt" in fehler.value.error["households"]["familie"]
 
 
 def test_f7_stunden_ohne_betreuungstage():

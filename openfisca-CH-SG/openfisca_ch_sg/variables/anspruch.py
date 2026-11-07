@@ -46,28 +46,6 @@ class kibg_gesuchsteller(Variable):
             "werden, wer das Gesuch stellt, denn nur diese Person muss im "
             "Kanton wohnen (Art. 4 Abs. 1 KiBG, Entscheid O8).",
         )
-        # Die Angabe «gemeinsamer Haushalt» muss zur Anzahl der
-        # Erziehungsberechtigten passen. Erziehungsberechtigte sind nach
-        # Art. 2 Abs. 1 KiBG die Personen, die Beiträge geltend machen: Bei
-        # getrennten Eltern ist das nur die gesuchstellende Person.
-        gemeinsam = person.household("gemeinsamer_haushalt", period)
-        eingabefehler(
-            person,
-            ist_erziehungsberechtigt * not_(gemeinsam) * (anzahl_eltern > 1),
-            "gemeinsamer_haushalt",
-            "Bei getrennten Eltern ist nur die gesuchstellende Person "
-            "erziehungsberechtigt im Sinn von Art. 2 Abs. 1 KiBG. Der andere "
-            "Elternteil wird nicht erfasst; er stellt allenfalls ein eigenes "
-            "Gesuch für seine Betreuungstage.",
-        )
-        eingabefehler(
-            person,
-            ist_erziehungsberechtigt * gemeinsam * (anzahl_eltern == 1),
-            "gemeinsamer_haushalt",
-            "Ein gemeinsamer Haushalt der Erziehungsberechtigten "
-            "(Art. 4 Abs. 1 lit. b KiBG, Art. 8 Abs. 1 lit. a KiBV, Entwurf) "
-            "setzt zwei Erziehungsberechtigte im Haushalt voraus.",
-        )
         # Ist nur eine erziehungsberechtigte Person im Haushalt, stellt sie das
         # Gesuch (der Haushalt ist der Haushalt der gesuchstellenden Person).
         return ist_erziehungsberechtigt * (angegeben + (anzahl_eltern == 1))
@@ -84,6 +62,33 @@ class kibg_wohnsitz_erfuellt(Variable):
         # «Erziehungsberechtigte mit zivilrechtlichem Wohnsitz im Kanton»:
         # massgebend ist nur die gesuchstellende Person (Entscheid O8). Ohne
         # erziehungsberechtigte Person im Haushalt ist das Ergebnis «nein».
+
+        # Die Angabe «gemeinsamer Haushalt» muss zur Anzahl der
+        # Erziehungsberechtigten passen. Erziehungsberechtigte sind nach
+        # Art. 2 Abs. 1 KiBG die Personen, die Beiträge geltend machen: Bei
+        # getrennten Eltern ist das nur die gesuchstellende Person. Geprüft
+        # beim Haushalt, damit die Fehlermeldung auf das Feld des Haushalts
+        # zeigt (households/.../gemeinsamer_haushalt).
+        gemeinsam = household("gemeinsamer_haushalt", period)
+        anzahl_eltern = household.nb_persons(Household.ERZIEHUNGSBERECHTIGT)
+        eingabefehler(
+            household,
+            not_(gemeinsam) * (anzahl_eltern > 1),
+            "gemeinsamer_haushalt",
+            "Bei getrennten Eltern ist nur die gesuchstellende Person "
+            "erziehungsberechtigt im Sinn von Art. 2 Abs. 1 KiBG. Der andere "
+            "Elternteil wird nicht erfasst; er stellt allenfalls ein eigenes "
+            "Gesuch für seine Betreuungstage.",
+        )
+        eingabefehler(
+            household,
+            gemeinsam * (anzahl_eltern == 1),
+            "gemeinsamer_haushalt",
+            "Ein gemeinsamer Haushalt der Erziehungsberechtigten "
+            "(Art. 4 Abs. 1 lit. b KiBG, Art. 8 Abs. 1 lit. a KiBV, Entwurf) "
+            "setzt zwei Erziehungsberechtigte im Haushalt voraus.",
+        )
+
         gesuchsteller = household.members("kibg_gesuchsteller", period)
         wohnsitz = household.members("wohnsitz_kanton_sg", period)
         return household.any(
