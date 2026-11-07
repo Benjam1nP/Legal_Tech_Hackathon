@@ -42,7 +42,7 @@ Auf macOS ist Port 5000 oft durch AirPlay belegt. Dann die API mit
 | `src/app.css` | Design-Tokens: Farben, Schrift, Abstände (Grün an einer Stelle) |
 | `src/routes/+layout.svelte` | Kopfzeile und Tabs (Namen in `texte.de.json`, `navigation`) |
 
-Design: nach dem Style-Kit in `style-kit/` (STYLE.md), schlank umgesetzt, ohne
+Design: nach dem Style-Kit (`style-kit/STYLE.md`), schlank umgesetzt, ohne
 Tailwind oder shadcn. Tokens in `src/app.css`: nur hell, neutrale Grautöne,
 Ebenen durch Fläche und 1px-Linie statt Schatten, Rundung 8px, Schrift Geist,
 Beträge in Geist Mono, kleine Überschriften in Grossbuchstaben. Einzige
