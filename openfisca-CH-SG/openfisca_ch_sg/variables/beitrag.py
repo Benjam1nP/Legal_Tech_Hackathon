@@ -1,10 +1,16 @@
 """Höhe des Beitrags (Art. 6, 18 und 20 KiBG; Art. 13 bis 15, 24 und Anhang KiBV).
 
-Formel im Anhang der KiBV, je Kind und Betreuungsstunde:
-    B = (MaxV + Z1) × F + Z2
-mit dem Einkommensfaktor F (kibg_einkommensfaktor). B wird aufgeteilt in den
-Mindestbeitrag MaxV × F (Kanton und Gemeinde je hälftig, Art. 18 KiBG) und den
-Zusatzbeitrag Z1 × F + Z2 (nur Gemeinde, Art. 20 Abs. 2 KiBG).
+Die Formel im Anhang der KiBV steht im Text einmal und deshalb auch im Code
+einmal: `formel_anhang` in hilfsfunktionen.py. Sie wird dort angewendet, wo der
+Text sie anwendet:
+
+- B, Beitrag je Kind und Betreuungsstunde (Art. 13 und Anhang KiBV):
+  Formel mit den Zusatzbeiträgen Z1 und Z2 der Gemeinde.
+- Mindestbeitrag (Art. 6 und Art. 20 Abs. 1 KiBG): der Beitrag nach dem
+  linearen Modell ohne Zusatzbeiträge, also dieselbe Formel mit Z1 = Z2 = 0.
+  Kanton und Gemeinde tragen ihn je hälftig (Art. 18 Abs. 1 KiBG).
+- Zusatzbeitrag (Art. 20 Abs. 2 KiBG): was die Gemeinde «über ihren
+  Kostenanteil hinaus» aufstockt, also B minus Mindestbeitrag.
 """
 
 from numpy import maximum, minimum, select
@@ -13,13 +19,13 @@ from openfisca_core.periods import MONTH
 from openfisca_core.variables import Variable
 
 from openfisca_ch_sg.entities import Household, Person
-from openfisca_ch_sg.hilfsfunktionen import auf_rappen_runden
+from openfisca_ch_sg.hilfsfunktionen import auf_rappen_runden, formel_anhang
 from openfisca_ch_sg.variables.betreuung import KibgEinrichtungstyp
 
 
 class KibgAltersstufe(Enum):
     unter_18_monate = "Unter 18 Monaten"
-    ab_18_monate = "Ab 18 Monaten bis zur Einschulung"
+    ueber_18_monate = "Über 18 Monaten bis zur Einschulung"
     eingeschult = "Eingeschult bis zum Ende der Primarstufe"
 
 
@@ -33,14 +39,15 @@ class kibg_altersstufe(Variable):
     reference = "Art. 14 Abs. 1 bis 3 KiBV (Entwurf)"
 
     def formula_2028_08(person, period, parameters):
-        # Der höhere Ansatz gilt die vollen ersten 18 Lebensmonate (O2).
+        # «unter 18 Monaten» (Abs. 1) gilt die vollen ersten 18 Lebensmonate;
+        # «über 18 Monaten» (Abs. 2) ab dem 18-Monate-Geburtstag (Entscheid O2).
         altersgrenze = parameters(period).kibg.hoechstbeitrag.altersgrenze_monate
         eingeschult = person("eingeschult", period)
         unter_18 = person("kibg_alter_monate", period) < altersgrenze
         return select(
             [eingeschult, unter_18],
             [KibgAltersstufe.eingeschult, KibgAltersstufe.unter_18_monate],
-            KibgAltersstufe.ab_18_monate,
+            KibgAltersstufe.ueber_18_monate,
         )
 
 
@@ -64,17 +71,19 @@ class kibg_hoechstbeitrag(Variable):
             typ == KibgEinrichtungstyp.sonderschule
         )
         unter_18 = stufe == KibgAltersstufe.unter_18_monate
-        ab_18 = stufe == KibgAltersstufe.ab_18_monate
+        ueber_18 = stufe == KibgAltersstufe.ueber_18_monate
         eingeschult = stufe == KibgAltersstufe.eingeschult
 
-        # Für Kombinationen ohne Ansatz im Text (z. B. schulergänzende
-        # Betreuung vor der Einschulung) gibt es keinen Beitrag.
+        # Für Kombinationen ohne Ansatz in Art. 14 KiBV (z. B. schulergänzende
+        # Betreuung vor der Einschulung) ist der Höchstbeitrag 0: Der Anspruch
+        # kann erfüllt sein, der Beitrag ist trotzdem Fr. 0. Das Interface
+        # erklärt diesen Fall (docs/output-konzept.md).
         return select(
             [
                 unter_18 * kita,
                 unter_18 * tagesfamilie,
-                ab_18 * kita,
-                ab_18 * tagesfamilie,
+                ueber_18 * kita,
+                ueber_18 * tagesfamilie,
                 eingeschult * kita,
                 eingeschult * schulergaenzend,
                 eingeschult * tagesfamilie,
@@ -82,8 +91,8 @@ class kibg_hoechstbeitrag(Variable):
             [
                 p.unter_18_monate.kita,
                 p.unter_18_monate.tagesfamilie,
-                p.ab_18_monate.kita,
-                p.ab_18_monate.tagesfamilie,
+                p.ueber_18_monate.kita,
+                p.ueber_18_monate.tagesfamilie,
                 p.eingeschult.kita,
                 p.eingeschult.schulergaenzend,
                 p.eingeschult.tagesfamilie,
@@ -112,8 +121,8 @@ class kibg_beitrag_pro_stunde(Variable):
     value_type = float
     entity = Person
     definition_period = MONTH
-    label = "Beitrag je Betreuungsstunde (B), nicht gerundet"
-    reference = "Art. 13 und Anhang KiBV (Entwurf)"
+    label = "Beitrag je Kind und Betreuungsstunde (B), nicht gerundet"
+    reference = ("Art. 13 KiBV (Entwurf)", "Anhang KiBV (Entwurf)")
 
     def formula_2028_08(person, period, parameters):
         anspruch = person("kibg_anspruch", period)
@@ -121,25 +130,66 @@ class kibg_beitrag_pro_stunde(Variable):
         faktor = person.household("kibg_einkommensfaktor", period)
         z1 = person.household("kibg_zusatzbeitrag_z1", period)
         z2 = person.household("kibg_zusatzbeitrag_z2", period)
-        return anspruch * ((max_v + z1) * faktor + z2)
+        return anspruch * formel_anhang(max_v, z1, z2, faktor)
+
+
+class kibg_mindestbeitrag_pro_stunde(Variable):
+    value_type = float
+    entity = Person
+    definition_period = MONTH
+    label = "Mindestbeitrag je Kind und Betreuungsstunde (Formel ohne Zusatzbeiträge)"
+    reference = (
+        "Art. 6 Abs. 1 KiBG",
+        "Art. 20 Abs. 1 KiBG",
+        "Art. 13 KiBV (Entwurf)",
+        "Anhang KiBV (Entwurf)",
+    )
+
+    def formula_2028_08(person, period, parameters):
+        # Art. 20 Abs. 1 KiBG: Die Beiträge nach Art. 6 (lineares Modell) gelten
+        # als Mindestbeiträge. Z1 und Z2 sind Zusatzbeiträge der Gemeinde
+        # (Anhang, Art. 20 Abs. 2 KiBG) und gehören nicht dazu.
+        anspruch = person("kibg_anspruch", period)
+        max_v = person("kibg_hoechstbeitrag", period)
+        faktor = person.household("kibg_einkommensfaktor", period)
+        return anspruch * formel_anhang(max_v, 0, 0, faktor)
+
+
+class kibg_zusatzbeitrag_pro_stunde(Variable):
+    value_type = float
+    entity = Person
+    definition_period = MONTH
+    label = "Zusatzbeitrag der Gemeinde je Kind und Betreuungsstunde"
+    reference = ("Art. 20 Abs. 2 KiBG", "Art. 24 KiBV (Entwurf)")
+
+    def formula_2028_08(person, period, parameters):
+        # Art. 20 Abs. 2 KiBG: Die Gemeinde stockt die Mindestbeiträge «über
+        # ihren Kostenanteil hinaus» auf. Der Zusatzbeitrag ist der Teil von B,
+        # der über den Mindestbeitrag hinausgeht.
+        beitrag = person("kibg_beitrag_pro_stunde", period)
+        mindestbeitrag = person("kibg_mindestbeitrag_pro_stunde", period)
+        return beitrag - mindestbeitrag
 
 
 class kibg_mindestbeitrag(Variable):
     value_type = float
     entity = Person
     definition_period = MONTH
-    label = "Mindestbeitrag im Monat (Kanton und Gemeinde)"
-    reference = ("Art. 6 KiBG", "Art. 20 Abs. 1 KiBG")
+    label = "Mindestbeitrag im Monat (Kanton und Gemeinde je hälftig)"
+    reference = (
+        "Art. 6 Abs. 1 und 2 KiBG",
+        "Art. 20 Abs. 1 KiBG",
+        "Art. 14 Abs. 4 KiBV (Entwurf)",
+    )
 
     def formula_2028_08(person, period, parameters):
         rundung = parameters(period).kibg.rundung
-        anspruch = person("kibg_anspruch", period)
-        max_v = person("kibg_hoechstbeitrag", period)
-        faktor = person.household("kibg_einkommensfaktor", period)
+        je_stunde = person("kibg_mindestbeitrag_pro_stunde", period)
         stunden = person("kibg_subventionierte_stunden", period)
         kosten = person("kibg_betreuungskosten", period)
-        beitrag = auf_rappen_runden(anspruch * max_v * faktor * stunden, rundung)
-        # Höchstens die Kosten (Art. 6 Abs. 2 KiBG), nach dem Runden (A4).
+        beitrag = auf_rappen_runden(je_stunde * stunden, rundung)
+        # Art. 6 Abs. 2 KiBG: «Ein Beitrag darf die Kosten ... nicht
+        # übersteigen.» Begrenzt nach dem Runden (A4).
         return minimum(beitrag, kosten)
 
 
@@ -152,14 +202,11 @@ class kibg_zusatzbeitrag(Variable):
 
     def formula_2028_08(person, period, parameters):
         rundung = parameters(period).kibg.rundung
-        anspruch = person("kibg_anspruch", period)
-        faktor = person.household("kibg_einkommensfaktor", period)
-        z1 = person.household("kibg_zusatzbeitrag_z1", period)
-        z2 = person.household("kibg_zusatzbeitrag_z2", period)
+        je_stunde = person("kibg_zusatzbeitrag_pro_stunde", period)
         stunden = person("kibg_subventionierte_stunden", period)
         kosten = person("kibg_betreuungskosten", period)
         mindestbeitrag = person("kibg_mindestbeitrag", period)
-        beitrag = auf_rappen_runden(anspruch * (z1 * faktor + z2) * stunden, rundung)
+        beitrag = auf_rappen_runden(je_stunde * stunden, rundung)
         # Mindest- und Zusatzbeitrag zusammen höchstens die Kosten
         # (Art. 20 Abs. 3 KiBG); gekürzt wird der Zusatzbeitrag (A2).
         return minimum(beitrag, maximum(kosten - mindestbeitrag, 0))

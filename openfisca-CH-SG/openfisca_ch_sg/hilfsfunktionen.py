@@ -1,6 +1,44 @@
 """Kleine Hilfsfunktionen, die mehrere Formeln brauchen."""
 
-from numpy import floor, round as runden
+from datetime import date
+
+from numpy import asarray, floor, round as runden
+from openfisca_core.errors import SituationParsingError
+
+# Standardwert für ein nicht angegebenes Geburtsdatum. Für Kinder ist das
+# Geburtsdatum Pflicht; fehlt es, bricht die Berechnung ab (siehe
+# kibg_alter_monate).
+GEBURTSDATUM_FEHLT = date(9999, 12, 31)
+
+
+def formel_anhang(max_v, z1, z2, faktor):
+    """Formel im Anhang der KiBV (Entwurf), auf die Art. 13 KiBV verweist.
+
+        B = (MaxV + Z1) × (1 − (ME − MinmE) / (MaxmE − MinmE)) + Z2
+
+    B: Beitrag je Kind und Betreuungsstunde; MaxV: höchster Beitrag je Kind und
+    Betreuungsstunde; Z1: einkommensabhängiger und Z2: einkommensunabhängiger
+    Zusatzbeitrag der politischen Gemeinde. `faktor` ist der Klammerausdruck
+    1 − (ME − MinmE) / (MaxmE − MinmE), begrenzt nach Art. 15 KiBV
+    (kibg_einkommensfaktor).
+
+    Die Formel steht im Text nur einmal und deshalb auch im Code nur hier.
+    """
+    return (max_v + z1) * faktor + z2
+
+
+def eingabefehler(population, betroffen, variable, meldung):
+    """Bricht die Berechnung mit einer Fehlermeldung ab.
+
+    Für Angaben, ohne die der Text nicht angewendet werden kann. Die Web-API
+    gibt die Meldung als Fehler 400 an das Interface zurück, statt einen
+    Betrag zu berechnen.
+    """
+    if betroffen.any():
+        erste_id = asarray(population.ids)[betroffen][0]
+        raise SituationParsingError(
+            [population.entity.plural, erste_id, variable], meldung
+        )
 
 
 def monate_seit(datum, period):

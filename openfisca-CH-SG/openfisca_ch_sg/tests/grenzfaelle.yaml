@@ -15,6 +15,7 @@
       gemeinsamer_haushalt: true
     persons:
       mutter: &p1_mutter
+        kibg_gesuchstellend: true
         wohnsitz_kanton_sg: true
         beschaeftigungsgrad: 1.0
         me_steuerveranlagung: {2028: 60000}
@@ -697,6 +698,8 @@
       lina: *p1_lina
   output:
     household:
+      kibg_beschaeftigung_lit_a_erfuellt: false
+      kibg_beschaeftigung_lit_b_erfuellt: false
       kibg_beschaeftigung_erfuellt: false
     persons:
       lina:
@@ -737,6 +740,8 @@
       lina: *p1_lina
   output:
     household:
+      kibg_beschaeftigung_lit_a_erfuellt: false
+      kibg_beschaeftigung_lit_b_erfuellt: true
       kibg_beschaeftigung_erfuellt: false
     persons:
       lina:
@@ -774,6 +779,7 @@
       kibg_ausnahmegrund: berufliche_integration
     persons:
       mutter:
+        kibg_gesuchstellend: true
         wohnsitz_kanton_sg: true
         beschaeftigungsgrad: 0
         me_steuerveranlagung: {2028: 30000}
@@ -989,6 +995,7 @@
       gemeinsamer_haushalt: true
     persons:
       mutter:
+        kibg_gesuchstellend: true
         wohnsitz_kanton_sg: true
         beschaeftigungsgrad: 0.8
         me_steuerveranlagung: {2028: 40000}
@@ -1047,6 +1054,7 @@
       gemeinsamer_haushalt: true
     persons:
       mutter:
+        kibg_gesuchstellend: true
         wohnsitz_kanton_sg: true
         beschaeftigungsgrad: 1.0
         me_steuerveranlagung: {2029: 70000}
@@ -1069,6 +1077,52 @@
         kibg_beitrag_total: 375
 
 # --- Kein Anspruch (Teil 3): Beiträge 0, Restkosten = volle Kosten -----------
+
+- name: G52 Paar, Vater wohnt ausserhalb, die Mutter stellt das Gesuch (Art. 4 Abs. 1 KiBG, O8)
+  period: 2028-09
+  absolute_error_margin: 0.01
+  input:
+    household: *p1_haushalt
+    persons:
+      mutter: *p1_mutter
+      vater:
+        <<: *p1_vater
+        wohnsitz_kanton_sg: false
+      lina: *p1_lina
+  output:
+    household:
+      kibg_wohnsitz_erfuellt: true
+    persons:
+      lina:
+        kibg_anspruch: true
+        kibg_beitrag_total: 440
+
+- name: G53 Paar, Vater wohnt ausserhalb und stellt das Gesuch (Art. 4 Abs. 1 KiBG, O8)
+  period: 2028-09
+  absolute_error_margin: 0.01
+  input:
+    household: *p1_haushalt
+    persons:
+      mutter:
+        <<: *p1_mutter
+        kibg_gesuchstellend: false
+      vater:
+        <<: *p1_vater
+        wohnsitz_kanton_sg: false
+        kibg_gesuchstellend: true
+      lina: *p1_lina
+  output:
+    household:
+      kibg_wohnsitz_erfuellt: false
+    persons:
+      mutter:
+        kibg_gesuchsteller: false
+      vater:
+        kibg_gesuchsteller: true
+      lina:
+        kibg_anspruch: false
+        kibg_beitrag_total: 0
+        kibg_restkosten_eltern: 1040
 
 - name: X1 Beide Eltern wohnen ausserhalb des Kantons (Art. 4 Abs. 1 KiBG)
   period: 2028-09
@@ -1253,6 +1307,8 @@
       lina: *p1_lina
   output:
     household:
+      kibg_beschaeftigung_lit_a_erfuellt: false
+      kibg_beschaeftigung_lit_b_erfuellt: true
       kibg_beschaeftigung_erfuellt: false
     persons:
       lina:

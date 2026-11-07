@@ -6,17 +6,23 @@ from openfisca_core.indexed_enums import Enum
 from openfisca_core.periods import ETERNITY, MONTH, YEAR
 from openfisca_core.variables import Variable
 
-from openfisca_ch_sg.entities import Person
-from openfisca_ch_sg.hilfsfunktionen import monate_seit
+from openfisca_ch_sg.entities import Household, Person
+from openfisca_ch_sg.hilfsfunktionen import (
+    GEBURTSDATUM_FEHLT,
+    eingabefehler,
+    monate_seit,
+)
 
 
 class geburtsdatum(Variable):
     value_type = date
-    default_value = date(1970, 1, 1)
+    # Kein Ersatzwert: Fehlt das Geburtsdatum eines Kindes, wird nicht
+    # gerechnet (kibg_alter_monate).
+    default_value = GEBURTSDATUM_FEHLT
     entity = Person
     definition_period = ETERNITY
-    label = "Geburtsdatum"
-    reference = "Art. 4 Abs. 3 KiBG"
+    label = "Geburtsdatum (Pflichtangabe für jedes Kind)"
+    reference = ("Art. 4 Abs. 3 KiBG", "Art. 14 Abs. 1 und 2 KiBV (Entwurf)")
 
 
 class kibg_alter_monate(Variable):
@@ -27,7 +33,20 @@ class kibg_alter_monate(Variable):
     reference = ("Art. 4 Abs. 3 KiBG", "Art. 14 Abs. 1 und 2 KiBV (Entwurf)")
 
     def formula(person, period, parameters):
-        return monate_seit(person("geburtsdatum", period), period)
+        geburtsdatum = person("geburtsdatum", period)
+        # Ohne Geburtsdatum lassen sich weder das Mindestalter (Art. 4 Abs. 3
+        # KiBG) noch der Höchstbeitrag (Art. 14 KiBV) bestimmen: kein Beitrag,
+        # sondern ein Fehler.
+        eingabefehler(
+            person,
+            (geburtsdatum == GEBURTSDATUM_FEHLT) * person.has_role(Household.KIND),
+            "geburtsdatum",
+            "Geburtsdatum des Kindes fehlt. Ohne Geburtsdatum können das "
+            "Mindestalter (Art. 4 Abs. 3 KiBG) und der Höchstbeitrag "
+            "(Art. 14 KiBV, Entwurf) nicht bestimmt werden; es wird kein "
+            "Beitrag berechnet.",
+        )
+        return monate_seit(geburtsdatum, period)
 
 
 class wohnsitz_kanton_sg(Variable):
@@ -36,6 +55,17 @@ class wohnsitz_kanton_sg(Variable):
     definition_period = MONTH
     label = "Zivilrechtlicher Wohnsitz im Kanton St. Gallen"
     reference = "Art. 4 Abs. 1 KiBG"
+
+
+class kibg_gesuchstellend(Variable):
+    value_type = bool
+    entity = Person
+    definition_period = MONTH
+    label = (
+        "Diese erziehungsberechtigte Person stellt das Gesuch (Pflichtangabe, "
+        "wenn zwei Erziehungsberechtigte im Haushalt sind)"
+    )
+    reference = ("Art. 9 Abs. 1 KiBG", "Art. 8 Abs. 1 lit. b KiBV (Entwurf)")
 
 
 class beschaeftigungsgrad(Variable):

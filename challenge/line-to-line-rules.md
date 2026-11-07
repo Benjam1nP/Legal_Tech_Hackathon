@@ -40,9 +40,11 @@ Jede Bestimmung des Gesetzes (KiBG, `Gesetz.pdf`) und der Verordnung (KiBV, `Ver
 
 | Variable | Entität | Periode | Eingabe / Formel | Typ | Quelle |
 |---|---|---|---|---|---|
-| `geburtsdatum` | Person | ETERNITY | Eingabe | Datum | KiBG 4.3 |
+| `geburtsdatum` | Person | ETERNITY | Eingabe, **Pflicht für jedes Kind** (fehlt es, bricht die Berechnung mit einer Fehlermeldung ab) | Datum | KiBG 4.3, KiBV 14 |
 | `kibg_alter_monate` | Person (Kind) | MONTH | Formel | volle Monate am Monatsersten (A1) | KiBG 4.3, KiBV 14 |
 | `wohnsitz_kanton_sg` | Person | MONTH | Eingabe | ja/nein | KiBG 4.1 |
+| `kibg_gesuchstellend` | Person | MONTH | Eingabe, **Pflicht bei zwei Erziehungsberechtigten im Haushalt** | ja/nein | KiBG 9.1, KiBV 8.1b |
+| `kibg_gesuchsteller` | Person | MONTH | Formel (angegebene Person oder einzige erziehungsberechtigte Person; sonst Fehlermeldung) | ja/nein | KiBG 9.1, KiBV 8.1b |
 | `beschaeftigungsgrad` | Person | MONTH | Eingabe | Anteil (0.8 = 80 %) | KiBG 4.1 |
 | `me_steuerveranlagung` | Person | YEAR | Eingabe | Fr. | KiBG 5.3, KiBV 9 |
 | `me_aktuell` | Person | YEAR | Eingabe | Fr. (aufs Jahr gerechnet) | KiBG 5.4, KiBV 11 |
@@ -51,7 +53,7 @@ Jede Bestimmung des Gesetzes (KiBG, `Gesetz.pdf`) und der Verordnung (KiBV, `Ver
 | `kibg_einrichtung_anerkannt` | Person (Kind) | MONTH | Eingabe | ja/nein | KiBG 3.2 |
 | `kibg_einrichtung_angemeldet` | Person (Kind) | MONTH | Eingabe | ja/nein | KiBG 3.3 |
 | `kibg_einrichtung_berechtigt` | Person (Kind) | MONTH | Formel | ja/nein | KiBG 3.1 |
-| `eingeschult` | Person (Kind) | MONTH | Eingabe | ja/nein | KiBV 14 |
+| `eingeschult` | Person (Kind) | MONTH | Eingabe (ab Eintritt in den obligatorischen Kindergarten, A8) | ja/nein | KiBV 14.2–3, 16.1 |
 | `primarschule_abgeschlossen` | Person (Kind) | MONTH | Eingabe | ja/nein | KiBG 4.3 |
 | `kibg_alter_erfuellt` | Person (Kind) | MONTH | Formel | ja/nein | KiBG 4.3 |
 | `kibg_altersstufe` | Person (Kind) | MONTH | Formel | Kategorie | KiBV 14.1–3 |
@@ -61,8 +63,10 @@ Jede Bestimmung des Gesetzes (KiBG, `Gesetz.pdf`) und der Verordnung (KiBV, `Ver
 | `kibg_subventionierte_stunden` | Person (Kind) | MONTH | Formel | Stunden | KiBV 14.4 |
 | `kibg_betreuungskosten` | Person (Kind) | MONTH | Eingabe | Fr. | KiBG 6.2 |
 | `kibg_anspruch` | Person (Kind) | MONTH | Formel | ja/nein | KiBG 4 |
-| `kibg_beitrag_pro_stunde` | Person (Kind) | MONTH | Formel | Fr. pro Stunde | KiBV 13, Anhang |
-| `kibg_mindestbeitrag` | Person (Kind) | MONTH | Formel | Fr. | KiBG 6, 20.1 |
+| `kibg_beitrag_pro_stunde` | Person (Kind) | MONTH | Formel (Formel im Anhang) | Fr. pro Stunde | KiBV 13, Anhang |
+| `kibg_mindestbeitrag_pro_stunde` | Person (Kind) | MONTH | Formel (Formel im Anhang ohne Z1, Z2) | Fr. pro Stunde | KiBG 6.1, 20.1; KiBV 13, Anhang |
+| `kibg_zusatzbeitrag_pro_stunde` | Person (Kind) | MONTH | Formel (B − Mindestbeitrag pro Stunde) | Fr. pro Stunde | KiBG 20.2, KiBV 24 |
+| `kibg_mindestbeitrag` | Person (Kind) | MONTH | Formel | Fr. | KiBG 6.1–2, 20.1; KiBV 14.4 |
 | `kibg_zusatzbeitrag` | Person (Kind) | MONTH | Formel | Fr. | KiBG 20.2, KiBV 24 |
 | `kibg_beitrag_total` | Person (Kind) | MONTH | Formel | Fr. | KiBG 20.3 |
 | `kibg_restkosten_eltern` | Person (Kind) | MONTH | Formel | Fr. | KiBG 12.2 |
@@ -73,7 +77,9 @@ Jede Bestimmung des Gesetzes (KiBG, `Gesetz.pdf`) und der Verordnung (KiBV, `Ver
 | `kibg_beitragsbeginn` | Person (Kind) | ETERNITY | Formel (optional) | Datum | KiBG 9.2, KiBV 25 |
 | `kibg_verfuegung_ende` | Person (Kind) | ETERNITY | Formel (optional) | Datum | KiBV 16 |
 | `gemeinsamer_haushalt` | Haushalt | MONTH | Eingabe | ja/nein | KiBG 4.1b |
-| `kibg_beschaeftigung_erfuellt` | Haushalt | MONTH | Formel | ja/nein | KiBG 4.1 |
+| `kibg_beschaeftigung_lit_a_erfuellt` | Haushalt | MONTH | Formel | ja/nein | KiBG 4.1a |
+| `kibg_beschaeftigung_lit_b_erfuellt` | Haushalt | MONTH | Formel (nur bei gemeinsamem Haushalt anwendbar) | ja/nein | KiBG 4.1b |
+| `kibg_beschaeftigung_erfuellt` | Haushalt | MONTH | Formel (lit. a UND lit. b, O3) | ja/nein | KiBG 4.1 |
 | `kibg_wohnsitz_erfuellt` | Haushalt | MONTH | Formel | ja/nein | KiBG 4.1; erfüllt, wenn die gesuchstellende Person im Kanton wohnt (O8) |
 | `kibg_ausnahme_bewilligt` | Haushalt | MONTH | Eingabe | ja/nein | KiBG 4.2 |
 | `kibg_ausnahmegrund` | Haushalt | MONTH | Eingabe | Kategorie | KiBV 12 |
@@ -107,11 +113,11 @@ Jede Bestimmung des Gesetzes (KiBG, `Gesetz.pdf`) und der Verordnung (KiBV, `Ver
 | Art. 3.2 a–d | Anerkannte Einrichtungstypen | Variable, Eingabe (Kategorie) | `kibg_einrichtungstyp`: `kita` / `tagesfamilie` / `schulergaenzend` / `sonderschule` / `keine` | Der Höchstbeitrag richtet sich nach der Betreuungsform (KiBV 14.3), nicht nach der Schule |
 | Art. 3.2 (Kriterien) | Bewilligung, Qualitätskonzept, Leistungsvereinbarung | Variable, Eingabe (ja/nein) | `kibg_einrichtung_anerkannt` | Behördlicher Entscheid, daher Eingabe |
 | Art. 3.3 | Bei der kantonalen Stelle angemeldet | Variable, Eingabe (ja/nein) | `kibg_einrichtung_angemeldet` | Beginn gemäss KiBV 6 |
-| Art. 4.1 | Zivilrechtlicher Wohnsitz im Kanton | Variable, Eingabe (ja/nein) + Formel | `wohnsitz_kanton_sg` (Person), `kibg_wohnsitz_erfuellt` (Haushalt) | Die gesuchstellende Person muss hier wohnen (O8, entschieden) |
+| Art. 4.1 | Zivilrechtlicher Wohnsitz im Kanton | Variable, Eingabe (ja/nein) + Formel | `wohnsitz_kanton_sg` (Person), `kibg_gesuchsteller` (Person), `kibg_wohnsitz_erfuellt` (Haushalt) | Nur die gesuchstellende Person muss hier wohnen (O8, entschieden) |
 | Art. 4.1 | Selbständig oder unselbständig erwerbstätig, mit Beschäftigungsgrad | Variable, Eingabe (Anteil) | `beschaeftigungsgrad` (Person) | Als Anteil: 80 % = 0.8 |
 | Art. 4.1a | Mindestens 20 Prozent | Parameter | `kibg.anspruch.min_beschaeftigungsgrad = 0.20` | Einheit `/1` (OpenFisca-Konvention) |
 | Art. 4.1b | Zusammen mindestens 120 Prozent bei gemeinsamem Haushalt | Parameter + Eingabe | `kibg.anspruch.min_beschaeftigungsgrad_gemeinsam = 1.20`, `gemeinsamer_haushalt` (Haushalt) | Kumulativ zu lit. a: jeder Elternteil mindestens 20 % (O3, entschieden) |
-| Art. 4.1 | Beschäftigungsbedingung erfüllt | Variable, Formel | `kibg_beschaeftigung_erfuellt` (Haushalt) | Jeder Erziehungsberechtigte mindestens 20 % (a); im gemeinsamen Haushalt zusätzlich zusammen mindestens 120 % (b) (O3) |
+| Art. 4.1 | Beschäftigungsbedingung erfüllt | Variable, Formel | `kibg_beschaeftigung_lit_a_erfuellt`, `kibg_beschaeftigung_lit_b_erfuellt`, `kibg_beschaeftigung_erfuellt` (Haushalt) | Jeder Erziehungsberechtigte mindestens 20 % (a); im gemeinsamen Haushalt zusätzlich zusammen mindestens 120 % (b) (O3) |
 | Art. 4.2 | Ausnahme in begründeten Fällen | Variable, Eingabe (ja/nein) | `kibg_ausnahme_bewilligt` | Menschlicher Entscheid; Gründe in KiBV 12 |
 | Art. 4.3 | Ab drei Monaten | Parameter + Eingabe | `kibg.anspruch.mindestalter_monate = 3`, `geburtsdatum` | — |
 | Art. 4.3 | Bis zum Abschluss der Primarschule | Variable, Eingabe (ja/nein) | `primarschule_abgeschlossen` (Kind) | Eine Tatsache, kein Alter |
@@ -120,7 +126,7 @@ Jede Bestimmung des Gesetzes (KiBG, `Gesetz.pdf`) und der Verordnung (KiBV, `Ver
 | Art. 5.1–5.2 | Abhängig von massgebendem Einkommen und Vermögen (ME) | Variable | `kibg_massgebendes_einkommen` (Haushalt, jährlich) | Zusammengesetzt gemäss KiBV 8–11 |
 | Art. 5.3 | Grundlage: letzte definitive Steuerveranlagung | Variable, Eingabe | `me_steuerveranlagung` (Person, jährlich) | In einem anderen Erlass definiert, der V EG-KVG (O5). **Entscheid: direkte Eingabe** |
 | Art. 5.4 | Wesentliche Veränderung, daher aktuelle Gegebenheiten | Variable, Eingabe + Formel | `me_aktuell` (Person) | Schwelle in KiBV 11 |
-| Art. 6.1 | Lineares Modell | Variable, Formel | `kibg_beitrag_pro_stunde` | Formel im Anhang der KiBV |
+| Art. 6.1 | Lineares Modell | Variable, Formel | `kibg_mindestbeitrag_pro_stunde` | Formel im Anhang der KiBV ohne Zusatzbeiträge |
 | Art. 6.2 | Beitrag höchstens so hoch wie die tatsächlichen Kosten | Variable, Eingabe + Formel | `kibg_betreuungskosten` (Kind, monatlich), `kibg_mindestbeitrag` | min(Beitrag, Kosten) |
 
 ### III. Plattform
@@ -134,7 +140,7 @@ Jede Bestimmung des Gesetzes (KiBG, `Gesetz.pdf`) und der Verordnung (KiBV, `Ver
 
 | Ref. | Inhalt | Konzept | Vorgeschlagener Name | Bemerkung |
 |---|---|---|---|---|
-| Art. 9.1 | Beiträge nur auf Gesuch | Variable, Eingabe (Datum) | `kibg_gesuchsdatum` | — |
+| Art. 9.1 | Beiträge nur auf Gesuch der Erziehungsberechtigten | Variable, Eingabe (Datum, ja/nein) | `kibg_gesuchsdatum`, `kibg_gesuchstellend` | Wer das Gesuch stellt, bestimmt den massgebenden Wohnsitz (O8) |
 | Art. 9.2 | Rückwirkend, wenn das Gesuch innert 30 Tagen nach Betreuungsbeginn eingeht, sonst ab Gesuch | Parameter + Eingabe + Formel | `kibg.verfahren.frist_rueckwirkung_tage = 30`, `betreuungsbeginn`, `kibg_beitragsbeginn` | Übergangsfrist in KiBV 25 |
 | Art. 10 | Einrichtung bestätigt das Betreuungsverhältnis | Variable, Eingabe (ja/nein) (optional) | `betreuung_bestaetigt` | Kann weggelassen werden |
 | Art. 11.1 | Kommunale Stelle prüft und verfügt | Nicht berechenbar | — | **Unser Ergebnis ist eine Schätzung, keine Verfügung** |
@@ -161,7 +167,7 @@ Jede Bestimmung des Gesetzes (KiBG, `Gesetz.pdf`) und der Verordnung (KiBV, `Ver
 
 | Ref. | Inhalt | Konzept | Vorgeschlagener Name | Bemerkung |
 |---|---|---|---|---|
-| Art. 20.1 | Beiträge nach Art. 6/17/18 sind Mindestbeiträge | Variable, Formel | `kibg_mindestbeitrag` | — |
+| Art. 20.1 | Beiträge nach Art. 6/17/18 sind Mindestbeiträge | Variable, Formel | `kibg_mindestbeitrag_pro_stunde`, `kibg_mindestbeitrag` | — |
 | Art. 20.2 | Gemeinde kann mit Zusatzbeiträgen aufstocken | Variable, Eingabe | `kibg_zusatzbeitrag_z1`, `kibg_zusatzbeitrag_z2` (Haushalt, Fr./Stunde) | Werte pro Gemeinde unbekannt, daher Eingaben |
 | Art. 20.3 | Mindestbeitrag + Zusatzbeitrag höchstens so hoch wie die Kosten | Variable, Formel | `kibg_beitrag_total` | min(Mindest- + Zusatzbeitrag, Kosten) |
 | Art. 21 | Anderweitige kommunale Unterstützung | Ausserhalb des Umfangs | — | — |
@@ -209,7 +215,7 @@ Jede Bestimmung des Gesetzes (KiBG, `Gesetz.pdf`) und der Verordnung (KiBV, `Ver
 | Art. 11.1 | Aktuelle Gegebenheiten nur auf Antrag | Variable, Eingabe (ja/nein) | `kibg_antrag_aktuelle_gegebenheiten` | — |
 | Art. 11.2 | Abweichung von mindestens 25 % bei Gesuchstellung | Parameter + Formel | `kibg.einkommen.schwelle_abweichung = 0.25`, `kibg_massgebendes_einkommen` | In beide Richtungen (O12, entschieden) |
 | Art. 11.3 | Veränderung von mindestens 25 % während laufender Verfügung gilt ab dem Ersten des Folgemonats | Formel (optional) | — | Datumslogik, kann weggelassen werden |
-| Art. 12 a–c | Ausnahmegründe: berufliche Integration, familiäre Belastung, Indikation beim Kind | Variable, Eingabe (Kategorie) | `kibg_ausnahmegrund` | Dokumentiert den Grund; der Entscheid bleibt bei `kibg_ausnahme_bewilligt` |
+| Art. 12 a–c | Ausnahmegründe: berufliche Integration, familiäre Belastung, Indikation beim Kind | Variable, Eingabe (Kategorie) | `kibg_ausnahmegrund` (Bezeichnungen im Wortlaut von lit. a–c) | Dokumentiert den Grund; der Entscheid bleibt bei `kibg_ausnahme_bewilligt` |
 
 ### IV. Berechnung
 
@@ -218,8 +224,8 @@ Jede Bestimmung des Gesetzes (KiBG, `Gesetz.pdf`) und der Verordnung (KiBV, `Ver
 | Art. 13 | Formel im Anhang | Variable, Formel | `kibg_beitrag_pro_stunde` | — |
 | Art. 14.1a | Unter 18 Monaten, Kita: Fr. 11.00 | Parameter | `kibg.hoechstbeitrag.unter_18_monate.kita = 11.00` | Gilt die vollen ersten 18 Lebensmonate (O2, entschieden) |
 | Art. 14.1b | Unter 18 Monaten, Tagesfamilie: Fr. 8.30 | Parameter | `…unter_18_monate.tagesfamilie = 8.30` | — |
-| Art. 14.2a | Über 18 Monaten bis Einschulung, Kita: Fr. 7.50 | Parameter | `…ab_18_monate.kita = 7.50` | Ab dem 18-Monate-Geburtstag (O2) |
-| Art. 14.2b | Über 18 Monaten bis Einschulung, Tagesfamilie: Fr. 5.50 | Parameter | `…ab_18_monate.tagesfamilie = 5.50` | — |
+| Art. 14.2a | Über 18 Monaten bis Einschulung, Kita: Fr. 7.50 | Parameter | `…ueber_18_monate.kita = 7.50` | Ab dem 18-Monate-Geburtstag (O2) |
+| Art. 14.2b | Über 18 Monaten bis Einschulung, Tagesfamilie: Fr. 5.50 | Parameter | `…ueber_18_monate.tagesfamilie = 5.50` | — |
 | Art. 14.3a | Eingeschult bis Ende Primarstufe, Kita: Fr. 7.50 | Parameter | `…eingeschult.kita = 7.50` | — |
 | Art. 14.3b | Eingeschult, schulergänzende Betreuung: Fr. 5.50 | Parameter | `…eingeschult.schulergaenzend = 5.50` | — |
 | Art. 14.3c | Eingeschult, Tagesfamilie: Fr. 5.50 | Parameter | `…eingeschult.tagesfamilie = 5.50` | — |
@@ -280,7 +286,7 @@ Jede Bestimmung des Gesetzes (KiBG, `Gesetz.pdf`) und der Verordnung (KiBV, `Ver
 | Z1, Z2 | Variablen, Eingaben | KiBG 20, KiBV 24 |
 | Faktor 1 − (ME − MinmE) / (MaxmE − MinmE), begrenzt auf 0–1 | Variable, Formel `kibg_einkommensfaktor` | Anhang; Begrenzung aus KiBV 15, die Formel selbst begrenzt nicht |
 
-**Hinweis zur Modellierung:** B in zwei Teile aufteilen. Der Mindestbeitrag ist MaxV × Faktor und wird von Kanton und Gemeinde je hälftig getragen (KiBG 18). Der Zusatzbeitrag ist Z1 × Faktor + Z2 und wird von der Gemeinde allein bezahlt (KiBG 20.2). So ergibt sich auch die Aufteilung der Finanzierung.
+**Hinweis zur Modellierung:** Die Formel steht im Text einmal (Anhang, Verweis in KiBV 13) und deshalb im Code nur einmal (`formel_anhang`). Sie wird dort angewendet, wo der Text sie anwendet: für B mit Z1 und Z2 (`kibg_beitrag_pro_stunde`) und für den Mindestbeitrag nach KiBG 6 und 20.1 ohne Zusatzbeiträge (`kibg_mindestbeitrag_pro_stunde`). Der Zusatzbeitrag ist, was die Gemeinde nach KiBG 20.2 «über ihren Kostenanteil hinaus» aufstockt: B minus Mindestbeitrag (`kibg_zusatzbeitrag_pro_stunde`). Den Mindestbeitrag tragen Kanton und Gemeinde je hälftig (KiBG 18), den Zusatzbeitrag die Gemeinde allein (KiBG 20.2).
 
 **Berechnungskette:**
 

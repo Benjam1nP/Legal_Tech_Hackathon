@@ -11,6 +11,7 @@
       gemeinsamer_haushalt: true
     persons:
       mutter:
+        kibg_gesuchstellend: true
         wohnsitz_kanton_sg: true
         beschaeftigungsgrad: 1.0
         me_steuerveranlagung: {2028: 60000}
@@ -28,8 +29,9 @@
         kibg_betreuungskosten: 1040
   output:
     # Enum-Werte lassen sich in OpenFisca 44 nur als Liste über alle Personen
-    # vergleichen (Reihenfolge mutter, vater, lina). Für Eltern ohne Bedeutung.
-    kibg_altersstufe: [ab_18_monate, ab_18_monate, unter_18_monate]
+    # vergleichen (Reihenfolge mutter, vater, lina). Für Eltern ohne Bedeutung:
+    # Ohne Geburtsdatum der Eltern ergibt sich der Standardwert.
+    kibg_altersstufe: [unter_18_monate, unter_18_monate, unter_18_monate]
     household:
       kibg_wohnsitz_erfuellt: true
       kibg_beschaeftigung_erfuellt: true
@@ -37,6 +39,7 @@
       kibg_einkommensfaktor: 0.5
     persons:
       mutter:
+        kibg_gesuchstellend: true
         kibg_anspruch: false
         kibg_beitrag_total: 0
       lina:
@@ -64,6 +67,7 @@
       gemeinsamer_haushalt: false
     persons:
       mutter:
+        kibg_gesuchstellend: true
         wohnsitz_kanton_sg: true
         beschaeftigungsgrad: 0.5
         me_steuerveranlagung: {2028: 30000}
@@ -97,6 +101,7 @@
       gemeinsamer_haushalt: true
     persons:
       mutter:
+        kibg_gesuchstellend: true
         wohnsitz_kanton_sg: true
         beschaeftigungsgrad: 0.8
         me_steuerveranlagung: {2028: 40000}
@@ -149,6 +154,7 @@
       gemeinsamer_haushalt: true
     persons:
       mutter:
+        kibg_gesuchstellend: true
         wohnsitz_kanton_sg: true
         beschaeftigungsgrad: 1.0
         me_steuerveranlagung: {2028: 70000}
@@ -187,6 +193,7 @@
       kibg_zusatzbeitrag_z2: 1.00
     persons:
       mutter:
+        kibg_gesuchstellend: true
         wohnsitz_kanton_sg: true
         beschaeftigungsgrad: 1.0
         me_steuerveranlagung: {2028: 60000}
@@ -206,6 +213,8 @@
     persons:
       lina:
         kibg_beitrag_pro_stunde: 7.50
+        kibg_mindestbeitrag_pro_stunde: 5.50
+        kibg_zusatzbeitrag_pro_stunde: 2.00
         kibg_mindestbeitrag: 440
         kibg_zusatzbeitrag: 160
         kibg_beitrag_total: 600

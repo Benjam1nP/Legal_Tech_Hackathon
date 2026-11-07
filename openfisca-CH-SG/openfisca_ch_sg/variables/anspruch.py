@@ -6,48 +6,121 @@ from openfisca_core.periods import MONTH
 from openfisca_core.variables import Variable
 
 from openfisca_ch_sg.entities import Household, Person
-from openfisca_ch_sg.hilfsfunktionen import mindestens
+from openfisca_ch_sg.hilfsfunktionen import eingabefehler, mindestens
+
+
+class kibg_gesuchsteller(Variable):
+    value_type = bool
+    entity = Person
+    definition_period = MONTH
+    label = "Gesuchstellende erziehungsberechtigte Person"
+    reference = ("Art. 9 Abs. 1 KiBG", "Art. 8 Abs. 1 lit. b KiBV (Entwurf)")
+
+    def formula_2028_08(person, period, parameters):
+        eltern = Household.ERZIEHUNGSBERECHTIGT
+        ist_erziehungsberechtigt = person.has_role(eltern)
+        angegeben = person("kibg_gesuchstellend", period)
+        anzahl_eltern = person.household.nb_persons(eltern)
+        anzahl_angegeben = person.household.sum(
+            angegeben * ist_erziehungsberechtigt, role=eltern
+        )
+        # Das Gesuch stellen die Erziehungsberechtigten (Art. 9 Abs. 1 KiBG).
+        eingabefehler(
+            person,
+            angegeben * not_(ist_erziehungsberechtigt),
+            "kibg_gesuchstellend",
+            "Das Gesuch kann nur eine erziehungsberechtigte Person stellen "
+            "(Art. 9 Abs. 1 KiBG).",
+        )
+        eingabefehler(
+            person,
+            ist_erziehungsberechtigt * (anzahl_angegeben > 1),
+            "kibg_gesuchstellend",
+            "Es kann nur eine Person als gesuchstellend angegeben werden.",
+        )
+        eingabefehler(
+            person,
+            ist_erziehungsberechtigt * (anzahl_eltern > 1) * (anzahl_angegeben == 0),
+            "kibg_gesuchstellend",
+            "Im Haushalt leben zwei Erziehungsberechtigte. Es muss angegeben "
+            "werden, wer das Gesuch stellt, denn nur diese Person muss im "
+            "Kanton wohnen (Art. 4 Abs. 1 KiBG, Entscheid O8).",
+        )
+        # Ist nur eine erziehungsberechtigte Person im Haushalt, stellt sie das
+        # Gesuch (der Haushalt ist der Haushalt der gesuchstellenden Person).
+        return ist_erziehungsberechtigt * (angegeben + (anzahl_eltern == 1))
 
 
 class kibg_wohnsitz_erfuellt(Variable):
     value_type = bool
     entity = Household
     definition_period = MONTH
-    label = "Die gesuchstellende Person wohnt im Kanton St. Gallen"
+    label = "Die gesuchstellende Person hat zivilrechtlichen Wohnsitz im Kanton"
     reference = "Art. 4 Abs. 1 KiBG"
 
     def formula_2028_08(household, period, parameters):
-        # Der Haushalt ist der Haushalt der gesuchstellenden Person (O8). Im
-        # gemeinsamen Haushalt wohnen beide Erziehungsberechtigten am selben Ort.
-        # Ohne erziehungsberechtigte Person gibt es keinen Anspruch («alle»
-        # wäre bei null Personen sonst wahr).
-        hat_eltern = household.nb_persons(Household.ERZIEHUNGSBERECHTIGT) > 0
+        # «Erziehungsberechtigte mit zivilrechtlichem Wohnsitz im Kanton»:
+        # massgebend ist nur die gesuchstellende Person (Entscheid O8). Ohne
+        # erziehungsberechtigte Person im Haushalt ist das Ergebnis «nein».
+        gesuchsteller = household.members("kibg_gesuchsteller", period)
         wohnsitz = household.members("wohnsitz_kanton_sg", period)
-        alle_im_kanton = household.all(wohnsitz, role=Household.ERZIEHUNGSBERECHTIGT)
-        return hat_eltern * alle_im_kanton
+        return household.any(
+            gesuchsteller * wohnsitz, role=Household.ERZIEHUNGSBERECHTIGT
+        )
+
+
+class kibg_beschaeftigung_lit_a_erfuellt(Variable):
+    value_type = bool
+    entity = Household
+    definition_period = MONTH
+    label = (
+        "Art. 4 Abs. 1 lit. a KiBG: jede erziehungsberechtigte Person wenigstens 20 %"
+    )
+    reference = "Art. 4 Abs. 1 lit. a KiBG"
+
+    def formula_2028_08(household, period, parameters):
+        p = parameters(period).kibg.anspruch
+        grad = household.members("beschaeftigungsgrad", period)
+        return household.all(
+            mindestens(grad, p.min_beschaeftigungsgrad),
+            role=Household.ERZIEHUNGSBERECHTIGT,
+        )
+
+
+class kibg_beschaeftigung_lit_b_erfuellt(Variable):
+    value_type = bool
+    entity = Household
+    definition_period = MONTH
+    label = (
+        "Art. 4 Abs. 1 lit. b KiBG: zusammen wenigstens 120 %, wenn die "
+        "Erziehungsberechtigten einen gemeinsamen Haushalt führen"
+    )
+    reference = "Art. 4 Abs. 1 lit. b KiBG"
+
+    def formula_2028_08(household, period, parameters):
+        p = parameters(period).kibg.anspruch
+        grad = household.members("beschaeftigungsgrad", period)
+        zusammen = household.sum(grad, role=Household.ERZIEHUNGSBERECHTIGT)
+        zusammen_genug = mindestens(zusammen, p.min_beschaeftigungsgrad_gemeinsam)
+        gemeinsam = household("gemeinsamer_haushalt", period)
+        # lit. b gilt nur bei gemeinsamem Haushalt («wenn sie einen
+        # gemeinsamen Haushalt führen»); sonst ist sie nicht anwendbar.
+        return zusammen_genug + not_(gemeinsam)
 
 
 class kibg_beschaeftigung_erfuellt(Variable):
     value_type = bool
     entity = Household
     definition_period = MONTH
-    label = "Der Mindest-Beschäftigungsgrad ist erreicht"
+    label = "Der Beschäftigungsgrad nach Art. 4 Abs. 1 lit. a und b KiBG ist erreicht"
     reference = "Art. 4 Abs. 1 lit. a und b KiBG"
 
     def formula_2028_08(household, period, parameters):
-        p = parameters(period).kibg.anspruch
-        grad = household.members("beschaeftigungsgrad", period)
-        # lit. a: jede erziehungsberechtigte Person mindestens 20 % (O3: kumulativ)
-        jeder_genug = household.all(
-            mindestens(grad, p.min_beschaeftigungsgrad),
-            role=Household.ERZIEHUNGSBERECHTIGT,
-        )
-        # lit. b: im gemeinsamen Haushalt zusammen mindestens 120 %
-        zusammen = household.sum(grad, role=Household.ERZIEHUNGSBERECHTIGT)
-        zusammen_genug = mindestens(zusammen, p.min_beschaeftigungsgrad_gemeinsam)
-        gemeinsam = household("gemeinsamer_haushalt", period)
+        # lit. a und lit. b gelten kumulativ (Entscheid O3).
+        lit_a = household("kibg_beschaeftigung_lit_a_erfuellt", period)
+        lit_b = household("kibg_beschaeftigung_lit_b_erfuellt", period)
         hat_eltern = household.nb_persons(Household.ERZIEHUNGSBERECHTIGT) > 0
-        return hat_eltern * jeder_genug * (zusammen_genug + not_(gemeinsam))
+        return hat_eltern * lit_a * lit_b
 
 
 class kibg_ausnahme_bewilligt(Variable):
@@ -60,11 +133,19 @@ class kibg_ausnahme_bewilligt(Variable):
 
 class KibgAusnahmegrund(Enum):
     keiner = "Kein Ausnahmegrund"
+    # Wortlaut von Art. 12 Abs. 1 lit. a bis c KiBV (Entwurf)
     berufliche_integration = (
-        "Berufliche Integration (Stellensuche, Aus- und Weiterbildung, Integration)"
+        "Berufliche Integration, namentlich Stellensuche, Aus- und Weiterbildung "
+        "oder Integrationsmassnahmen für ausländische Staatsangehörige"
     )
-    familiaere_belastung = "Familiäre Belastung (Gesundheit, Überforderung)"
-    indikation_kind = "Entwicklungs- oder Verhaltensauffälligkeit oder sprachliche Indikation des Kindes"
+    familiaere_belastung = (
+        "Familiäre Belastungen wie gesundheitliche Beeinträchtigungen oder "
+        "Überforderung der Erziehungsberechtigten"
+    )
+    indikation_kind = (
+        "Entwicklungs- oder Verhaltensauffälligkeiten des Kindes oder eine "
+        "sprachliche Indikation"
+    )
 
 
 class kibg_ausnahmegrund(Variable):
@@ -97,7 +178,7 @@ class kibg_anspruch(Variable):
     entity = Person
     definition_period = MONTH
     label = "Anspruch auf Beiträge für dieses Kind"
-    reference = ("Art. 3 und 4 KiBG", "Art. 7 KiBV (Entwurf)")
+    reference = ("Art. 3 Abs. 1 KiBG", "Art. 4 Abs. 1 bis 3 KiBG")
 
     def formula_2028_08(person, period, parameters):
         wohnsitz = person.household("kibg_wohnsitz_erfuellt", period)

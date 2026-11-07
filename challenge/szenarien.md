@@ -63,6 +63,8 @@ Wenn bei einem Szenario nichts anderes steht, gilt:
 - Keine Zusatzbeiträge der Gemeinde (`kibg_zusatzbeitrag_z1` = `kibg_zusatzbeitrag_z2` = 0); keine Ausnahme nach KiBG 4.2; kein Antrag auf aktuelle Gegebenheiten.
 - Massgebendes Einkommen als Eingabe für das Jahr 2028.
 - Bei getrennt lebenden Eltern enthält der Haushalt im Modell nur die gesuchstellende Person (und allenfalls ihre Partnerin oder ihren Partner).
+- Bei zwei Erziehungsberechtigten im Haushalt stellt die Mutter das Gesuch (`kibg_gesuchstellend`). Diese Angabe ist Pflicht (siehe F2).
+- Jedes Kind hat ein Geburtsdatum. Diese Angabe ist Pflicht (siehe F1).
 
 ### Annahmen
 
@@ -424,6 +426,13 @@ Höheres aktuelles Einkommen: siehe Q4.
 | G50 | P1 im Monat 2028-08 (erster Monat nach Vollzugsbeginn, Lina 11 Monate) | wie P1: 440.00 | fest |
 | G51 | P4 im Monat 2029-01, Einkommen für 2029 gleich wie 2028 | wie P4: 375.00 (Elias 28 Monate, Ansatz unverändert) | A1 |
 
+### Wohnsitz der gesuchstellenden Person (KiBG 4.1, Entscheid O8)
+
+| Nr. | Änderung | `kibg_wohnsitz_erfuellt` | `kibg_anspruch` | Status |
+|---|---|---|---|---|
+| G52 | P1, der Vater wohnt ausserhalb des Kantons, die Mutter stellt das Gesuch | ja | ja, Beitrag 440.00 | Entscheid O8 |
+| G53 | P1, der Vater wohnt ausserhalb des Kantons und stellt das Gesuch | nein | nein, Beitrag 0.00, Restkosten 1'040.00 | Entscheid O8 |
+
 ---
 
 ## Teil 3: Kein Anspruch
@@ -442,6 +451,17 @@ Ausgehend von P1. Erwartet ist jeweils `kibg_anspruch` = nein, alle Beiträge un
 | X8 | Paar, 100 % + 0 %, Ausnahme bewilligt, aber beide Eltern wohnen ausserhalb des Kantons | Die Ausnahme ersetzt nur das Pensum, nicht den Wohnsitz | KiBG 4.1–4.2 | fest |
 | X9 | P7, aber der Vater (Gesuchsteller) wohnt ausserhalb des Kantons | Wohnsitz der gesuchstellenden Person | KiBG 4.1 | Entscheid O8 |
 | X10 | Monat 2028-07 (vor Vollzugsbeginn) | Das Gesetz gilt noch nicht | KiBG IV, KiBV IV | Entscheid O1 |
+
+### Teil 3b: Eingabefehler (keine Berechnung)
+
+Ohne diese Angaben lässt sich der Text nicht anwenden. Der Rechner liefert dann **keinen Betrag**, sondern eine Fehlermeldung (über die Web-API als Fehler 400 mit Hinweis auf das fehlende Feld). Getestet in `openfisca-CH-SG/openfisca_ch_sg/tests/test_eingabefehler.py`.
+
+| Nr. | Fall | Erwartet | Grund |
+|---|---|---|---|
+| F1 | P1, aber ohne Geburtsdatum von Lina | Fehler beim Feld `geburtsdatum` von Lina | Ohne Geburtsdatum lassen sich Mindestalter (KiBG 4.3) und Höchstbeitrag (KiBV 14) nicht bestimmen |
+| F2 | P1, aber niemand ist als gesuchstellend angegeben | Fehler beim Feld `kibg_gesuchstellend` | Bei zwei Erziehungsberechtigten muss feststehen, wessen Wohnsitz zählt (KiBG 4.1, O8) |
+| F3 | P1, beide Eltern als gesuchstellend angegeben | Fehler beim Feld `kibg_gesuchstellend` | Nur eine Person stellt das Gesuch |
+| F4 | P1 mit Partnerin, die als gesuchstellend angegeben ist | Fehler beim Feld `kibg_gesuchstellend` der Partnerin | Das Gesuch stellen Erziehungsberechtigte (KiBG 9.1) |
 
 ---
 
@@ -542,10 +562,10 @@ Welche Bestimmung durch welche Fälle geprüft wird.
 | Bestimmung | Inhalt | Fälle |
 |---|---|---|
 | KiBG 3.1–3.3 | Anerkannte und angemeldete Einrichtung | X2–X4, D8–D9 |
-| KiBG 4.1 | Wohnsitz | X1, X8–X9, G44 |
-| KiBG 4.1a–b | Beschäftigungsgrad | P1–P7, G30–G35, G38, X6, Q2 |
+| KiBG 4.1 | Wohnsitz der gesuchstellenden Person | X1, X8–X9, G44, G52–G53, F2–F4 |
+| KiBG 4.1a–b | Beschäftigungsgrad (lit. a und b getrennt geprüft) | P1–P7, G30–G35, G38, X6, Q2 |
 | KiBG 4.2, KiBV 12 | Ausnahme | G36–G37, X7–X8 |
-| KiBG 4.3 | Mindestalter, Ende Primarschule | G15–G17, G49, X5 |
+| KiBG 4.3 | Mindestalter, Ende Primarschule; Geburtsdatum Pflicht | G15–G17, G49, X5, F1 |
 | KiBG 5.4, KiBV 11 | Aktuelle Gegebenheiten | G45–G48, Q4 |
 | KiBG 6.2 | Kostenobergrenze | P6, G21–G24, G28 |
 | KiBG 9.2, KiBV 25 | Rückwirkung, Übergang | D1–D7 |
@@ -572,7 +592,7 @@ Jede Rechnung soll eine zweite Person nachrechnen, bevor sie zum Test wird.
 | Teil | Nachgerechnet von | Datum |
 |---|---|---|
 | Teil 1 (P1–P7b) | | |
-| Teil 2 (G1–G51) | | |
-| Teil 3 (X1–X10) | | |
+| Teil 2 (G1–G53) | | |
+| Teil 3 (X1–X10, F1–F4) | | |
 | Teil 4 (Q1–Q4) | | |
 | Teil 5–6 (E1–E2, D1–D9) | | |

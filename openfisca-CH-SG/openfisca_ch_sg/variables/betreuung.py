@@ -60,8 +60,11 @@ class eingeschult(Variable):
     value_type = bool
     entity = Person
     definition_period = MONTH
-    label = "Das Kind ist eingeschult"
-    reference = "Art. 14 Abs. 3 KiBV (Entwurf)"
+    label = (
+        "Das Kind ist eingeschult, d. h. ab Eintritt in den obligatorischen "
+        "Kindergarten (Annahme A8)"
+    )
+    reference = ("Art. 14 Abs. 2 und 3 KiBV (Entwurf)", "Art. 16 Abs. 1 KiBV (Entwurf)")
 
 
 class primarschule_abgeschlossen(Variable):

@@ -24,9 +24,9 @@ class kibg_massgebendes_einkommen(Variable):
     definition_period = MONTH
     label = "Massgebendes Einkommen und Vermögen des Haushalts"
     reference = (
-        "Art. 5 KiBG",
+        "Art. 5 Abs. 1 bis 4 KiBG",
         "Art. 8 Abs. 1 KiBV (Entwurf)",
-        "Art. 11 Abs. 2 KiBV (Entwurf)",
+        "Art. 11 Abs. 1 und 2 KiBV (Entwurf)",
     )
 
     def formula_2028_08(household, period, parameters):
@@ -76,6 +76,11 @@ class kibg_einkommensfaktor(Variable):
     def formula_2028_08(household, period, parameters):
         p = parameters(period).kibg.einkommen
         me = household("kibg_massgebendes_einkommen", period)
+        # Klammerausdruck der Formel im Anhang: 1 − (ME − MinmE) / (MaxmE − MinmE)
         faktor = 1 - (me - p.min) / (p.max - p.min)
-        # Bis MinmE voller Beitrag, ab MaxmE kein Mindestbeitrag (Art. 15 KiBV).
+        # Art. 15 Abs. 1 KiBV: «bis Fr. 40'000.– erhalten den maximalen Beitrag»
+        # → höchstens 1. Art. 15 Abs. 2 KiBV: «über Fr. 154'000.– erhalten
+        # keinen Beitrag» → mindestens 0. Auslegung O4: Das gilt für den
+        # Mindestbeitrag; Z2 der Gemeinde kommt in der Formel nach dem Faktor
+        # und wird auch darüber ausgerichtet.
         return clip(faktor, 0, 1)

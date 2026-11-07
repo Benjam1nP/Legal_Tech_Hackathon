@@ -3,7 +3,8 @@
         "mutter": {
             "wohnsitz_kanton_sg": {"2028-09": true},
             "beschaeftigungsgrad": {"2028-09": 1.0},
-            "me_steuerveranlagung": {"2028": 60000}
+            "me_steuerveranlagung": {"2028": 60000},
+            "kibg_gesuchstellend": {"2028-09": true}
         },
         "vater": {
             "wohnsitz_kanton_sg": {"2028-09": true},

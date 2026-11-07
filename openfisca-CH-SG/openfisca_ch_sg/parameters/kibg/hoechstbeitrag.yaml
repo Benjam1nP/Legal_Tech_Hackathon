@@ -1,6 +1,11 @@
-description: Höchster Beitrag je Kind und Betreuungsstunde (MaxV)
+description: >-
+  Höchster Beitrag je Kind und Betreuungsstunde (MaxV), Art. 14 KiBV (Entwurf).
+  Alle Beträge in Franken je Kind und Betreuungsstunde.
 altersgrenze_monate:
-  description: Alter in Monaten, ab dem der tiefere Höchstbeitrag gilt
+  description: >-
+    Grenze zwischen «unter 18 Monaten» (Abs. 1) und «über 18 Monaten» (Abs. 2).
+    Entscheid O2: Der Ansatz nach Abs. 1 gilt die vollen ersten 18
+    Lebensmonate, der Ansatz nach Abs. 2 ab dem 18-Monate-Geburtstag.
   metadata:
     unit: month
     reference: Art. 14 Abs. 1 und 2 KiBV (Entwurf)
@@ -8,9 +13,9 @@ altersgrenze_monate:
     2028-08-01:
       value: 18
 unter_18_monate:
-  description: Kinder unter 18 Monaten
+  description: Der höchste Beitrag für Kinder unter 18 Monaten
   kita:
-    description: Höchstbeitrag unter 18 Monaten in Kindertagesstätten
+    description: Fr. 11.00 je Kind und Betreuungsstunde in Kindertagesstätten
     metadata:
       unit: currency-CHF
       reference: Art. 14 Abs. 1 lit. a KiBV (Entwurf)
@@ -18,17 +23,17 @@ unter_18_monate:
       2028-08-01:
         value: 11.00
   tagesfamilie:
-    description: Höchstbeitrag unter 18 Monaten in Tagesfamilien
+    description: Fr. 8.30 je Kind und Betreuungsstunde in Tagesfamilien
     metadata:
       unit: currency-CHF
       reference: Art. 14 Abs. 1 lit. b KiBV (Entwurf)
     values:
       2028-08-01:
         value: 8.30
-ab_18_monate:
-  description: Kinder über 18 Monaten bis zur Einschulung
+ueber_18_monate:
+  description: Der höchste Beitrag für Kinder über 18 Monaten bis zur Einschulung
   kita:
-    description: Höchstbeitrag über 18 Monaten in Kindertagesstätten
+    description: Fr. 7.50 je Kind und Betreuungsstunde in Kindertagesstätten
     metadata:
       unit: currency-CHF
       reference: Art. 14 Abs. 2 lit. a KiBV (Entwurf)
@@ -36,7 +41,7 @@ ab_18_monate:
       2028-08-01:
         value: 7.50
   tagesfamilie:
-    description: Höchstbeitrag über 18 Monaten in Tagesfamilien
+    description: Fr. 5.50 je Kind und Betreuungsstunde in Tagesfamilien
     metadata:
       unit: currency-CHF
       reference: Art. 14 Abs. 2 lit. b KiBV (Entwurf)
@@ -44,9 +49,9 @@ ab_18_monate:
       2028-08-01:
         value: 5.50
 eingeschult:
-  description: Eingeschulte Kinder bis zum Ende der Primarstufe
+  description: Der höchste Beitrag für eingeschulte Kinder bis zum Ende der Primarstufe
   kita:
-    description: Höchstbeitrag eingeschult in Kindertagesstätten
+    description: Fr. 7.50 je Kind und Betreuungsstunde in Kindertagesstätten
     metadata:
       unit: currency-CHF
       reference: Art. 14 Abs. 3 lit. a KiBV (Entwurf)
@@ -54,7 +59,9 @@ eingeschult:
       2028-08-01:
         value: 7.50
   schulergaenzend:
-    description: Höchstbeitrag eingeschult in Einrichtungen für schulergänzende Betreuung
+    description: >-
+      Fr. 5.50 je Kind und Betreuungsstunde in Einrichtungen für
+      schulergänzende Betreuung
     metadata:
       unit: currency-CHF
       reference: Art. 14 Abs. 3 lit. b KiBV (Entwurf)
@@ -62,7 +69,7 @@ eingeschult:
       2028-08-01:
         value: 5.50
   tagesfamilie:
-    description: Höchstbeitrag eingeschult in Tagesfamilien
+    description: Fr. 5.50 je Kind und Betreuungsstunde in Tagesfamilien
     metadata:
       unit: currency-CHF
       reference: Art. 14 Abs. 3 lit. c KiBV (Entwurf)
