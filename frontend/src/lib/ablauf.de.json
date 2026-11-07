@@ -1,0 +1,117 @@
+{
+	"_info": "Texte für den Tab «Gesuch stellen» (Ablauf aus Sicht der Eltern). Quelle: KiBG_Ablauf_Eltern.docx und Für Familien.docx (Team Legal Design). Verweise als «KiBG 9 Abs. 2» oder «KiBV 14 Abs. 4»; die Seite verlinkt sie auf die PDF-Seite in static/quellen/. Ohne Code bearbeitbar.",
+	"titel": "Ihr Weg zum Beitrag",
+	"einleitung": "So stellen Sie das Gesuch für Kinderbetreuungsbeiträge, und das passiert danach. Jeder Schritt zeigt, was Sie selbst tun und was die Kita, die Gemeinde oder der Kanton erledigt. Ein Klick auf einen Artikel öffnet die Stelle im Gesetz.",
+	"spalten": {
+		"sie": "Sie tun",
+		"andere": "Das passiert ohne Sie"
+	},
+	"schritte": [
+		{
+			"nr": 1,
+			"titel": "Habe ich Anspruch?",
+			"kurz": "Prüfen Sie diese Punkte, zum Beispiel mit unserem Rechner.",
+			"pruefung": [
+				{ "text": "Sie wohnen im Kanton St. Gallen.", "quelle": ["KiBG 4 Abs. 1"] },
+				{ "text": "Ihr Kind ist mindestens 3 Monate alt und noch in der Primarschule.", "quelle": ["KiBG 4 Abs. 3"] },
+				{ "text": "Die Kita, Tagesfamilie oder Tagesstruktur ist beim Kanton angemeldet. Das geht auch ausserhalb des Kantons.", "quelle": ["KiBG 3", "KiBV 3"] },
+				{ "text": "Sie arbeiten mindestens 20 %. Leben Sie mit dem anderen Elternteil zusammen, arbeiten Sie zusammen mindestens 120 %.", "quelle": ["KiBG 4 Abs. 1"] },
+				{ "text": "Ihr massgebendes Einkommen und Vermögen liegt unter Fr. 154'000.", "quelle": ["KiBV 15 Abs. 2"] }
+			],
+			"weiche": {
+				"ja": "Alles erfüllt: weiter mit Schritt 2.",
+				"nein": "Sie arbeiten weniger? Fragen Sie Ihre Gemeinde nach einer Ausnahme, zum Beispiel bei Stellensuche, Ausbildung, Integration, familiärer Belastung oder wenn Ihr Kind besondere Förderung braucht.",
+				"quelle": ["KiBG 4 Abs. 2", "KiBV 12"]
+			},
+			"gut_zu_wissen": [
+				{ "text": "Beiträge gibt es nur für Tage, an denen das Kind bei Ihnen lebt (Obhut).", "quelle": ["KiBV 7"] },
+				{ "text": "Eine Kita nimmt erst ab dem 1. des Monats nach der Bestätigung durch den Kanton teil.", "quelle": ["KiBV 6"] },
+				{ "text": "Zuständig ist immer Ihre Wohngemeinde.", "quelle": ["KiBV 2"] }
+			]
+		},
+		{
+			"nr": 2,
+			"titel": "Gesuch stellen",
+			"kurz": "Online auf der Plattform von Kanton und Gemeinden.",
+			"sie": [
+				{ "text": "Mit dem E-Login auf der Plattform anmelden.", "quelle": ["KiBV 20"] },
+				{ "text": "Gesuch einreichen, am besten innert 30 Tagen nach dem ersten Betreuungstag.", "quelle": ["KiBG 9"] },
+				{ "text": "Unterlagen nur, wenn keine ordentliche Steuerveranlagung vorliegt, zum Beispiel bei Quellensteuer.", "quelle": ["KiBV 10"] },
+				{ "text": "Freiwillig: Hat sich Ihr Einkommen um mindestens 25 % verändert, aktuelle Zahlen beantragen.", "quelle": ["KiBG 5 Abs. 4", "KiBV 11"] }
+			],
+			"andere": [
+				{ "wer": "Kita", "text": "bestätigt, dass Ihr Kind dort betreut wird.", "quelle": ["KiBG 10", "KiBG 15 Abs. 1"] },
+				{ "wer": "Plattform", "text": "ruft Ihre Steuerdaten ab.", "quelle": ["KiBG 8 Abs. 2"] }
+			],
+			"frist": {
+				"titel": "Die 30-Tage-Frist",
+				"start": "1. Betreuungstag",
+				"innert": "Gesuch innert 30 Tagen: Beitrag ab dem 1. Betreuungstag",
+				"spaeter": "Gesuch später: Beitrag erst ab dem Tag des Gesuchs",
+				"start_system": "Beim Start des neuen Systems gilt: Gesuche bis 3 Monate nach Vollzugsbeginn gelten rückwirkend ab Start.",
+				"quelle": ["KiBG 9 Abs. 2", "KiBV 25"]
+			}
+		},
+		{
+			"nr": 3,
+			"titel": "Berechnung und Entscheid",
+			"kurz": "Die Gemeinde prüft und entscheidet.",
+			"andere": [
+				{ "wer": "Gemeinde", "text": "prüft, ob Sie Anspruch haben.", "quelle": ["KiBG 11 Abs. 1"] },
+				{ "wer": "Gemeinde", "text": "nimmt das Einkommen beider Eltern. Leben Sie getrennt: Ihr Einkommen und das Ihrer neuen Partnerin oder Ihres neuen Partners (Ehe, eingetragene Partnerschaft oder mindestens 2 Jahre zusammen).", "quelle": ["KiBV 8"] },
+				{ "wer": "Gemeinde", "text": "nimmt dafür Ihre letzte definitive Steuerveranlagung.", "quelle": ["KiBG 5 Abs. 3", "KiBV 9"] },
+				{ "wer": "Gemeinde", "text": "berechnet den Beitrag pro Stunde: bis Fr. 40'000 der volle Betrag, darüber weniger, ab Fr. 154'000 nichts.", "quelle": ["KiBG 6", "KiBV 13", "KiBV 14", "KiBV 15", "KiBV Anhang"] },
+				{ "wer": "Gemeinde", "text": "zählt höchstens 12 Stunden pro Tag und 5 Tage pro Woche. Der Beitrag ist nie höher als die Kosten, auch mit Zusatzbeitrag der Gemeinde.", "quelle": ["KiBV 14 Abs. 4", "KiBG 6 Abs. 2", "KiBG 20 Abs. 3"] }
+			],
+			"sie": [
+				{ "text": "Sie erhalten den Entscheid der Gemeinde (Verfügung).", "quelle": ["KiBG 11"] },
+				{ "text": "Er gilt bei Kita und Tagesfamilie meist 12 Monate, im Jahr der Einschulung bis Schulbeginn.", "quelle": ["KiBV 16 Abs. 1"] },
+				{ "text": "Bei Schulkindern gilt er ein Schuljahr.", "quelle": ["KiBV 16 Abs. 2"] },
+				{ "text": "Nicht einverstanden? Lesen Sie die Rechtsmittelbelehrung auf dem Entscheid.", "quelle": ["VRP"] }
+			]
+		},
+		{
+			"nr": 4,
+			"titel": "Auszahlung",
+			"kurz": "Sie bekommen kein Geld überwiesen: Die Kita zieht den Beitrag von der Rechnung ab.",
+			"sie": [
+				{ "text": "Nur die tiefere Kita-Rechnung bezahlen.", "quelle": ["KiBG 12 Abs. 2"] },
+				{ "text": "Den Abzug auf der Rechnung prüfen.", "quelle": [] }
+			],
+			"andere": [
+				{ "wer": "Kita", "text": "erfasst die Stunden bis zum 15. des Folgemonats.", "quelle": ["KiBV 17 Abs. 1"] },
+				{ "wer": "Gemeinde", "text": "zahlt mindestens alle drei Monate an die Kita.", "quelle": ["KiBG 12 Abs. 1", "KiBV 17 Abs. 2"] }
+			]
+		},
+		{
+			"nr": 5,
+			"titel": "Während der Laufzeit",
+			"kurz": "Wenn sich etwas ändert, melden Sie es sofort.",
+			"sie": [
+				{ "text": "Änderungen sofort melden: Umzug, anderes Pensum, Trennung oder neue Partnerschaft, Wechsel der Kita.", "quelle": ["KiBG 14 Abs. 2"] },
+				{ "text": "Unterlagen nachreichen, wenn die Gemeinde sie verlangt.", "quelle": ["KiBG 14 Abs. 1"] },
+				{ "text": "Neuberechnung beantragen, wenn sich Ihr Einkommen um mindestens 25 % ändert. Sie gilt ab dem folgenden Monat.", "quelle": ["KiBV 11 Abs. 3"] }
+			],
+			"andere": [
+				{ "wer": "Gemeinde", "text": "passt den Entscheid an.", "quelle": ["KiBG 11 Abs. 3"] },
+				{ "wer": "Kanton", "text": "Senkt er die Beiträge für alle, gilt das für Sie erst mit dem nächsten Entscheid.", "quelle": ["KiBV 16 Abs. 3"] }
+			]
+		},
+		{
+			"nr": 6,
+			"titel": "Ablauf und neues Gesuch",
+			"kurz": "Der Entscheid gilt nur befristet.",
+			"sie": [
+				{ "text": "Vor Ablauf ein neues Gesuch stellen.", "quelle": ["KiBV 16 Abs. 4"] }
+			],
+			"andere": [
+				{ "wer": "Gemeinde", "text": "erinnert Sie vor Ablauf des Entscheids.", "quelle": ["KiBV 16 Abs. 4"] }
+			],
+			"achtung": {
+				"text": "Haben Sie Geld bekommen, das Ihnen nicht zustand, kann die Gemeinde es innert 5 Jahren zurückverlangen oder mit späteren Beiträgen verrechnen.",
+				"quelle": ["KiBG 13", "KiBV 18"]
+			},
+			"zurueck_zu": 2
+		}
+	],
+	"vorbehalt": "Die Verordnung (KiBV) ist ein Entwurf. Die Vernehmlassung läuft bis 15. November 2026, Artikel und Beträge können sich noch ändern. Das neue System startet voraussichtlich am 1. August 2028. Ein Gesuch auf Papier sehen Gesetz und Verordnung nicht vor."}

@@ -29,6 +29,9 @@ Auf macOS ist Port 5000 oft durch AirPlay belegt. Dann die API mit
 | `src/routes/+page.svelte` | Tab «Home» (`/`), noch leer |
 | `src/routes/rechner/+page.svelte` | Tab «Rechner» (`/rechner`): Fragebogen (Haushalt, Erziehungsberechtigte, Kinder), Pflichtangaben, Berechnen |
 | `src/routes/dashboard/+page.svelte` | Tab «Dashboard» (`/dashboard`): Vergleich «Mehr arbeiten – welche Betreuung – was bleibt?». Pensum einer frei wählbaren Person × Betreuungsform (Kita, Tagesfamilie, schulergänzend), mit dem Einkommen laut letzter Steuerveranlagung; Wochenplan, Kennzahlen, Linien- und Balken-Chart, Tabelle |
+| `src/routes/gesuch/+page.svelte` | Tab «Gesuch stellen» (`/gesuch`): Ablauf der Gesuchstellung in 6 Schritten als Diagramm, je Schritt «Sie tun» und «Das passiert ohne Sie», Zeitstrahl der 30-Tage-Frist |
+| `src/lib/ablauf.de.json` | Texte des Ablaufs mit Artikelverweisen. Ohne Code bearbeitbar |
+| `src/lib/quellen.js`, `src/lib/Quelle.svelte` | Verweis wie «KiBG 9 Abs. 2» → Link auf die PDF-Seite in `static/quellen/` (KiBG, KiBV-Entwurf) |
 | `src/lib/vergleich.js` | Wochenplan mit Halbtagen (Mo–Fr, Vormittag und Nachmittag; 1 Halbtag = 10 % Pensum): Betreuung nötig, wenn alle Eltern arbeiten, niemand sonst hilft und das Kind nicht in der Schule ist; Pläne bei anderem Pensum (dazu ab Montag Vormittag, weg ab Freitag Nachmittag); Umrechnung in Monatswerte; Vorgaben für Preise und Stunden pro Halbtag |
 | `src/lib/Wochenplan.svelte` | Wochenplan zum Anklicken (heute) und zur Anzeige (beim neuen Pensum); auf dem Handy mit Titel über der Zeile |
 | `src/lib/server/vergleich.js` | Ein Haushalt je Stufe × Form in einer OpenFisca-Anfrage; Annahmen: Wohnsitz, anerkannte und angemeldete Einrichtung, rechtzeitiges Gesuch, keine Zusatzbeiträge, ohne Steuern |
