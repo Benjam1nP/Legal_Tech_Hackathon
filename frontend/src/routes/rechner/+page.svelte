@@ -50,6 +50,10 @@
 	let serverFehlerFuer = $state('');
 	let ergebnis = $state.raw(null);
 	let berechnetMit = $state('');
+	// Angaben, mit denen das Ergebnis berechnet wurde. Das Ergebnis zeigt diese,
+	// nicht das Formular: Sonst mischen sich nach einer Änderung alte und neue
+	// Werte, und ein entferntes Kind fehlt in den Angaben.
+	let berechnet = $derived(berechnetMit ? JSON.parse(berechnetMit) : null);
 	let laeuft = $state(false);
 
 	// Bei gemeinsamem Haushalt zwei Erziehungsberechtigte, sonst nur die
@@ -252,12 +256,12 @@
 	);
 
 	let summe = $derived.by(() => {
-		if (!ergebnis) return null;
+		if (!ergebnis || !berechnet) return null;
 		const add = (name) => ergebnis.kinder.reduce((s, k) => s + Number(k[name]), 0);
 		return {
 			summe_beitrag_total: add('kibg_beitrag_total'),
 			summe_restkosten: add('kibg_restkosten_eltern'),
-			summe_kosten: kinder.reduce((s, k) => s + Number(k.kosten), 0)
+			summe_kosten: berechnet.kinder.reduce((s, k) => s + Number(k.kosten), 0)
 		};
 	});
 </script>
@@ -566,7 +570,7 @@
 	</button>
 </form>
 
-{#if ergebnis}
+{#if ergebnis && berechnet}
 	<section class="ergebnisse" aria-live="polite">
 		<h2>{f.ergebnis_titel}</h2>
 		{#if veraltet}
@@ -576,9 +580,9 @@
 			<Ergebnis
 				bezeichnung={kindName(i)}
 				{kind}
-				eingabe={kinder[i]}
+				eingabe={berechnet.kinder[i]}
 				haushalt={ergebnis.haushalt}
-				{angaben}
+				angaben={berechnet}
 				partnerEinkommenZaehlt={ergebnis.partnerEinkommenZaehlt}
 			/>
 		{/each}

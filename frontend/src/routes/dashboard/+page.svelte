@@ -202,10 +202,17 @@
 	}
 	let meldungen = $derived.by(() => {
 		const m = {};
+		// Beträge: ausgefüllt und nicht negativ (sonst negative Restkosten)
+		const betrag = (feld, wert) => {
+			if (leer(wert)) m[feld] = t.pflicht;
+			else if (Number(wert) < 0) m[feld] = f.ungueltig;
+		};
 		if (leer(monat)) m.monat = t.pflicht;
-		if (leer(lohn100)) m.lohn100 = t.pflicht;
+		// Vor dem Vollzugsbeginn gibt es keine Beiträge (wie im Rechner).
+		else if (monat < '2028-08') m.monat = f.monat_zu_frueh;
+		betrag('lohn100', lohn100);
 		eltern.slice(0, anzahl).forEach((p, i) => {
-			if (leer(p.einkommen)) m[`eltern.${i}.einkommen`] = t.pflicht;
+			betrag(`eltern.${i}.einkommen`, p.einkommen);
 		});
 		kinder.forEach((k, i) => {
 			if (leer(k.geburtsdatum)) m[`kind.${i}.geburtsdatum`] = t.pflicht;
@@ -215,9 +222,9 @@
 			}
 			if (!k.form) m[`kind.${i}.form`] = t.pflicht;
 			for (const form of formenFuer({ eingeschult: k.eingeschult === true })) {
-				if (leer(k.preise[form])) m[`kind.${i}.preis.${form}`] = t.pflicht;
-				if (leer(k.stunden[form])) m[`kind.${i}.stunden.${form}`] = t.pflicht;
-				else if (Number(k.stunden[form]) > MAX_STUNDEN_HALBTAG) {
+				betrag(`kind.${i}.preis.${form}`, k.preise[form]);
+				betrag(`kind.${i}.stunden.${form}`, k.stunden[form]);
+				if (Number(k.stunden[form]) > MAX_STUNDEN_HALBTAG) {
 					m[`kind.${i}.stunden.${form}`] = t.max_stunden;
 				}
 			}

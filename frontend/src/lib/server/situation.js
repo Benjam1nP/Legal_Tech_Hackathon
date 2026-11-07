@@ -53,6 +53,11 @@ export const idKind = (index) => `kind_${index + 1}`;
 
 const zahl = (wert) => Number(wert);
 
+// Leere Daten weglassen: OpenFisca liest "" nicht als «fehlt», sondern als
+// ungültiges Datum und rechnet still weiter. Fehlt das Feld, meldet das Modell
+// den Fehler beim richtigen Feld (z. B. Geburtsdatum fehlt).
+const datum = (name, wert) => (wert ? { [name]: { ETERNITY: wert } } : {});
+
 /** Situation im Format der OpenFisca-Web-API. */
 export function situation(angaben) {
 	const monat = angaben.monat;
@@ -90,10 +95,11 @@ export function situation(angaben) {
 		const ergebnisse = Object.fromEntries(ERGEBNISSE_KIND.map((n) => [n, { [monat]: null }]));
 		const einrichtung = kind.typ !== 'keine';
 		persons[idKind(index)] = {
-			geburtsdatum: { ETERNITY: kind.geburtsdatum },
-			// Art. 9 Abs. 2 KiBG, Art. 25 KiBV: Pflichtangaben (A10: Eingang bei der Gemeinde)
-			betreuungsbeginn: { ETERNITY: kind.betreuungsbeginn },
-			kibg_gesuchsdatum: { ETERNITY: kind.gesuchsdatum },
+			...datum('geburtsdatum', kind.geburtsdatum),
+			// Art. 9 Abs. 2 KiBG, Art. 25 KiBV: Pflichtangaben (A10: Tag, an dem
+			// das Gesuch abgegeben wird)
+			...datum('betreuungsbeginn', kind.betreuungsbeginn),
+			...datum('kibg_gesuchsdatum', kind.gesuchsdatum),
 			eingeschult: { [monat]: kind.eingeschult === true },
 			primarschule_abgeschlossen: { [monat]: kind.primarschuleAbgeschlossen === true },
 			kibg_einrichtungstyp: { [monat]: kind.typ },
