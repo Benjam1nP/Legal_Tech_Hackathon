@@ -1,0 +1,28 @@
+---
+name: Rulebook checks
+
+# Same checks as the local pre-push hook, so pushes made without the hook
+# (or with --no-verify) are still checked.
+on:
+  push:
+  pull_request:
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v9.0.0
+        with:
+          enable-cache: true
+
+      - name: Install OpenFisca model
+        working-directory: openfisca-CH-SG
+        run: uv sync --locked --all-extras --dev
+
+      - name: Run all rulebook checks
+        run: >-
+          uv run --project openfisca-CH-SG --frozen
+          pre-commit run --all-files --hook-stage pre-push --show-diff-on-failure

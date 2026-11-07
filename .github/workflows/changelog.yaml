@@ -1,0 +1,45 @@
+---
+name: Update changes and decisions
+
+# After every push to main, rebuild docs/CHANGELOG_DECISIONS.md from the git
+# history and commit it. Remember to pull afterwards.
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: changelog
+  cancel-in-progress: false
+
+jobs:
+  changelog:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Rebuild and commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git reset --hard origin/main
+            python3 tools/build_changelog.py
+            if git diff --quiet -- docs/CHANGELOG_DECISIONS.md; then
+              echo "Already up to date."
+              exit 0
+            fi
+            git add docs/CHANGELOG_DECISIONS.md
+            git commit -m "Update changes and decisions [changelog-bot] [skip ci]"
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+            echo "Push raced with another push, retrying ($attempt)..."
+            sleep 5
+          done
+          exit 1

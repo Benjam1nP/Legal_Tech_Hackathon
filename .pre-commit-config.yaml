@@ -1,0 +1,57 @@
+# Rulebook checks (see RULEBOOK.md). Install once with: bash tools/setup.sh
+#   on commit: fast lint (ruff, yamllint)
+#   on push:   lint + all OpenFisca tests + rulebook checker
+# All tools run from the uv environment of openfisca-CH-SG, so every teammate
+# and CI use exactly the versions pinned in openfisca-CH-SG/uv.lock.
+default_install_hook_types: [pre-commit, pre-push]
+default_stages: [pre-commit, pre-push]
+
+repos:
+  - repo: local
+    hooks:
+      - id: ruff-check
+        name: ruff lint (Python)
+        entry: uv run --project openfisca-CH-SG --frozen ruff check --fix
+        language: system
+        types: [python]
+        files: ^(openfisca-CH-SG|tools)/
+
+      - id: ruff-format
+        name: ruff format (Python)
+        entry: uv run --project openfisca-CH-SG --frozen ruff format
+        language: system
+        types: [python]
+        files: ^(openfisca-CH-SG|tools)/
+        stages: [pre-commit]
+
+      - id: ruff-format-check
+        name: ruff format check (Python)
+        entry: uv run --project openfisca-CH-SG --frozen ruff format --check
+        language: system
+        types: [python]
+        files: ^(openfisca-CH-SG|tools)/
+        stages: [pre-push]
+
+      - id: yamllint
+        name: yamllint (parameters and tests)
+        entry: uv run --project openfisca-CH-SG --frozen yamllint
+        language: system
+        types: [yaml]
+
+      - id: openfisca-tests
+        name: OpenFisca tests
+        entry: >-
+          bash -c 'cd openfisca-CH-SG && uv run --frozen openfisca test
+          --country-package openfisca_ch_sg openfisca_ch_sg/tests'
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages: [pre-push]
+
+      - id: rulebook-check
+        name: rulebook checker (OpenFisca format, references)
+        entry: uv run --project openfisca-CH-SG --frozen python tools/check_openfisca.py
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages: [pre-push]

@@ -1,0 +1,12 @@
+
+# ^ Subject: what changed, in a few words, with the article if relevant.
+#   e.g. "Add income limit for childcare contribution (Art. 6 KiBG)"
+#
+# Did you decide how to read the law, or make an assumption? Remove the "# "
+# in front of the lines below. They are copied automatically into
+# docs/CHANGELOG_DECISIONS.md after the push. Repeat the block for more
+# decisions.
+#
+# Decision: <what we decided / how we interpret the rule>
+# Reason: <why>
+# Source: <Art. X Abs. Y KiBG / Art. X Verordnung (Entwurf) / team assumption>
