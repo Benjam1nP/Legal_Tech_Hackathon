@@ -68,7 +68,7 @@ Wenn bei einem Szenario nichts anderes steht, gilt:
 
 | Nr. | Annahme | Grund | Betrifft | Stand |
 |---|---|---|---|---|
-| A1 | Alter des Kindes und Dauer einer Lebensgemeinschaft werden am **ersten Tag des Monats** bestimmt und gelten für den ganzen Monat | Der Beitrag wird pro Monat berechnet; der Text sagt nichts zum Stichtag | G7–G8, G15–G17, G41–G42, G51, Q1 | bestätigt |
+| A1 | Alter des Kindes und Dauer einer Lebensgemeinschaft werden am **ersten Tag des Monats** bestimmt und gelten für den ganzen Monat | Der Beitrag wird pro Monat berechnet; der Text sagt nichts zum Stichtag | G7–G8, G15–G17, G41–G42, G49, G51, Q1 | bestätigt |
 | A2 | Übersteigen Mindest- und Zusatzbeitrag die Kosten, wird **zuerst der Zusatzbeitrag** gekürzt | KiBG 6.2 begrenzt schon den Mindestbeitrag auf die Kosten; KiBG 20.3 begrenzt dann die Summe | P6b, G24 | bestätigt |
 | A3 | Die Grenze von 5 Tagen pro Woche wird nicht geprüft (Teamentscheid, siehe Dokumentation) | Eingaben sind Monatswerte | E1 | bestätigt |
 | A4 | Beträge in Franken werden **kaufmännisch auf 5 Rappen gerundet** (ab 2.5 Rappen auf, sonst ab). Gerundet werden die Monatsbeträge (Mindest- und Zusatzbeitrag, Anteil Kanton), nicht der Beitrag pro Stunde. Die Kostenobergrenze gilt nach dem Runden. Der Anteil der Gemeinde ist der Rest, damit die Summe stimmt. Die Restkosten der Eltern sind Kosten minus Beitrag, ohne weitere Rundung | Der Text regelt keine Rundung; 5 Rappen ist die kleinste Münze | G25–G29 | bestätigt |
