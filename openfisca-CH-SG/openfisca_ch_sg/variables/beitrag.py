@@ -19,7 +19,11 @@ from openfisca_core.periods import MONTH
 from openfisca_core.variables import Variable
 
 from openfisca_ch_sg.entities import Household, Person
-from openfisca_ch_sg.hilfsfunktionen import auf_rappen_runden, formel_anhang
+from openfisca_ch_sg.hilfsfunktionen import (
+    auf_rappen_runden,
+    eingabefehler,
+    formel_anhang,
+)
 from openfisca_ch_sg.variables.betreuung import KibgEinrichtungstyp
 
 
@@ -44,6 +48,14 @@ class kibg_altersstufe(Variable):
         altersgrenze = parameters(period).kibg.hoechstbeitrag.altersgrenze_monate
         eingeschult = person("eingeschult", period)
         unter_18 = person("kibg_alter_monate", period) < altersgrenze
+        eingabefehler(
+            person,
+            eingeschult * unter_18,
+            "eingeschult",
+            "Ein Kind unter 18 Monaten kann nicht eingeschult sein. Für Kinder "
+            "unter 18 Monaten gilt Art. 14 Abs. 1 KiBV (Entwurf); bitte die "
+            "Angabe «eingeschult» prüfen.",
+        )
         return select(
             [eingeschult, unter_18],
             [KibgAltersstufe.eingeschult, KibgAltersstufe.unter_18_monate],
@@ -55,7 +67,7 @@ class kibg_hoechstbeitrag(Variable):
     value_type = float
     entity = Person
     definition_period = MONTH
-    label = "Höchster Beitrag je Betreuungsstunde (MaxV)"
+    label = "Höchster Beitrag je Kind und Betreuungsstunde (MaxV)"
     reference = "Art. 14 Abs. 1 bis 3 KiBV (Entwurf)"
 
     def formula_2028_08(person, period, parameters):

@@ -63,7 +63,7 @@ ready in `../challenge/szenarien.md` (part 6) for the date rules.
 | Art. 25 Abs. 1 and 2 KiBV (draft) | Applications within three months of the start date apply retroactively from the start date | Same as above; only relevant in the transition period | D3 to D7 |
 | Art. 6 KiBV (draft) | A facility takes part from the first day of the month after confirmation | Entered as `kibg_einrichtung_angemeldet` for each month instead | D8, D9 |
 | Art. 11 Abs. 2 KiBG, Art. 16 Abs. 1 and 2 KiBV (draft) | Duration of the decision: usually 12 months, for school children one school year | Duration of a decision, not the amount | none |
-| Art. 11 Abs. 3 KiBV (draft) | New assessment during a running decision applies from the first day of the following month | Date logic; the model compares the income in each month | none |
+| Art. 11 Abs. 3 KiBV (draft) | New assessment during a running decision applies from the first day of the following month | Date logic. The calculator estimates the month of the application: `me_aktuell` is the income at the time of the application and the 25 % check is the one of Art. 11 Abs. 2 KiBV; a later change during a running decision is not modelled | none |
 | Art. 16 Abs. 3 KiBV (draft) | Reductions caused by model changes apply only with the next decision | Matters for reforms, not for one family | none |
 | Art. 14 Abs. 4 KiBV (draft), second sentence | At most five care days per week | Inputs are monthly; the weekly spread is unknown (team decision A3, test E1) | E1 |
 | Art. 17 KiBG | Total volume of 20 million francs per year; adjustment after three years with a deviation of more than Fr. 500'000 | Needs data on all families in the canton; possible later as a budget simulation | none |

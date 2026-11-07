@@ -5,14 +5,12 @@
     "bedingungen": "«wann» sagt, wann ein Text erscheint. Jede Bedingung prüft nur Werte, die OpenFisca liefert; das Interface rechnet kein Recht nach.",
     "ton": "Höfliche Sie-Form, einfache Sätze. KiBV-Artikel immer mit «(Entwurf)»."
   },
-
   "interface_platzhalter": {
     "kind": "Bezeichnung des Kindes, vom Interface vergeben: «1. Kind», «2. Kind» usw. (keine Namen abfragen, Datenminimierung)",
     "summe_beitrag_total": "Summe von kibg_beitrag_total über alle Kinder",
     "summe_restkosten": "Summe von kibg_restkosten_eltern über alle Kinder",
     "summe_kosten": "Summe von kibg_betreuungskosten über alle Kinder"
   },
-
   "formate": {
     "franken": "Zwei Nachkommastellen, Tausender mit Apostroph: 1'040.00",
     "franken_genau": "Drei Nachkommastellen, weil der Beitrag je Stunde nicht gerundet wird: 4.125",
@@ -45,7 +43,6 @@
       "summe_kosten": "franken"
     }
   },
-
   "anzeigewerte": {
     "kibg_einrichtungstyp": {
       "keine": "keiner anerkannten Einrichtung",
@@ -60,7 +57,6 @@
       "eingeschult": "eingeschulte Kinder bis zum Ende der Primarstufe"
     }
   },
-
   "fragebogen": {
     "haushalt": {
       "titel": "Ihr Haushalt",
@@ -149,14 +145,17 @@
       }
     }
   },
-
   "fehler": {
     "geburtsdatum": "Bitte geben Sie das Geburtsdatum von {kind} an. Ohne Geburtsdatum lässt sich nicht bestimmen, ob und wie viel Beitrag es gibt.",
     "kibg_gesuchstellend": "Bitte geben Sie an, wer von Ihnen beiden das Gesuch stellt. Nur diese Person muss im Kanton wohnen.",
     "me_steuerveranlagung": "Bitte geben Sie das massgebende Einkommen und Vermögen an. Sie finden es auf Ihrer letzten definitiven Steuerveranlagung.",
+    "gemeinsamer_haushalt_getrennt": "Bei getrennten Eltern erfassen Sie nur die Person, die das Gesuch stellt. Der andere Elternteil stellt allenfalls ein eigenes Gesuch für seine Betreuungstage.",
+    "gemeinsamer_haushalt_eine_person": "Sie haben «gemeinsamer Haushalt» gewählt, aber nur eine erziehungsberechtigte Person erfasst. Bitte erfassen Sie beide Elternteile oder wählen Sie «nicht im gleichen Haushalt».",
+    "betreuungstage_mit_obhut": "Bitte geben Sie an, an wie vielen Tagen im Monat {kind} betreut wird. Die Stunden zählen höchstens 12 pro Betreuungstag.",
+    "eingeschult": "{kind} ist jünger als 18 Monate und kann noch nicht eingeschult sein. Bitte prüfen Sie die Angabe.",
+    "me_aktuell": "Das aktuelle Einkommen kann nicht negativ sein. Bitte prüfen Sie die Angabe.",
     "allgemein": "Die Berechnung ist mit diesen Angaben nicht möglich. Bitte prüfen Sie Ihre Eingaben."
   },
-
   "ergebnis": {
     "anspruch": {
       "wann": "kibg_anspruch = ja und kibg_beitrag_total > 0",
@@ -184,7 +183,6 @@
       "text": "Beitrag Fr. {summe_beitrag_total} pro Monat. Von den Kosten von Fr. {summe_kosten} bezahlen Sie noch Fr. {summe_restkosten}."
     }
   },
-
   "voraussetzungen": {
     "titel": "Voraussetzungen",
     "kibg_wohnsitz_erfuellt": {
@@ -219,7 +217,6 @@
       "nicht_erfuellt": "Beiträge gibt es nur für die Betreuung in einer anerkannten und beim Kanton angemeldeten Einrichtung: Kita, Tagesfamilie oder schulergänzende Betreuung."
     }
   },
-
   "rechenweg": {
     "titel": "So wird der Beitrag für {kind} berechnet",
     "wann": "kibg_anspruch = ja und kibg_beitrag_total > 0",
@@ -256,7 +253,6 @@
       }
     ]
   },
-
   "hinweise": {
     "titel": "Gut zu wissen",
     "altersgrenze_18_monate": {
@@ -295,6 +291,5 @@
       "artikel": "Art. 14 Abs. 2 und Art. 13 KiBG"
     }
   },
-
   "fester_hinweis": "Dies ist eine unverbindliche Schätzung. Massgebend ist die Verfügung Ihrer Gemeinde, die jedes Gesuch prüft. Die Beträge stammen aus dem Entwurf der Verordnung (Vernehmlassung bis 15. November 2026) und können sich noch ändern. Zusatzbeiträge Ihrer Gemeinde sind nicht berücksichtigt; fragen Sie Ihre Gemeinde. Der Rechner speichert Ihre Angaben nicht; sie werden nur für die Berechnung verwendet."
 }

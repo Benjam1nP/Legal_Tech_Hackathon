@@ -33,6 +33,11 @@
         kibg_betreuungskosten: 1040
   output: &satz_11_00
     persons:
+      mutter:
+        kibg_einkommen_zaehlt_lit_a: true
+        kibg_einkommen_zaehlt_lit_b: false
+      vater:
+        kibg_einkommen_zaehlt_lit_a: true
       lina:
         kibg_hoechstbeitrag: 11.00
         kibg_beitrag_pro_stunde: 5.50
@@ -67,6 +72,11 @@
         kibg_betreuungskosten: 864
   output: &p7_ergebnis
     persons:
+      vater:
+        kibg_einkommen_zaehlt_lit_a: false
+        kibg_einkommen_zaehlt_lit_b: true
+      partnerin:
+        kibg_einkommen_zaehlt_lit_b: true
       jonas:
         kibg_anspruch: true
         kibg_beitrag_total: 270
@@ -1434,58 +1444,3 @@
         eingeschult: true
         kibg_einrichtungstyp: sonderschule
   output: *satz_5_50
-
-- name: Zusatzfall getrennter Haushalt, nur das Einkommen der antragstellenden Person zählt (Art. 8 Abs. 1 lit. b KiBV)
-  period: 2028-09
-  absolute_error_margin: 0.01
-  input:
-    household:
-      erziehungsberechtigte: [vater, mutter]
-      kinder: [jonas]
-      gemeinsamer_haushalt: false
-    persons:
-      vater:
-        <<: *p7_vater
-        kibg_gesuchstellend: true
-      mutter:
-        wohnsitz_kanton_sg: true
-        beschaeftigungsgrad: 1.0
-        me_steuerveranlagung: {2028: 80000}
-      jonas: *p7_jonas
-  output:
-    household:
-      kibg_me_steuerveranlagung_haushalt: 51400
-      kibg_massgebendes_einkommen: 51400
-    persons:
-      vater:
-        kibg_einkommen_zaehlt_lit_a: false
-        kibg_einkommen_zaehlt_lit_b: true
-      mutter:
-        kibg_einkommen_zaehlt_lit_b: false
-
-- name: Zusatzfall getrennte Eltern, die Abweichung zählt nur beim Einkommen der gesuchstellenden Person (Art. 8 Abs. 1 lit. b und Art. 11 Abs. 2 KiBV)
-  period: 2028-09
-  absolute_error_margin: 0.01
-  input:
-    household:
-      erziehungsberechtigte: [vater, mutter]
-      kinder: [jonas]
-      gemeinsamer_haushalt: false
-      kibg_antrag_aktuelle_gegebenheiten: {2028: true}
-    persons:
-      vater:
-        <<: *p7_vater
-        kibg_gesuchstellend: true
-        me_steuerveranlagung: {2028: 80000}
-        me_aktuell: {2028: 60000}
-      mutter:
-        wohnsitz_kanton_sg: true
-        beschaeftigungsgrad: 1.0
-        me_steuerveranlagung: {2028: 50000}
-        me_aktuell: {2028: 50000}
-      jonas: *p7_jonas
-  output:
-    household:
-      # Nur der Vater: 80'000 → 60'000 = −25 %. Beide zusammen wären −15 %.
-      kibg_abweichung_wesentlich: true
-      kibg_massgebendes_einkommen: 60000

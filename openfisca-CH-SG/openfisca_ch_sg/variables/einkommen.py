@@ -14,12 +14,15 @@ from openfisca_core.periods import MONTH, YEAR
 from openfisca_core.variables import Variable
 
 from openfisca_ch_sg.entities import Household, Person
-from openfisca_ch_sg.hilfsfunktionen import mindestens
+from openfisca_ch_sg.hilfsfunktionen import eingabefehler, mindestens
 
 
 class kibg_antrag_aktuelle_gegebenheiten(Variable):
     value_type = bool
     entity = Household
+    # Der Antrag wird bei der Gesuchstellung gestellt (Art. 11 Abs. 1 KiBV).
+    # Jährlich erfasst, weil auch die Einkommen Jahreswerte sind; der Rechner
+    # schätzt den Monat des Gesuchs.
     definition_period = YEAR
     label = "Antrag auf Bemessung nach aktuellen Gegebenheiten"
     reference = ("Art. 5 Abs. 4 KiBG", "Art. 11 Abs. 1 KiBV (Entwurf)")
@@ -86,6 +89,15 @@ class kibg_me_aktuell_haushalt(Variable):
         lit_b = household.members("kibg_einkommen_zaehlt_lit_b", period)
         veranlagt = household.members("me_steuerveranlagung", period.this_year)
         aktuell = household.members("me_aktuell", period.this_year)
+        # -1 heisst «nicht angegeben»; andere negative Werte sind ein Fehler,
+        # sonst würden sie still wie «nicht angegeben» behandelt.
+        eingabefehler(
+            household.members,
+            (aktuell < 0) * (aktuell != -1),
+            "me_aktuell",
+            "Das aktuelle massgebende Einkommen und Vermögen kann nicht "
+            "negativ sein (Art. 5 Abs. 4 KiBG, Art. 11 KiBV, Entwurf).",
+        )
         # Ohne Angabe (-1) gilt für diese Person die Steuerveranlagung.
         aktuell = where(aktuell < 0, veranlagt, aktuell)
         return household.sum(aktuell * (lit_a + lit_b))

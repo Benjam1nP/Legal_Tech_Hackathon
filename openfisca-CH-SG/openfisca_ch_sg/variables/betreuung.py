@@ -6,6 +6,7 @@ from openfisca_core.periods import MONTH
 from openfisca_core.variables import Variable
 
 from openfisca_ch_sg.entities import Person
+from openfisca_ch_sg.hilfsfunktionen import eingabefehler
 
 
 class KibgEinrichtungstyp(Enum):
@@ -112,4 +113,12 @@ class kibg_subventionierte_stunden(Variable):
         max_stunden_pro_tag = parameters(period).kibg.betreuung.max_stunden_pro_tag
         stunden = person("betreuungsstunden", period)
         tage = person("betreuungstage_mit_obhut", period)
+        eingabefehler(
+            person,
+            (stunden > 0) * (tage == 0),
+            "betreuungstage_mit_obhut",
+            "Es sind Betreuungsstunden, aber keine Betreuungstage angegeben. "
+            "Die Stunden zählen höchstens je Betreuungstag (Art. 14 Abs. 4 "
+            "KiBV, Entwurf); bitte die Anzahl Tage angeben.",
+        )
         return minimum(stunden, tage * max_stunden_pro_tag)

@@ -462,6 +462,11 @@ Ohne diese Angaben lässt sich der Text nicht anwenden. Der Rechner liefert dann
 | F2 | P1, aber niemand ist als gesuchstellend angegeben | Fehler beim Feld `kibg_gesuchstellend` | Bei zwei Erziehungsberechtigten muss feststehen, wessen Wohnsitz zählt (KiBG 4.1, O8) |
 | F3 | P1, beide Eltern als gesuchstellend angegeben | Fehler beim Feld `kibg_gesuchstellend` | Nur eine Person stellt das Gesuch |
 | F4 | P1 mit Partnerin, die als gesuchstellend angegeben ist | Fehler beim Feld `kibg_gesuchstellend` der Partnerin | Das Gesuch stellen Erziehungsberechtigte (KiBG 9.1) |
+| F5 | P1, aber «kein gemeinsamer Haushalt» (beide Eltern erfasst) | Fehler beim Feld `gemeinsamer_haushalt` | Bei getrennten Eltern ist nur die gesuchstellende Person erziehungsberechtigt (KiBG 2.1); sonst würde das Pensum der anderen Person zählen (KiBG 4.1a), ihr Einkommen aber nicht (KiBV 8.1b) |
+| F6 | Mutter allein, aber «gemeinsamer Haushalt» | Fehler beim Feld `gemeinsamer_haushalt` | Ein gemeinsamer Haushalt der Erziehungsberechtigten (KiBV 8.1a) setzt zwei Erziehungsberechtigte voraus |
+| F7 | P1, 80 Stunden, aber 0 Betreuungstage | Fehler beim Feld `betreuungstage_mit_obhut` | Die Stunden zählen höchstens je Betreuungstag (KiBV 14.4) |
+| F8 | P1, Lina (12 Monate) als eingeschult angegeben | Fehler beim Feld `eingeschult` | Für Kinder unter 18 Monaten gilt KiBV 14.1; sie können nicht eingeschult sein |
+| F9 | P1, aktuelles Einkommen der Mutter −5'000 | Fehler beim Feld `me_aktuell` | Negative Werte würden sonst still wie «nicht angegeben» behandelt |
 
 ---
 

@@ -1,4 +1,4 @@
-"""Eingabefehler F1 bis F4 aus challenge/szenarien.md (Teil 3b).
+"""Eingabefehler F1 bis F9 aus challenge/szenarien.md (Teil 3b).
 
 Ohne diese Angaben kann der Text nicht angewendet werden. Die Berechnung muss
 abbrechen, statt einen Betrag zu liefern. YAML-Tests können nur Werte prüfen,
@@ -15,7 +15,7 @@ SYSTEM = CountryTaxBenefitSystem()
 MONAT = "2028-09"
 
 
-def p1(mutter=None, vater=None, lina=None, partner=False):
+def p1(mutter=None, vater=None, lina=None, partner=False, gemeinsam=True):
     """Familie P1 aus challenge/szenarien.md mit einzelnen Änderungen."""
     personen = {
         "mutter": {
@@ -45,7 +45,7 @@ def p1(mutter=None, vater=None, lina=None, partner=False):
     haushalt = {
         "erziehungsberechtigte": ["mutter", "vater"],
         "kinder": ["lina"],
-        "gemeinsamer_haushalt": {MONAT: True},
+        "gemeinsamer_haushalt": {MONAT: gemeinsam},
     }
     if partner:
         personen["partnerin"] = {"kibg_gesuchstellend": {MONAT: True}}
@@ -84,4 +84,61 @@ def test_f3_zwei_gesuchstellende_personen():
 def test_f4_partnerin_als_gesuchstellerin():
     simulation = p1(mutter=ohne("kibg_gesuchstellend"), partner=True)
     with pytest.raises(SituationParsingError, match="erziehungsberechtigte Person"):
+        simulation.calculate("kibg_beitrag_total", MONAT)
+
+
+def test_f5_getrennte_eltern_beide_erfasst():
+    # Art. 2 Abs. 1 KiBG: Bei getrennten Eltern ist nur die gesuchstellende
+    # Person erziehungsberechtigt; der andere Elternteil wird nicht erfasst.
+    simulation = p1(gemeinsam=False)
+    with pytest.raises(SituationParsingError, match="nur die gesuchstellende Person"):
+        simulation.calculate("kibg_beitrag_total", MONAT)
+
+
+def test_f6_gemeinsamer_haushalt_mit_einer_person():
+    # Ein gemeinsamer Haushalt der Erziehungsberechtigten (Art. 8 Abs. 1
+    # lit. a KiBV) setzt zwei Erziehungsberechtigte voraus.
+    personen = {
+        "mutter": {
+            "wohnsitz_kanton_sg": {MONAT: True},
+            "beschaeftigungsgrad": {MONAT: 1.0},
+            "me_steuerveranlagung": {"2028": 60000},
+        },
+        "lina": {
+            "geburtsdatum": {"ETERNITY": "2027-09-01"},
+            "kibg_einrichtungstyp": {MONAT: "kita"},
+            "kibg_einrichtung_anerkannt": {MONAT: True},
+            "kibg_einrichtung_angemeldet": {MONAT: True},
+            "betreuungsstunden": {MONAT: 80},
+            "betreuungstage_mit_obhut": {MONAT: 8},
+            "kibg_betreuungskosten": {MONAT: 1040},
+        },
+    }
+    haushalt = {
+        "erziehungsberechtigte": ["mutter"],
+        "kinder": ["lina"],
+        "gemeinsamer_haushalt": {MONAT: True},
+    }
+    simulation = SimulationBuilder().build_from_entities(
+        SYSTEM, {"persons": personen, "households": {"familie": haushalt}}
+    )
+    with pytest.raises(SituationParsingError, match="zwei Erziehungsberechtigte"):
+        simulation.calculate("kibg_beitrag_total", MONAT)
+
+
+def test_f7_stunden_ohne_betreuungstage():
+    simulation = p1(lina=lambda k: {**k, "betreuungstage_mit_obhut": {MONAT: 0}})
+    with pytest.raises(SituationParsingError, match="keine Betreuungstage"):
+        simulation.calculate("kibg_beitrag_total", MONAT)
+
+
+def test_f8_kleinkind_als_eingeschult():
+    simulation = p1(lina=lambda k: {**k, "eingeschult": {MONAT: True}})
+    with pytest.raises(SituationParsingError, match="nicht eingeschult sein"):
+        simulation.calculate("kibg_beitrag_total", MONAT)
+
+
+def test_f9_negatives_aktuelles_einkommen():
+    simulation = p1(mutter=lambda m: {**m, "me_aktuell": {"2028": -5000}})
+    with pytest.raises(SituationParsingError, match="nicht negativ"):
         simulation.calculate("kibg_beitrag_total", MONAT)
