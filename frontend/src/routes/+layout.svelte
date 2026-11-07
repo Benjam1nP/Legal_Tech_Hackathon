@@ -10,8 +10,7 @@
 		{ href: '/rechner', text: texte.navigation.rechner },
 		{ href: '/dashboard', text: texte.navigation.dashboard },
 		{ href: '/ueberblick', text: texte.navigation.ueberblick },
-		{ href: '/gesetzgebung', text: texte.navigation.gesetzgebung },
-		{ href: '/gesuch', text: texte.navigation.gesuch }
+		{ href: '/gesetzgebung', text: texte.navigation.gesetzgebung }
 	];
 </script>
 

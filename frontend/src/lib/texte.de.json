@@ -67,8 +67,7 @@
     "rechner": "Rechner",
     "dashboard": "Vergleichstool",
     "ueberblick": "Überblick",
-    "gesetzgebung": "Gesetzgebung",
-    "gesuch": "Gesuch stellen"
+    "gesetzgebung": "Gesetzgebung"
   },
   "formular": {
     "einleitung": "Schätzen Sie den Beitrag des Kantons und Ihrer Gemeinde an die Kosten der familien- und schulergänzenden Kinderbetreuung. Alle Fragen beziehen sich auf den gewählten Monat.",
@@ -519,5 +518,15 @@
       "bei_stufe_text": "Mehr Pensum kommt von Montag Vormittag an dazu (umrandet), weniger fällt von Freitag Nachmittag an weg. Die übrigen Angaben bleiben wie im Wochenplan oben.",
       "schule_hinweis": "Besucht ein Kind den Kindergarten oder die Schule? Antworten Sie oben bei diesem Kind mit «Ja». Dann erscheint hier eine Zeile für die Schulzeit (vorbelegt: alle Vormittage); in dieser Zeit braucht es keine Betreuung."
     }
+  },
+  "gesetzgebung": {
+    "titel": "Gesetz und Verordnung",
+    "einleitung": "Der Wortlaut der beiden Erlasse, auf denen der Rechner beruht. Die Artikelverweise im Tab «Überblick» führen direkt zum passenden Artikel oder Absatz.",
+    "inhalt": "Inhalt",
+    "kibg": "Gesetz (KiBG)",
+    "kibv": "Verordnung (KiBV, Entwurf)",
+    "kibv_quelle": "Entwurf der Regierung (RRB 2026/733), Vernehmlassung bis 15. November 2026. Der Text kann sich noch ändern.",
+    "pdf_kibg": "KiBG als PDF",
+    "pdf_kibv": "KiBV-Entwurf als PDF"
   }
 }

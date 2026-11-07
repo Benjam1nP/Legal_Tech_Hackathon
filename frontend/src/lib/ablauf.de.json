@@ -1,5 +1,5 @@
 {
-	"_info": "Texte für den Tab «Gesuch stellen» (Ablauf aus Sicht der Eltern). Quelle: KiBG_Ablauf_Eltern.docx und Für Familien.docx (Team Legal Design). Verweise als «KiBG 9 Abs. 2» oder «KiBV 14 Abs. 4»; die Seite verlinkt sie auf die PDF-Seite in static/quellen/. Ohne Code bearbeitbar.",
+	"_info": "Texte für den Tab «Überblick» (Ablauf aus Sicht der Eltern). Quelle: KiBG_Ablauf_Eltern.docx und Für Familien.docx (Team Legal Design). Verweise als «KiBG 9 Abs. 2» oder «KiBV 14 Abs. 4»; die Seite verlinkt sie auf die Stelle im Tab «Gesetzgebung» (src/lib/quellen.js). Ohne Code bearbeitbar.",
 	"titel": "Ihr Weg zum Beitrag",
 	"einleitung": "So stellen Sie das Gesuch für Kinderbetreuungsbeiträge, und das passiert danach. Jeder Schritt zeigt, was Sie selbst tun und was die Kita, die Gemeinde oder der Kanton erledigt. Ein Klick auf einen Artikel öffnet die Stelle im Gesetz.",
 	"spalten": {
