@@ -8,7 +8,9 @@
 	const TABS = [
 		{ href: '/', text: texte.navigation.home },
 		{ href: '/rechner', text: texte.navigation.rechner },
-		{ href: '/dashboard', text: texte.navigation.dashboard }
+		{ href: '/dashboard', text: texte.navigation.dashboard },
+		{ href: '/ueberblick', text: texte.navigation.ueberblick },
+		{ href: '/gesetzgebung', text: texte.navigation.gesetzgebung }
 	];
 </script>
 
@@ -61,9 +63,14 @@
 		display: flex;
 		gap: 0.25rem;
 		margin-top: 1rem;
+		/* Auf schmalen Bildschirmen scrollen die Tabs, nicht die ganze Seite */
+		overflow-x: auto;
+		scrollbar-width: none;
 	}
 
 	nav a {
+		flex-shrink: 0;
+		white-space: nowrap;
 		padding: 0.5rem 0.75rem;
 		border-bottom: 2px solid transparent;
 		color: var(--muted-foreground);

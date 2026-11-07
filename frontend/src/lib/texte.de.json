@@ -65,7 +65,9 @@
   "navigation": {
     "home": "Home",
     "rechner": "Rechner",
-    "dashboard": "Vergleichstool"
+    "dashboard": "Vergleichstool",
+    "ueberblick": "Überblick",
+    "gesetzgebung": "Gesetzgebung"
   },
   "formular": {
     "einleitung": "Schätzen Sie den Beitrag des Kantons und Ihrer Gemeinde an die Kosten der familien- und schulergänzenden Kinderbetreuung. Alle Fragen beziehen sich auf den gewählten Monat.",
