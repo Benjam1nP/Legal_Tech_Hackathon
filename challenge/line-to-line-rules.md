@@ -80,7 +80,10 @@ Jede Bestimmung des Gesetzes (KiBG, `Gesetz.pdf`) und der Verordnung (KiBV, `Ver
 | `kibg_beitragsbeginn_erreicht` | Person (Kind) | MONTH | Formel (Voraussetzung des Anspruchs) | ja/nein | KiBG 9.2, KiBV 25.1 |
 | `kibg_einrichtung_bestaetigt_am` | Person (Kind) | ETERNITY | Eingabe, freiwillig (hat Vorrang vor `kibg_einrichtung_angemeldet`) | Datum | KiBV 5–6 |
 | `kibg_einrichtung_teilnahmebeginn` | Person (Kind) | MONTH | Formel | Datum | KiBV 6 |
-| `kibg_verfuegung_ende` | Person (Kind) | ETERNITY | Formel (optional) | Datum | KiBV 16 |
+| `jahr_eintritt_kindergarten` | Person (Kind) | ETERNITY | Eingabe, freiwillig (0 = nicht angegeben) | Jahr | KiBV 16.1 Satz 2, A8 |
+| `kibg_verfuegung_schulkind` | Person (Kind) | MONTH | Formel | ja/nein | KiBV 16.1–16.2: eingeschult zu Beginn der Verfügung (A12) |
+| `kibg_verfuegung_ende` | Person (Kind) | MONTH | Formel | Datum | KiBG 11.2, KiBV 16.1–16.2, 25.2 (A11) |
+| `kibg_verfuegung_laeuft` | Person (Kind) | MONTH | Formel | ja/nein | KiBG 11.2, KiBV 16; Bedingung von `kibg_anspruch` |
 | `gemeinsamer_haushalt` | Haushalt | MONTH | Eingabe | ja/nein | KiBG 4.1b |
 | `kibg_beschaeftigung_lit_a_erfuellt` | Haushalt | MONTH | Formel | ja/nein | KiBG 4.1a |
 | `kibg_beschaeftigung_lit_b_erfuellt` | Haushalt | MONTH | Formel (nur bei gemeinsamem Haushalt anwendbar) | ja/nein | KiBG 4.1b |
@@ -154,7 +157,7 @@ Jede Bestimmung des Gesetzes (KiBG, `Gesetz.pdf`) und der Verordnung (KiBV, `Ver
 | Art. 9.2 | Rückwirkend, wenn das Gesuch innert 30 Tagen nach Betreuungsbeginn eingeht, sonst ab Gesuch | Parameter + Eingabe + Formel | `kibg.verfahren.frist_rueckwirkung_tage = 30`, `betreuungsbeginn`, `kibg_gesuchsdatum`, `kibg_gesuch_innert_frist`, `kibg_beitragsbeginn`, `kibg_beitragsbeginn_erreicht` | Vor dem Beitragsbeginn kein Anspruch; im Monat des Beitragsbeginns nur Stunden ab diesem Tag (A9). Übergangsfrist in KiBV 25 |
 | Art. 10 | Einrichtung bestätigt das Betreuungsverhältnis | Variable, Eingabe (ja/nein) (optional) | `betreuung_bestaetigt` | Kann weggelassen werden |
 | Art. 11.1 | Kommunale Stelle prüft und verfügt | Nicht berechenbar | — | **Unser Ergebnis ist eine Schätzung, keine Verfügung** |
-| Art. 11.2 | In der Regel zwölf Monate | Parameter | `kibg.verfahren.verfuegungsdauer_monate = 12` | Einzelheiten in KiBV 16 |
+| Art. 11.2 | In der Regel zwölf Monate | Parameter + Formel | `kibg.verfahren.verfuegungsdauer_monate = 12`, `kibg_verfuegung_ende`, `kibg_verfuegung_laeuft` | **Umgesetzt**, Einzelheiten in KiBV 16 |
 | Art. 11.3 | Verfügung wird bei Änderungen angepasst | Nicht berechenbar | — | — |
 | Art. 12.1, 12.3 | Auszahlung an die Einrichtung; Kantonsanteil an die Gemeinde | Nicht berechenbar | — | — |
 | Art. 12.2 | Beitrag wird auf der Rechnung an die Eltern abgezogen | Variable, Formel | `kibg_restkosten_eltern` | = Kosten − Beitrag. Gut für den Rechner |
@@ -252,8 +255,8 @@ Jede Bestimmung des Gesetzes (KiBG, `Gesetz.pdf`) und der Verordnung (KiBV, `Ver
 
 | Ref. | Inhalt | Konzept | Vorgeschlagener Name | Bemerkung |
 |---|---|---|---|---|
-| Art. 16.1 | Kita und Tagesfamilie: 12 Monate, im Jahr der Einschulung bis Schuljahresbeginn | Formel (optional) | `kibg_verfuegung_ende` | — |
-| Art. 16.2 | Eingeschulte Kinder: ein Schuljahr, oder bis zum Ende des laufenden | Formel (optional) | `kibg_verfuegung_ende` | Schuljahresbeginn vorläufig 1. August (O9) |
+| Art. 16.1 | Kita und Tagesfamilie: 12 Monate, im Jahr der Einschulung bis Schuljahresbeginn | Formel | `kibg_verfuegung_ende` | **Umgesetzt** (`variables/verfahren.py`); Schuljahresbeginn 1. August (O9) |
+| Art. 16.2 | Eingeschulte Kinder: ein Schuljahr, oder bis zum Ende des laufenden | Formel | `kibg_verfuegung_ende` | **Umgesetzt** (`variables/verfahren.py`); Schuljahresbeginn 1. August (O9) |
 | Art. 16.3 | Senkungen wegen Modelländerungen gelten erst ab der nächsten Verfügung | Periode | — | Wichtig für Reformszenarien |
 | Art. 16.4 | Erinnerung vor Ablauf einer Verfügung | Nicht berechenbar | — | — |
 | Art. 17 | Erfassung des Betreuungsumfangs bis zum 15., Auszahlungsrhythmus | Nicht berechenbar | — | — |
@@ -333,7 +336,7 @@ Diese Bestimmungen modellieren wir anfangs bewusst nicht. Sie sind aber wichtig 
 | O6 | Das Gesetzes-PDF ist die **Fassung der ersten Lesung (16. September 2025)**, die KiBV verweist aber auf das Gesetz vom 14. Juni 2026. Bei den Organisatoren nachfragen, ob der Schlusstext abweicht | KiBG Titelseite |
 | O7 | Umrechnung der Wochenobergrenzen auf einen Monat; Betreuungsmodule und Monatspauschalen sind Richtlinien überlassen, die nicht öffentlich sind. **Vorläufig entschieden:** Stunden pro Monat sind eine Eingabe; die Grenze von 5 Tagen pro Woche bleibt offen | KiBV 14.4–14.5 |
 | O8 | Welcher Elternteil muss im Kanton wohnen, und welche Gemeinde ist zuständig, wenn die Eltern getrennt leben? **Entschieden:** Die gesuchstellende Person muss im Kanton wohnen; zuständig ist ihre Wohngemeinde | KiBG 4.1, KiBV 2 |
-| O9 | Das Datum des Schuljahresbeginns steht nicht im Text. **Entschieden: 1. August.** Nötig für die Dauer der Verfügung bei eingeschulten Kindern (KiBV 16), die noch nicht umgesetzt ist | KiBV 16.2 |
+| O9 | Das Datum des Schuljahresbeginns steht nicht im Text. **Entschieden: 1. August.** Verwendet für die Dauer der Verfügung (KiBV 16), Parameter `kibg.verfahren.schuljahresbeginn_monat` | KiBV 16.2 |
 | O10 | Getrennte Eltern mit alternierender Obhut: Wer stellt das Gesuch, und wie werden die Tage aufgeteilt? **Entschieden:** Jeder Elternteil stellt das Gesuch für die eigenen Obhutstage und gibt nur diese ein | KiBV 7, 8.1b |
 | O11 | ~~Private Sonderschulen (KiBG 3.2d): welcher Ansatz?~~ **Erledigt:** Der Anspruch folgt aus KiBG 3.2d; der Betrag richtet sich nach der Betreuungsform (KiBV 14.3) | KiBG 3.2d, KiBV 14.3 |
 | O12 | Zählt die Abweichung von 25 % in beide Richtungen (nach oben und unten)? **Entschieden: ja**, wie im Wortlaut («Abweichung») | KiBV 11.2–11.3 |
@@ -344,4 +347,4 @@ Diese Bestimmungen modellieren wir anfangs bewusst nicht. Sie sind aber wichtig 
 
 1. Zuerst der Kern: Anspruch (KiBG 3–4), massgebendes Einkommen (KiBV 8 und 11), die Formel mit Ansätzen und Grenzen (KiBV 13–15, Anhang), die Stundenobergrenzen und die Kostenobergrenze.
 2. Danach die Aufteilung der Finanzierung und die Restkosten.
-3. Die Datumsregeln: KiBG 9.2, KiBV 25 und KiBV 6 sind umgesetzt (`variables/verfahren.py`). Offen: die Dauer der Verfügung (KiBG 11.2, KiBV 16, 25.2) und die Budgetsimulation (KiBG 17).
+3. Die Datumsregeln: KiBG 9.2, KiBV 25 und KiBV 6 sind umgesetzt (`variables/verfahren.py`). Auch die Dauer der Verfügung (KiBG 11.2, KiBV 16, 25.2) ist umgesetzt. Offen: die Budgetsimulation (KiBG 17).

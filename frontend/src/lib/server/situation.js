@@ -18,13 +18,19 @@ const ERGEBNISSE_KIND = [
 	'kibg_gesuch_in_uebergangsfrist',
 	'kibg_beitragsbeginn',
 	'kibg_beitragsbeginn_erreicht',
-	'kibg_einrichtung_teilnahmebeginn'
+	'kibg_einrichtung_teilnahmebeginn',
+	'kibg_verfuegung_ende',
+	'kibg_verfuegung_laeuft'
 ];
 
 // Datumsergebnisse: Die Web-API liefert sie als HTTP-Datum
 // («Tue, 01 Aug 2028 00:00:00 GMT»); angezeigt wird JJJJ-MM-TT.
 // 9999-12-31 heisst in OpenFisca «keine Angabe».
-const DATUMSERGEBNISSE = ['kibg_beitragsbeginn', 'kibg_einrichtung_teilnahmebeginn'];
+const DATUMSERGEBNISSE = [
+	'kibg_beitragsbeginn',
+	'kibg_einrichtung_teilnahmebeginn',
+	'kibg_verfuegung_ende'
+];
 const isoDatum = (wert) => {
 	if (!wert) return null;
 	const iso = new Date(wert).toISOString().slice(0, 10);
@@ -98,6 +104,12 @@ export function situation(angaben) {
 			kibg_betreuungskosten: { [monat]: zahl(kind.kosten) },
 			...ergebnisse
 		};
+		// Art. 16 Abs. 1 KiBV: freiwillig; ohne Angabe nur die zwölf Monate.
+		if (kind.eingeschult !== true && kind.jahrKindergarten) {
+			persons[idKind(index)].jahr_eintritt_kindergarten = {
+				ETERNITY: Number(kind.jahrKindergarten)
+			};
+		}
 		// Art. 6 KiBV: freiwillig; hat Vorrang vor «angemeldet».
 		if (einrichtung && kind.bestaetigtAm) {
 			persons[idKind(index)].kibg_einrichtung_bestaetigt_am = { ETERNITY: kind.bestaetigtAm };

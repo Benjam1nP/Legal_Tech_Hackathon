@@ -23,3 +23,23 @@ uebergang_frist_monate:
   values:
     2028-08-01:
       value: 3
+verfuegungsdauer_monate:
+  description: >-
+    Der Beitrag wird in der Regel für die Dauer von zwölf Monaten verfügt
+    (familienergänzende Betreuung in Kindertagesstätten und Tagesfamilien).
+  metadata:
+    unit: month
+    reference: Art. 11 Abs. 2 KiBG; Art. 16 Abs. 1 KiBV (Entwurf)
+  values:
+    2028-08-01:
+      value: 12
+schuljahresbeginn_monat:
+  description: >-
+    Monat, in dem das Schuljahr beginnt (am Ersten des Monats). Steht nicht im
+    Text; Teamentscheid O9: 1. August.
+  metadata:
+    unit: month
+    reference: Teamentscheid O9 zu Art. 16 Abs. 1 und 2 KiBV (Entwurf)
+  values:
+    2028-08-01:
+      value: 8

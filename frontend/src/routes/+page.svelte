@@ -27,6 +27,7 @@
 		anerkannt: null,
 		angemeldet: null,
 		bestaetigtAm: '',
+		jahrKindergarten: null,
 		tage: null,
 		stunden: null,
 		kosten: null
@@ -156,10 +157,13 @@
 			const kindIndex = id?.startsWith('kind_') ? Number(id.slice(5)) - 1 : 0;
 			// Zwei Prüfungen melden sich beim Feld der Betreuungstage: Tage fehlen
 			// (Art. 14 Abs. 4 KiBV) oder mehr Tage als ab dem Beitragsbeginn (A9).
+			// Dazu kommt: mehr Tage als bis zum Ende der Verfügung (A12).
 			const text =
 				variable === 'betreuungstage_mit_obhut' && meldung.includes('Beitragsbeginn')
 					? texte.fehler.betreuungstage_ab_beitragsbeginn
-					: texte.fehler[variable];
+					: variable === 'betreuungstage_mit_obhut' && meldung.includes('Verfügung')
+						? texte.fehler.betreuungstage_bis_verfuegungsende
+						: texte.fehler[variable];
 			meldungen[pfad ? schluessel : 'allgemein'] = text
 				? einsetzen(text, { kind: kindName(kindIndex) })
 				: meldung;
@@ -471,6 +475,16 @@
 						optionen={JA_NEIN}
 						bind:wert={kind.primarschuleAbgeschlossen}
 						fehler={fehler[`kind_${i + 1}.primarschuleAbgeschlossen`]}
+					/>
+				{/if}
+				{#if kind.eingeschult === false}
+					<Feld
+						id="kindergarten-{kind.nr}"
+						label={fb.kind.jahr_eintritt_kindergarten.frage}
+						hilfe={fb.kind.jahr_eintritt_kindergarten.hilfe}
+						min="2028"
+						step="1"
+						bind:wert={kind.jahrKindergarten}
 					/>
 				{/if}
 				<Auswahl

@@ -345,3 +345,165 @@
       lina:
         kibg_anspruch: true
         kibg_beitrag_total: 440
+
+# --- Dauer der Verfügung (Art. 11 Abs. 2 KiBG, Art. 16 und 25 Abs. 2 KiBV) ---
+# A11: Die Verfügung beginnt mit dem Beitragsbeginn. A12: Im letzten Monat
+# zählen nur die Tage bis zum Ende. Schuljahresbeginn 1. August (O9).
+
+- name: D12 Kita, zwölf Monate ab 1. August 2028, Juli 2029 noch mit Beitrag (Art. 16 Abs. 1 KiBV)
+  period: 2029-07
+  absolute_error_margin: 0.01
+  input:
+    household: *haushalt
+    persons:
+      mutter: *mutter
+      vater: *vater
+      lina: &lina_d12
+        <<: *lina
+        betreuungsbeginn: 2028-08-01
+        kibg_gesuchsdatum: 2028-08-15
+  output:
+    persons:
+      lina:
+        kibg_verfuegung_schulkind: false
+        kibg_verfuegung_ende: 2029-07-31
+        kibg_verfuegung_laeuft: true
+        kibg_anspruch: true
+        # Lina ist 22 Monate alt: 7.50 × 0.5 × 80
+        kibg_beitrag_total: 300
+
+- name: D13 Wie D12 im August 2029, Verfügung abgelaufen, neues Gesuch nötig (Art. 16 Abs. 1 und 4 KiBV)
+  period: 2029-08
+  absolute_error_margin: 0.01
+  input:
+    household: *haushalt
+    persons:
+      mutter: *mutter
+      vater: *vater
+      lina: *lina_d12
+  output:
+    persons:
+      lina:
+        kibg_verfuegung_ende: 2029-07-31
+        kibg_verfuegung_laeuft: false
+        kibg_anspruch: false
+        kibg_beitrag_total: 0
+        kibg_restkosten_eltern: 1040
+
+- name: D14 Kita ab 15. März 2029, Verfügung bis 14. März 2030, im März 2030 noch 8 Tage (A12)
+  period: 2030-03
+  absolute_error_margin: 0.01
+  input:
+    household: *haushalt
+    persons:
+      mutter: *mutter
+      vater: *vater
+      lina:
+        <<: *lina
+        betreuungsbeginn: 2029-03-15
+        kibg_gesuchsdatum: 2029-03-20
+  output:
+    persons:
+      lina:
+        kibg_verfuegung_ende: 2030-03-14
+        kibg_verfuegung_laeuft: true
+        kibg_anspruch: true
+
+- name: D15 Schulkind ab Schuljahresbeginn, Verfügung für ein Schuljahr (Art. 16 Abs. 2 Satz 1 KiBV)
+  period: 2028-09
+  absolute_error_margin: 0.01
+  input:
+    household: *haushalt
+    persons:
+      mutter: *mutter
+      vater: *vater
+      lina:
+        <<: *lina
+        geburtsdatum: 2021-05-01
+        eingeschult: true
+        kibg_einrichtungstyp: schulergaenzend
+        betreuungsbeginn: 2028-08-01
+        kibg_gesuchsdatum: 2028-08-15
+  output:
+    persons:
+      lina:
+        kibg_verfuegung_schulkind: true
+        kibg_verfuegung_ende: 2029-07-31
+        kibg_anspruch: true
+
+- name: D16 Schulkind ab Januar, Verfügung bis Ende des laufenden Schuljahres (Art. 16 Abs. 2 Satz 2 KiBV)
+  period: 2029-01
+  absolute_error_margin: 0.01
+  input:
+    household: *haushalt
+    persons:
+      mutter: *mutter
+      vater: *vater
+      lina:
+        <<: *lina
+        geburtsdatum: 2021-05-01
+        eingeschult: true
+        kibg_einrichtungstyp: schulergaenzend
+        betreuungsbeginn: 2029-01-08
+        kibg_gesuchsdatum: 2029-01-20
+  output:
+    persons:
+      lina:
+        kibg_verfuegung_schulkind: true
+        kibg_verfuegung_ende: 2029-07-31
+
+- name: D17 Kita im Jahr der Schulpflicht, Verfügung nur bis Schuljahresbeginn (Art. 16 Abs. 1 Satz 2 KiBV)
+  period: 2029-02
+  absolute_error_margin: 0.01
+  input:
+    household: *haushalt
+    persons:
+      mutter: *mutter
+      vater: *vater
+      lina: &lina_d17
+        <<: *lina
+        geburtsdatum: 2025-02-01
+        jahr_eintritt_kindergarten: 2029
+        betreuungsbeginn: 2029-02-01
+        kibg_gesuchsdatum: 2029-02-10
+  output:
+    persons:
+      lina:
+        kibg_verfuegung_schulkind: false
+        kibg_verfuegung_ende: 2029-07-31
+
+- name: D18 Wie D17 ohne Angabe des Jahres, nur die zwölf Monate (Art. 16 Abs. 1 Satz 1 KiBV)
+  period: 2029-02
+  absolute_error_margin: 0.01
+  input:
+    household: *haushalt
+    persons:
+      mutter: *mutter
+      vater: *vater
+      lina:
+        <<: *lina_d17
+        jahr_eintritt_kindergarten: 0
+  output:
+    persons:
+      lina:
+        kibg_verfuegung_ende: 2030-01-31
+
+- name: D19 Beginn nach Schuljahresbeginn im Jahr der Schulpflicht, Kind gilt als Schulkind (Art. 16 Abs. 2 KiBV, A8)
+  period: 2029-09
+  absolute_error_margin: 0.01
+  input:
+    household: *haushalt
+    persons:
+      mutter: *mutter
+      vater: *vater
+      lina:
+        <<: *lina_d17
+        eingeschult: true
+        betreuungsbeginn: 2029-09-01
+        kibg_gesuchsdatum: 2029-09-05
+  output:
+    persons:
+      lina:
+        # Ein Schuljahr bis 31. Juli 2030, nicht zwölf Monate bis 31. August 2030
+        kibg_verfuegung_schulkind: true
+        kibg_verfuegung_ende: 2030-07-31

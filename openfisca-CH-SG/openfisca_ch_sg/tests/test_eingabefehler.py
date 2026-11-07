@@ -204,3 +204,30 @@ def test_f13_grenze_genau_die_verbleibenden_tage():
         }
     )
     assert simulation.calculate("kibg_beitragsbeginn_erreicht", "2028-11")[2]
+
+
+def test_f14_mehr_tage_als_bis_zum_ende_der_verfuegung():
+    # Verfügung ab 15. März 2029 bis 14. März 2030 (Art. 16 Abs. 1 KiBV); im
+    # März 2030 bleiben 14 Tage, 20 sind unmöglich (A12).
+    simulation = p1(
+        lina=lambda k: {
+            **k,
+            "betreuungsbeginn": {"ETERNITY": "2029-03-15"},
+            "kibg_gesuchsdatum": {"ETERNITY": "2029-03-20"},
+            "betreuungstage_mit_obhut": {"2030-03": 20},
+        }
+    )
+    with pytest.raises(SituationParsingError, match="endet in diesem Monat"):
+        simulation.calculate("kibg_verfuegung_laeuft", "2030-03")
+
+
+def test_f15_grenze_genau_die_tage_bis_zum_ende():
+    simulation = p1(
+        lina=lambda k: {
+            **k,
+            "betreuungsbeginn": {"ETERNITY": "2029-03-15"},
+            "kibg_gesuchsdatum": {"ETERNITY": "2029-03-20"},
+            "betreuungstage_mit_obhut": {"2030-03": 14},
+        }
+    )
+    assert simulation.calculate("kibg_verfuegung_laeuft", "2030-03")[2]

@@ -8,6 +8,9 @@ Jede Bestimmung ist eine eigene Variable:
   ab Vollzugsbeginn
 - Art. 6 KiBV: Teilnahme der Einrichtung ab dem ersten Tag des Folgemonats
   nach der Bestätigung
+- Art. 11 Abs. 2 KiBG, Art. 16 Abs. 1 und 2 KiBV: Dauer der Verfügung
+  (12 Monate oder ein Schuljahr), für Übergangsgesuche sachgemäss
+  (Art. 25 Abs. 2 KiBV)
 
 Teamentscheide: Das Gesuchsdatum ist der Tag, an dem das Gesuch abgegeben
 wird, bei der Gemeinde oder durch Postaufgabe; nach Verwaltungsrecht wahrt die
@@ -18,7 +21,7 @@ Anspruch.
 
 from datetime import date
 
-from numpy import datetime64, maximum, timedelta64, where
+from numpy import datetime64, logical_not as not_, maximum, minimum, timedelta64, where
 from openfisca_core.periods import ETERNITY, MONTH
 from openfisca_core.variables import Variable
 
@@ -27,6 +30,9 @@ from openfisca_ch_sg.hilfsfunktionen import (
     DATUM_FEHLT,
     VOLLZUGSBEGINN,
     eingabefehler,
+    ende_nach_monaten,
+    jahr_und_monat,
+    monatserster,
     plus_monate,
 )
 
@@ -181,3 +187,108 @@ class kibg_einrichtung_teilnahmebeginn(Variable):
         # Soziales diese bestätigt hat».
         folgemonat = (bestaetigt.astype("datetime64[M]") + 1).astype("datetime64[D]")
         return where(bestaetigt == FEHLT, FEHLT, folgemonat)
+
+
+class jahr_eintritt_kindergarten(Variable):
+    value_type = int
+    # 0 heisst «nicht angegeben» (freiwillige Angabe).
+    default_value = 0
+    entity = Person
+    definition_period = ETERNITY
+    label = (
+        "Jahr, in dem das Kind in den Kindergarten eintritt und schulpflichtig "
+        "wird (freiwillige Angabe, Annahme A8)"
+    )
+    reference = "Art. 16 Abs. 1 KiBV (Entwurf)"
+
+
+class kibg_verfuegung_schulkind(Variable):
+    value_type = bool
+    entity = Person
+    definition_period = MONTH
+    label = "Die Verfügung betrifft ein eingeschultes Kind (Art. 16 Abs. 2 KiBV)"
+    reference = "Art. 16 Abs. 1 und 2 KiBV (Entwurf)"
+
+    def formula_2028_08(person, period, parameters):
+        schuljahr_monat = parameters(period).kibg.verfahren.schuljahresbeginn_monat
+        beginn = person("kibg_beitragsbeginn", period)
+        jahr = person("jahr_eintritt_kindergarten", period)
+        # Massgebend ist, ob das Kind zu Beginn der Verfügung eingeschult ist.
+        # Mit dem Jahr des Kindergarteneintritts (A8) lässt sich das bestimmen;
+        # ohne diese Angabe gilt «eingeschult» im berechneten Monat (A12).
+        bekannt = jahr > 0
+        schulbeginn = monatserster(jahr, schuljahr_monat)
+        return where(bekannt, beginn >= schulbeginn, person("eingeschult", period))
+
+
+class kibg_verfuegung_ende(Variable):
+    value_type = date
+    default_value = DATUM_FEHLT
+    entity = Person
+    definition_period = MONTH
+    label = "Letzter Tag, für den die Beitragsverfügung voraussichtlich gilt"
+    reference = (
+        "Art. 11 Abs. 2 KiBG",
+        "Art. 16 Abs. 1 und 2 KiBV (Entwurf)",
+        "Art. 25 Abs. 2 KiBV (Entwurf)",
+    )
+
+    def formula_2028_08(person, period, parameters):
+        p = parameters(period).kibg.verfahren
+        # Die Verfügung beginnt mit dem Beitragsbeginn (A11; auch für
+        # Übergangsgesuche, Art. 25 Abs. 2 KiBV). Der Text sagt «in der Regel»:
+        # Das Modell rechnet mit dem Regelfall.
+        beginn = person("kibg_beitragsbeginn", period)
+        jahr_beginn, monat_beginn = jahr_und_monat(beginn)
+        schulkind = person("kibg_verfuegung_schulkind", period)
+
+        # Art. 16 Abs. 1 Satz 1 KiBV: Kita und Tagesfamilie zwölf Monate.
+        ende_zwoelf_monate = ende_nach_monaten(beginn, p.verfuegungsdauer_monate)
+        # Art. 16 Abs. 1 Satz 2 KiBV: Erfolgt die Verfügung im Kalenderjahr, in
+        # dem das Kind schulpflichtig wird, gilt sie bis zum Schuljahresbeginn
+        # in diesem Jahr (nur mit der freiwilligen Angabe des Jahres).
+        jahr_schulpflicht = person("jahr_eintritt_kindergarten", period)
+        schulbeginn_dieses_jahr = monatserster(jahr_beginn, p.schuljahresbeginn_monat)
+        im_jahr_der_schulpflicht = (jahr_schulpflicht > 0) * (
+            jahr_beginn == jahr_schulpflicht
+        )
+        ende_kita = where(
+            im_jahr_der_schulpflicht,
+            minimum(ende_zwoelf_monate, schulbeginn_dieses_jahr - 1),
+            ende_zwoelf_monate,
+        )
+
+        # Art. 16 Abs. 2 KiBV: eingeschulte Kinder ein Schuljahr; erfolgt die
+        # Verfügung während des laufenden Schuljahres, bis zu dessen Ende.
+        jahr_schulende = jahr_beginn + (monat_beginn >= p.schuljahresbeginn_monat)
+        ende_schuljahr = monatserster(jahr_schulende, p.schuljahresbeginn_monat) - 1
+
+        return where(schulkind, ende_schuljahr, ende_kita)
+
+
+class kibg_verfuegung_laeuft(Variable):
+    value_type = bool
+    entity = Person
+    definition_period = MONTH
+    label = "Die Beitragsverfügung gilt in diesem Monat noch"
+    reference = ("Art. 11 Abs. 2 KiBG", "Art. 16 Abs. 1 und 2 KiBV (Entwurf)")
+
+    def formula_2028_08(person, period, parameters):
+        ende = person("kibg_verfuegung_ende", period)
+        monatsanfang = datetime64(period.start.date)
+        monatsende = datetime64(period.stop.date)
+        # A12: Endet die Verfügung in diesem Monat, zählen nur die Tage bis zum
+        # Ende. Mehr Betreuungstage, als bis dahin im Monat liegen, sind
+        # unmöglich (wie A9 am Beginn).
+        endet_im_monat = (ende >= monatsanfang) * (ende < monatsende)
+        tage_bis_ende = (ende - monatsanfang).astype(int) + 1
+        tage = person("betreuungstage_mit_obhut", period)
+        eingabefehler(
+            person,
+            person.has_role(Household.KIND) * endet_im_monat * (tage > tage_bis_ende),
+            "betreuungstage_mit_obhut",
+            "Die Beitragsverfügung endet in diesem Monat. Es dürfen nur die "
+            "Betreuungstage und -stunden bis zu diesem Tag angegeben werden "
+            "(Art. 16 KiBV, Entwurf; Annahme A12).",
+        )
+        return not_(ende < monatsanfang)

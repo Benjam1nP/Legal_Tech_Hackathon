@@ -95,3 +95,32 @@ def auf_rappen_runden(franken, schritt):
     rappen = runden(franken.astype("float64") * 100, 2)
     schritt_rappen = round(schritt * 100)
     return floor(rappen / schritt_rappen + 0.5) * schritt_rappen / 100
+
+
+def monatserster(jahr, monat):
+    """Erster Tag des Monats `monat` im Jahr `jahr` (Arrays von Zahlen)."""
+    return (
+        ((jahr - 1970) * 12 + (monat - 1))
+        .astype("datetime64[M]")
+        .astype("datetime64[D]")
+    )
+
+
+def ende_nach_monaten(beginn, monate):
+    """Letzter Tag eines Zeitraums von `monate` Monaten ab `beginn` (Arrays).
+
+    Zwölf Monate ab dem 1. August 2028 dauern bis zum 31. Juli 2029; ab dem
+    15. März 2029 bis zum 14. März 2030. Anders als eine Frist (plus_monate,
+    A7) endet ein Zeitraum am Tag vor der gleichen Zahl.
+    """
+    monatsbeginn = beginn.astype("datetime64[M]")
+    tag_im_monat = beginn - monatsbeginn.astype("datetime64[D]")
+    gleicher_tag = (monatsbeginn + monate).astype("datetime64[D]") + tag_im_monat
+    return gleicher_tag - 1
+
+
+def jahr_und_monat(datum):
+    """Jahr und Monat (1 bis 12) eines Datums-Arrays."""
+    jahr = datum.astype("datetime64[Y]").astype(int) + 1970
+    monat = datum.astype("datetime64[M]").astype(int) % 12 + 1
+    return jahr, monat

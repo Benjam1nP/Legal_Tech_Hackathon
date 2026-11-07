@@ -77,6 +77,10 @@ export function voraussetzungen(kind, haushalt, angaben) {
 	if (kind.kibg_beitragsbeginn) {
 		liste.push(zeile('kibg_beitragsbeginn_erreicht', kind.kibg_beitragsbeginn_erreicht));
 	}
+	// Art. 11 Abs. 2 KiBG, Art. 16 KiBV: nach dem Ende der Verfügung neues Gesuch.
+	if (kind.kibg_verfuegung_ende && kind.kibg_beitragsbeginn_erreicht) {
+		liste.push(zeile('kibg_verfuegung_laeuft', kind.kibg_verfuegung_laeuft));
+	}
 	return liste;
 }
 
@@ -123,6 +127,7 @@ export function hinweise(kind, haushalt, angaben, partnerEinkommenZaehlt) {
 	if (kind.kibg_einrichtung_teilnahmebeginn && !kind.kibg_einrichtung_berechtigt) {
 		liste.push(h.teilnahme_einrichtung);
 	}
+	if (kind.kibg_anspruch) liste.push(h.verfuegung_ende);
 	if (kind.kibg_anspruch) {
 		liste.push(h.gesuchsfrist_30_tage);
 		liste.push(h.meldepflicht);

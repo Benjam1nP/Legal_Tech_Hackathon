@@ -44,7 +44,8 @@
       "kibg_beitragsbeginn": "datum",
       "kibg_einrichtung_teilnahmebeginn": "datum",
       "betreuungsbeginn": "datum",
-      "kibg_gesuchsdatum": "datum"
+      "kibg_gesuchsdatum": "datum",
+      "kibg_verfuegung_ende": "datum"
     }
   },
   "anzeigewerte": {
@@ -161,6 +162,10 @@
       "primarschule_abgeschlossen": {
         "frage": "Hat das Kind die Primarschule abgeschlossen?"
       },
+      "jahr_eintritt_kindergarten": {
+        "frage": "Freiwillig: In welchem Jahr kommt das Kind in den Kindergarten?",
+        "hilfe": "Im Jahr, in dem das Kind schulpflichtig wird, gilt die Verfügung für Kita oder Tagesfamilie nur bis zum Schuljahresbeginn am 1. August (Art. 16 Abs. 1 KiBV (Entwurf)). Ohne Angabe rechnen wir mit zwölf Monaten."
+      },
       "kibg_einrichtungstyp": {
         "frage": "Wo wird das Kind betreut?",
         "optionen": {
@@ -209,7 +214,8 @@
     "betreuungsbeginn": "Bitte geben Sie an, seit wann {kind} betreut wird. Ohne dieses Datum lässt sich nicht bestimmen, ab wann es Beiträge gibt.",
     "kibg_gesuchsdatum": "Bitte geben Sie an, an welchem Tag Sie das Gesuch für {kind} abgeben (bei der Gemeinde oder per Post, auch ein geplantes Datum). Davon hängt ab, ab wann es Beiträge gibt.",
     "kibg_einrichtung_angemeldet": "Nach dem Datum der Bestätigung nimmt die Einrichtung im gewählten Monat noch nicht teil. Sie nimmt ab dem Ersten des Folgemonats teil. Bitte prüfen Sie die Angaben zur Anmeldung.",
-    "betreuungstage_ab_beitragsbeginn": "Die Beiträge für {kind} beginnen mitten im gewählten Monat. Geben Sie nur die Betreuungstage und -stunden ab diesem Tag an."
+    "betreuungstage_ab_beitragsbeginn": "Die Beiträge für {kind} beginnen mitten im gewählten Monat. Geben Sie nur die Betreuungstage und -stunden ab diesem Tag an.",
+    "betreuungstage_bis_verfuegungsende": "Die Beitragsverfügung für {kind} endet mitten im gewählten Monat. Geben Sie nur die Betreuungstage und -stunden bis zu diesem Tag an."
   },
   "ergebnis": {
     "anspruch": {
@@ -275,6 +281,11 @@
       "artikel": "Art. 9 Abs. 2 KiBG, Art. 25 Abs. 1 KiBV (Entwurf)",
       "erfuellt": "Die Beiträge beginnen am {kibg_beitragsbeginn}; der gewählte Monat ist eingeschlossen.",
       "nicht_erfuellt": "Die Beiträge beginnen erst am {kibg_beitragsbeginn}. Für den gewählten Monat gibt es noch keinen Beitrag."
+    },
+    "kibg_verfuegung_laeuft": {
+      "artikel": "Art. 11 Abs. 2 KiBG, Art. 16 KiBV (Entwurf)",
+      "erfuellt": "Die Beitragsverfügung gilt voraussichtlich bis zum {kibg_verfuegung_ende}; der gewählte Monat ist eingeschlossen.",
+      "nicht_erfuellt": "Die Beitragsverfügung gilt voraussichtlich nur bis zum {kibg_verfuegung_ende}. Für den gewählten Monat braucht es ein neues Gesuch."
     }
   },
   "rechenweg": {
@@ -369,6 +380,11 @@
       "wann": "Datum der Bestätigung angegeben und kibg_einrichtung_berechtigt = nein",
       "text": "Die Einrichtung nimmt erst ab dem {kibg_einrichtung_teilnahmebeginn} teil. Vorher gibt es für sie keine Beiträge.",
       "artikel": "Art. 6 KiBV (Entwurf)"
+    },
+    "verfuegung_ende": {
+      "wann": "kibg_anspruch = ja",
+      "text": "Die Verfügung gilt in der Regel zwölf Monate, für eingeschulte Kinder ein Schuljahr: voraussichtlich bis zum {kibg_verfuegung_ende}. Danach braucht es ein neues Gesuch; die Gemeinde erinnert Sie daran.",
+      "artikel": "Art. 11 Abs. 2 KiBG, Art. 16 Abs. 1, 2 und 4 KiBV (Entwurf)"
     }
   },
   "fester_hinweis": "Dies ist eine unverbindliche Schätzung. Massgebend ist die Verfügung Ihrer Gemeinde, die jedes Gesuch prüft. Die Beträge stammen aus dem Entwurf der Verordnung (Vernehmlassung bis 15. November 2026) und können sich noch ändern. Zusatzbeiträge Ihrer Gemeinde sind nicht berücksichtigt; fragen Sie Ihre Gemeinde. Der Rechner speichert Ihre Angaben nicht; sie werden nur für die Berechnung verwendet."

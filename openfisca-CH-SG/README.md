@@ -97,7 +97,6 @@ contributions under Art. 9 Abs. 2 KiBG and Art. 25 and 6 KiBV is encoded; see
 
 | Provision | Content | Why not encoded | Ready scenarios |
 |---|---|---|---|
-| Art. 11 Abs. 2 KiBG, Art. 16 Abs. 1 and 2 and Art. 25 Abs. 2 KiBV (draft) | Duration of the decision: usually 12 months, for school children one school year | Duration of a decision, not the amount | none |
 | Art. 11 Abs. 3 KiBV (draft) | New assessment during a running decision applies from the first day of the following month | Date logic. The calculator estimates the month of the application: `me_aktuell` is the income at the time of the application and the 25 % check is the one of Art. 11 Abs. 2 KiBV; a later change during a running decision is not modelled | none |
 | Art. 16 Abs. 3 KiBV (draft) | Reductions caused by model changes apply only with the next decision | Matters for reforms, not for one family | none |
 | Art. 14 Abs. 4 KiBV (draft), second sentence | At most five care days per week | Inputs are monthly; the weekly spread is unknown (team decision A3, test E1) | E1 |

@@ -81,6 +81,8 @@ Wenn bei einem Szenario nichts anderes steht, gilt:
 | A8 | **Eingeschult** ist ein Kind ab dem Eintritt in den obligatorischen Kindergarten | KiBV 16.1 knüpft an das Jahr an, in dem das Kind «schulpflichtig wird»; im Kanton St. Gallen beginnt die Schulpflicht mit dem Kindergarten | G14 | bestätigt |
 | A9 | Im Monat, in dem die Beiträge beginnen, geben die Eltern **nur die Betreuungstage und -stunden ab diesem Tag** ein. Vor dem Beitragsbeginn gibt es keinen Anspruch | KiBG 9.2: Beiträge «ab dem Zeitpunkt der Gesuchstellung»; der Rechner rechnet pro Monat | D4, D5, F13 | bestätigt |
 | A10 | Das **Gesuchsdatum** ist der Tag, an dem das Gesuch **abgegeben** wird (bei der Gemeinde oder durch Postaufgabe). Es ist Pflicht, ebenso der Betreuungsbeginn | Nach Verwaltungsrecht wahrt die Abgabe die Frist, nicht erst der Eingang (Entscheid des Rechtsteams) | D1–D7, D10–D11, F10–F11 | bestätigt |
+| A11 | Die **Beitragsverfügung beginnt mit dem Beitragsbeginn**; auch Übergangsgesuche nach KiBV 25.1 (KiBV 25.2: KiBV 16 gilt sachgemäss). Der Text knüpft an das Datum der Verfügung an, das der Rechner nicht kennt | Vorläufig, Rechtsteam bestätigen | D12–D19 | **neu, bitte prüfen** |
+| A12 | Endet die Verfügung mitten im Monat, geben die Eltern **nur die Betreuungstage bis zu diesem Tag** an; mehr Tage, als bis dahin im Monat liegen, sind ein Eingabefehler (wie A9 am Beginn). Ohne Angabe des Kindergartenjahres gilt für die Wahl zwischen KiBV 16.1 und 16.2 «eingeschult» im berechneten Monat | Der Rechner rechnet pro Monat | D14, F14–F15 | **neu, bitte prüfen** |
 
 ---
 
@@ -476,6 +478,8 @@ Ohne diese Angaben lässt sich der Text nicht anwenden. Der Rechner liefert dann
 | F11 | P1, aber ohne Gesuchsdatum | Fehler beim Feld `kibg_gesuchsdatum` | Ohne es lässt sich der Beitragsbeginn nicht bestimmen (KiBG 9.2, KiBV 25) |
 | F12 | P1, Kita am 2028-09-01 bestätigt, im September aber als angemeldet angegeben | Fehler beim Feld `kibg_einrichtung_angemeldet` | Nach KiBV 6 nimmt die Kita erst ab 2028-10-01 teil |
 | F13 | Gesuch wird am 2028-11-15 abgegeben, im November 20 Betreuungstage | Fehler beim Feld `betreuungstage_mit_obhut` | Ab dem 15. November bleiben nur 16 Tage (A9); mit 16 Tagen ist es kein Fehler |
+| F14 | Kita ab 2029-03-15 (Verfügung bis 2030-03-14), im März 2030 20 Betreuungstage | Fehler beim Feld `betreuungstage_mit_obhut` | Bis zum 14. März bleiben 14 Tage (A12) |
+| F15 | Wie F14, aber 14 Betreuungstage | kein Fehler, Verfügung läuft im März 2030 | Grenze genau erreicht (A12) |
 
 ---
 
@@ -539,6 +543,21 @@ Bei diesen Fällen ist «angemeldet» mit nein angegeben; massgebend ist das Dat
 | D11 | 2028-08-20 (Übergangsfrist, Beitragsbeginn 2028-08-01) | 2028-08-10 | 2028-09-01 | August 2028: kein Anspruch, 0.00, Restkosten 1'040.00, obwohl der Beitragsbeginn erreicht ist; September 2028: 440.00 | fest |
 
 D1, D2 und D10 liegen bewusst im Jahr 2029, ausserhalb der Übergangsfrist, damit nur KiBG 9.2 wirkt.
+
+### Dauer der Verfügung (KiBG 11.2, KiBV 16 und 25.2)
+
+Familie P1 wie D1; geändert werden nur die Daten. Schuljahresbeginn 1. August (O9). Die Verfügung beginnt mit dem Beitragsbeginn (A11). Getestet in `datumsregeln.yaml`.
+
+| Nr. | Fall | Monat | `kibg_verfuegung_ende` | Erwartet | Quelle | Status |
+|---|---|---|---|---|---|---|
+| D12 | Kita, Beitragsbeginn 2028-08-01 | 2029-07 | 2029-07-31 | Verfügung läuft, Beitrag 300.00 (Lina 22 Monate) | KiBG 11.2, KiBV 16.1 | A11 |
+| D13 | wie D12 | 2029-08 | 2029-07-31 | Verfügung abgelaufen: kein Anspruch, Restkosten 1'040.00 | KiBV 16.1, 16.4 | A11 |
+| D14 | Kita, Beitragsbeginn 2029-03-15 | 2030-03 | 2030-03-14 | Verfügung läuft noch (8 Tage bis zum 14. März) | KiBV 16.1 | A11, A12 |
+| D15 | Schulkind, schulergänzende Betreuung ab 2028-08-01 | 2028-09 | 2029-07-31 | ein Schuljahr | KiBV 16.2 Satz 1 | A11 |
+| D16 | Schulkind ab 2029-01-08 | 2029-01 | 2029-07-31 | bis Ende des laufenden Schuljahres | KiBV 16.2 Satz 2 | A11 |
+| D17 | Kita, Kindergarteneintritt 2029, Beitragsbeginn 2029-02-01 | 2029-02 | 2029-07-31 | im Jahr der Schulpflicht nur bis Schuljahresbeginn | KiBV 16.1 Satz 2 | A8, A11 |
+| D18 | wie D17, Jahr nicht angegeben | 2029-02 | 2030-01-31 | nur die zwölf Monate | KiBV 16.1 Satz 1 | A11 |
+| D19 | wie D17, Beitragsbeginn 2029-09-01 (nach Schuljahresbeginn) | 2029-09 | 2030-07-31 | gilt als Schulkind: ein Schuljahr, nicht zwölf Monate | KiBV 16.2, A8 | A11 |
 
 ---
 

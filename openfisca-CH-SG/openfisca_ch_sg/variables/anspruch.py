@@ -213,6 +213,8 @@ class kibg_anspruch(Variable):
         "Art. 3 Abs. 1 KiBG",
         "Art. 4 Abs. 1 bis 3 KiBG",
         "Art. 9 Abs. 2 KiBG",
+        "Art. 11 Abs. 2 KiBG",
+        "Art. 16 KiBV (Entwurf)",
         "Art. 25 Abs. 1 KiBV (Entwurf)",
     )
 
@@ -229,10 +231,14 @@ class kibg_anspruch(Variable):
         beitragsbeginn = where(
             ist_kind, person("kibg_beitragsbeginn_erreicht", period), False
         )
+        # Art. 11 Abs. 2 KiBG, Art. 16 KiBV: Nach dem Ende der Verfügung braucht
+        # es ein neues Gesuch (Art. 16 Abs. 4 KiBV).
+        verfuegung = where(ist_kind, person("kibg_verfuegung_laeuft", period), False)
         return (
             wohnsitz
             * (beschaeftigung + ausnahme)
             * alter
             * einrichtung
             * beitragsbeginn
+            * verfuegung
         )
