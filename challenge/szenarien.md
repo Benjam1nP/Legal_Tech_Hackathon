@@ -74,8 +74,8 @@ Wenn bei einem Szenario nichts anderes steht, gilt:
 | A4 | Beträge in Franken werden **kaufmännisch auf 5 Rappen gerundet** (ab 2.5 Rappen auf, sonst ab). Gerundet werden die Monatsbeträge (Mindest- und Zusatzbeitrag, Anteil Kanton), nicht der Beitrag pro Stunde. Die Kostenobergrenze gilt nach dem Runden. Der Anteil der Gemeinde ist der Rest, damit die Summe stimmt. Die Restkosten der Eltern sind Kosten minus Beitrag, ohne weitere Rundung | Der Text regelt keine Rundung; 5 Rappen ist die kleinste Münze | G25–G29 | bestätigt |
 | A5 | Die eingegebenen Stunden und Tage sind nur solche mit faktischer Obhut (KiBV 7) | Vereinfachung der Eingabe | alle | bestätigt |
 | A6 | Beschäftigungsgrad: Jeder Elternteil braucht mindestens 20 % (KiBG 4.1a); Eltern im gemeinsamen Haushalt zusätzlich zusammen mindestens 120 % (KiBG 4.1b) | Entscheid zu O3: lit. a und b gelten kumulativ | G30–G38, X6, Q2 | bestätigt |
-| A7 | **Fristen:** Eine Frist in Tagen beginnt am Tag nach dem Ereignis; eine Frist in Monaten endet am Tag mit derselben Zahl (sinngemäss Art. 77 OR) | Der Text regelt die Berechnung nicht | D1–D2, D7 | **neu, bitte prüfen** |
-| A8 | **Eingeschult** ist ein Kind ab dem Eintritt in den obligatorischen Kindergarten | KiBV 16.1 knüpft an das Jahr an, in dem das Kind «schulpflichtig wird»; im Kanton St. Gallen beginnt die Schulpflicht mit dem Kindergarten | G14 | **neu, bitte prüfen** |
+| A7 | **Fristen:** Eine Frist in Tagen beginnt am Tag nach dem Ereignis; eine Frist in Monaten endet am Tag mit derselben Zahl (sinngemäss Art. 77 OR) | Der Text regelt die Berechnung nicht | D1–D2, D7 | bestätigt |
+| A8 | **Eingeschult** ist ein Kind ab dem Eintritt in den obligatorischen Kindergarten | KiBV 16.1 knüpft an das Jahr an, in dem das Kind «schulpflichtig wird»; im Kanton St. Gallen beginnt die Schulpflicht mit dem Kindergarten | G14 | bestätigt |
 
 ---
 
