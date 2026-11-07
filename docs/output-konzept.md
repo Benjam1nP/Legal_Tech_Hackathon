@@ -9,6 +9,10 @@ Code-Änderungen überarbeiten kann. Platzhalter in `{Klammern}` heissen wie die
 OpenFisca-Variablen in `challenge/line-to-line-rules.md`. Keine Icons, die
 Gestaltung übernimmt das Interface. Ton: höfliche «Sie»-Form, einfache Sätze.
 
+**Umsetzung:** Alle Texte dieses Konzepts stehen in
+`frontend/src/lib/texte.de.json`, mit Platzhaltern, Anzeigeformaten und der
+Bedingung («wann»), unter der ein Text erscheint.
+
 ## Fragebogen
 
 Reihenfolge:
@@ -49,7 +53,8 @@ Gemeindesteuern), Art. 5 Abs. 3 KiBG.»
    als Formel.
 4. **Hinweise je nach Situation:** Altersgrenze 18 Monate, Neuberechnung ab 25 %
    Einkommensänderung, mögliche Entbindung vom Beschäftigungsgrad, Einkommen der
-   Partnerin oder des Partners.
+   Partnerin oder des Partners, Gesuchsfrist von 30 Tagen (Art. 9 Abs. 2 KiBG),
+   Meldepflicht und mögliche Rückforderung (Art. 13 und 14 Abs. 2 KiBG).
 
    **Anspruch erfüllt, aber Beitrag Fr. 0:** Wenn `kibg_anspruch` «ja» ist,
    `kibg_hoechstbeitrag` aber 0, gibt es für diese Kombination keinen Ansatz in

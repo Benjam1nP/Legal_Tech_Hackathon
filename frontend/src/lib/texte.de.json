@@ -1,0 +1,300 @@
+{
+  "_info": {
+    "zweck": "Alle Texte des KiBG-Rechners. Inhalt nach docs/output-konzept.md. Ohne Code-Kenntnisse bearbeitbar: nur die Texte ändern, nicht die Schlüssel und nicht die Platzhalter.",
+    "platzhalter": "{name} wird durch den Wert der gleichnamigen OpenFisca-Variable ersetzt (Namen wie in challenge/line-to-line-rules.md) oder durch einen Platzhalter aus «interface_platzhalter». Das Format steht unter «formate».",
+    "bedingungen": "«wann» sagt, wann ein Text erscheint. Jede Bedingung prüft nur Werte, die OpenFisca liefert; das Interface rechnet kein Recht nach.",
+    "ton": "Höfliche Sie-Form, einfache Sätze. KiBV-Artikel immer mit «(Entwurf)»."
+  },
+
+  "interface_platzhalter": {
+    "kind": "Bezeichnung des Kindes, vom Interface vergeben: «1. Kind», «2. Kind» usw. (keine Namen abfragen, Datenminimierung)",
+    "summe_beitrag_total": "Summe von kibg_beitrag_total über alle Kinder",
+    "summe_restkosten": "Summe von kibg_restkosten_eltern über alle Kinder",
+    "summe_kosten": "Summe von kibg_betreuungskosten über alle Kinder"
+  },
+
+  "formate": {
+    "franken": "Zwei Nachkommastellen, Tausender mit Apostroph: 1'040.00",
+    "franken_genau": "Drei Nachkommastellen, weil der Beitrag je Stunde nicht gerundet wird: 4.125",
+    "prozent": "Wert × 100, eine Nachkommastelle wenn nötig: 0.5 → 50 %, 0.912 → 91.2 %",
+    "prozent_eingabe": "Eingabe in Prozent, an OpenFisca als Anteil senden: 80 → 0.8",
+    "stunden": "Ohne Nachkommastellen, wenn ganzzahlig: 80",
+    "ganzzahl": "Ohne Nachkommastellen",
+    "datum": "TT.MM.JJJJ in der Anzeige, JJJJ-MM-TT an OpenFisca",
+    "variablen": {
+      "kibg_beitrag_total": "franken",
+      "kibg_mindestbeitrag": "franken",
+      "kibg_restkosten_eltern": "franken",
+      "kibg_betreuungskosten": "franken",
+      "kibg_massgebendes_einkommen": "franken",
+      "me_steuerveranlagung": "franken",
+      "me_aktuell": "franken",
+      "kibg_hoechstbeitrag": "franken",
+      "kibg_mindestbeitrag_pro_stunde": "franken_genau",
+      "kibg_beitrag_pro_stunde": "franken_genau",
+      "kibg_einkommensfaktor": "prozent",
+      "beschaeftigungsgrad": "prozent_eingabe",
+      "betreuungsstunden": "stunden",
+      "kibg_subventionierte_stunden": "stunden",
+      "betreuungstage_mit_obhut": "ganzzahl",
+      "kibg_alter_monate": "ganzzahl",
+      "geburtsdatum": "datum",
+      "beginn_gemeinsamer_haushalt": "datum",
+      "summe_beitrag_total": "franken",
+      "summe_restkosten": "franken",
+      "summe_kosten": "franken"
+    }
+  },
+
+  "anzeigewerte": {
+    "kibg_einrichtungstyp": {
+      "keine": "keiner anerkannten Einrichtung",
+      "kita": "einer Kindertagesstätte",
+      "tagesfamilie": "einer Tagesfamilie",
+      "schulergaenzend": "einer Einrichtung für schulergänzende Betreuung",
+      "sonderschule": "der schulergänzenden Betreuung einer privaten Sonderschule"
+    },
+    "kibg_altersstufe": {
+      "unter_18_monate": "Kinder unter 18 Monaten",
+      "ueber_18_monate": "Kinder über 18 Monaten bis zur Einschulung",
+      "eingeschult": "eingeschulte Kinder bis zum Ende der Primarstufe"
+    }
+  },
+
+  "fragebogen": {
+    "haushalt": {
+      "titel": "Ihr Haushalt",
+      "gemeinsamer_haushalt": {
+        "frage": "Leben beide Elternteile (Erziehungsberechtigte) des Kindes im gleichen Haushalt?",
+        "hilfe": "Bei getrennten Eltern stellt jeder Elternteil das Gesuch für die eigenen Betreuungstage."
+      },
+      "kibg_gesuchstellend": {
+        "frage": "Wer von Ihnen beiden stellt das Gesuch?",
+        "hilfe": "Diese Person muss im Kanton St. Gallen wohnen (Art. 4 Abs. 1 KiBG)."
+      },
+      "partner_vorhanden": {
+        "frage": "Lebt in Ihrem Haushalt eine Partnerin oder ein Partner, die oder der nicht Elternteil des Kindes ist?",
+        "hilfe": "Nur bei getrennten Eltern. Je nach Dauer der Beziehung zählt ihr oder sein Einkommen mit (Art. 8 KiBV (Entwurf))."
+      },
+      "verheiratet_oder_eingetragen": {
+        "frage": "Sind Sie mit dieser Person verheiratet oder leben Sie in eingetragener Partnerschaft?"
+      },
+      "beginn_gemeinsamer_haushalt": {
+        "frage": "Seit wann führen Sie mit dieser Person einen gemeinsamen Haushalt?"
+      }
+    },
+    "personen": {
+      "titel": "Angaben zu jeder erziehungsberechtigten Person",
+      "wohnsitz_kanton_sg": {
+        "frage": "Wohnt diese Person im Kanton St. Gallen (zivilrechtlicher Wohnsitz)?"
+      },
+      "beschaeftigungsgrad": {
+        "frage": "Wie viele Prozent arbeitet diese Person (angestellt oder selbständig)?",
+        "hilfe": "Zum Beispiel 80 für 80 %. Bei mehreren Stellen zusammenzählen."
+      },
+      "me_steuerveranlagung": {
+        "frage": "Massgebendes Einkommen und Vermögen dieser Person in Franken",
+        "hilfe": "Diese Zahl finden Sie auf Ihrer letzten definitiven Steuerveranlagung (Kantons- und Gemeindesteuern), Art. 5 Abs. 3 KiBG."
+      },
+      "kibg_antrag_aktuelle_gegebenheiten": {
+        "frage": "Hat sich Ihr Einkommen seit der letzten Steuerveranlagung stark verändert, und möchten Sie mit dem aktuellen Einkommen rechnen?",
+        "hilfe": "Das aktuelle Einkommen zählt nur, wenn es mindestens 25 % abweicht (Art. 11 KiBV (Entwurf))."
+      },
+      "me_aktuell": {
+        "frage": "Aktuelles massgebendes Einkommen und Vermögen dieser Person in Franken (aufs Jahr gerechnet)"
+      },
+      "kibg_ausnahme_bewilligt": {
+        "frage": "Hat Ihre Gemeinde Sie vom Mindest-Beschäftigungsgrad entbunden?",
+        "hilfe": "Nur wenn die Gemeinde das bereits entschieden hat (Art. 4 Abs. 2 KiBG)."
+      }
+    },
+    "kind": {
+      "titel": "Angaben zu {kind}",
+      "geburtsdatum": {
+        "frage": "Geburtsdatum"
+      },
+      "eingeschult": {
+        "frage": "Besucht das Kind den Kindergarten oder die Schule?"
+      },
+      "primarschule_abgeschlossen": {
+        "frage": "Hat das Kind die Primarschule abgeschlossen?"
+      },
+      "kibg_einrichtungstyp": {
+        "frage": "Wo wird das Kind betreut?",
+        "optionen": {
+          "kita": "Kindertagesstätte (Kita)",
+          "tagesfamilie": "Tagesfamilie (über eine Tagesfamilienorganisation)",
+          "schulergaenzend": "Schulergänzende Betreuung (z. B. Tagesstruktur, Mittagstisch)",
+          "sonderschule": "Schulergänzende Betreuung einer privaten Sonderschule",
+          "keine": "Andere Betreuung (z. B. Nanny, Grosseltern)"
+        }
+      },
+      "kibg_einrichtung_anerkannt": {
+        "frage": "Ist die Einrichtung anerkannt (Bewilligung, Meldung oder Qualitätskonzept)?",
+        "hilfe": "Fragen Sie im Zweifel bei der Einrichtung nach (Art. 3 Abs. 2 KiBG)."
+      },
+      "kibg_einrichtung_angemeldet": {
+        "frage": "Ist die Einrichtung beim Kanton für Beiträge angemeldet?",
+        "hilfe": "Fragen Sie im Zweifel bei der Einrichtung nach (Art. 3 Abs. 3 KiBG)."
+      },
+      "betreuungstage_mit_obhut": {
+        "frage": "An wie vielen Tagen im Monat wird das Kind betreut?",
+        "hilfe": "Nur Tage, an denen das Kind bei Ihnen lebt (Art. 7 KiBV (Entwurf))."
+      },
+      "betreuungsstunden": {
+        "frage": "Wie viele Betreuungsstunden sind das im Monat zusammen?"
+      },
+      "kibg_betreuungskosten": {
+        "frage": "Wie viel kostet die Betreuung im Monat, in Franken?"
+      }
+    }
+  },
+
+  "fehler": {
+    "geburtsdatum": "Bitte geben Sie das Geburtsdatum von {kind} an. Ohne Geburtsdatum lässt sich nicht bestimmen, ob und wie viel Beitrag es gibt.",
+    "kibg_gesuchstellend": "Bitte geben Sie an, wer von Ihnen beiden das Gesuch stellt. Nur diese Person muss im Kanton wohnen.",
+    "me_steuerveranlagung": "Bitte geben Sie das massgebende Einkommen und Vermögen an. Sie finden es auf Ihrer letzten definitiven Steuerveranlagung.",
+    "allgemein": "Die Berechnung ist mit diesen Angaben nicht möglich. Bitte prüfen Sie Ihre Eingaben."
+  },
+
+  "ergebnis": {
+    "anspruch": {
+      "wann": "kibg_anspruch = ja und kibg_beitrag_total > 0",
+      "titel": "Voraussichtlicher Beitrag für {kind}: Fr. {kibg_beitrag_total} pro Monat",
+      "text": "Die Einrichtung zieht den Beitrag direkt von Ihrer Rechnung ab. Von den Kosten von Fr. {kibg_betreuungskosten} bezahlen Sie noch Fr. {kibg_restkosten_eltern} (Art. 12 Abs. 2 KiBG)."
+    },
+    "anspruch_ohne_ansatz": {
+      "wann": "kibg_anspruch = ja und kibg_hoechstbeitrag = 0",
+      "titel": "Für {kind} gibt es für diese Betreuung keinen Beitrag",
+      "text": "Ihre Familie erfüllt die Voraussetzungen. Für {kibg_altersstufe} in {kibg_einrichtungstyp} legt Art. 14 KiBV (Entwurf) aber keinen Beitrag fest. Schulergänzende Betreuung setzt die Schulzeit voraus. Für eine Kita oder eine Tagesfamilie gäbe es einen Beitrag."
+    },
+    "anspruch_einkommen": {
+      "wann": "kibg_anspruch = ja und kibg_hoechstbeitrag > 0 und kibg_einkommensfaktor = 0",
+      "titel": "Für {kind} ergibt sich kein Beitrag",
+      "text": "Ihre Familie erfüllt die Voraussetzungen. Ihr massgebendes Einkommen und Vermögen beträgt Fr. {kibg_massgebendes_einkommen}. Ab Fr. 154'000 ergibt die Berechnung keinen Beitrag (Art. 15 Abs. 2 KiBV (Entwurf))."
+    },
+    "kein_anspruch": {
+      "wann": "kibg_anspruch = nein",
+      "titel": "Für {kind} besteht voraussichtlich kein Anspruch auf einen Beitrag",
+      "text": "Nach Ihren Angaben ist mindestens eine Voraussetzung nicht erfüllt (siehe unten). Sie bezahlen die vollen Kosten von Fr. {kibg_restkosten_eltern}."
+    },
+    "familie": {
+      "wann": "mehr als ein Kind",
+      "titel": "Für Ihre Familie zusammen",
+      "text": "Beitrag Fr. {summe_beitrag_total} pro Monat. Von den Kosten von Fr. {summe_kosten} bezahlen Sie noch Fr. {summe_restkosten}."
+    }
+  },
+
+  "voraussetzungen": {
+    "titel": "Voraussetzungen",
+    "kibg_wohnsitz_erfuellt": {
+      "artikel": "Art. 4 Abs. 1 KiBG",
+      "erfuellt": "Die gesuchstellende Person wohnt im Kanton St. Gallen.",
+      "nicht_erfuellt": "Beiträge gibt es nur, wenn die gesuchstellende Person ihren zivilrechtlichen Wohnsitz im Kanton St. Gallen hat."
+    },
+    "kibg_beschaeftigung_lit_a_erfuellt": {
+      "artikel": "Art. 4 Abs. 1 lit. a KiBG",
+      "erfuellt": "Jede erziehungsberechtigte Person arbeitet mindestens 20 %.",
+      "nicht_erfuellt": "Jede erziehungsberechtigte Person muss mindestens 20 % erwerbstätig sein. Nach Ihren Angaben erreicht das mindestens eine Person nicht."
+    },
+    "kibg_beschaeftigung_lit_b_erfuellt": {
+      "wann": "gemeinsamer_haushalt = ja",
+      "artikel": "Art. 4 Abs. 1 lit. b KiBG",
+      "erfuellt": "Sie arbeiten zusammen mindestens 120 %.",
+      "nicht_erfuellt": "Leben beide Eltern im gleichen Haushalt, müssen sie zusammen mindestens 120 % erwerbstätig sein. Nach Ihren Angaben ist das nicht der Fall."
+    },
+    "kibg_ausnahme_bewilligt": {
+      "wann": "kibg_beschaeftigung_erfuellt = nein und kibg_ausnahme_bewilligt = ja",
+      "artikel": "Art. 4 Abs. 2 KiBG, Art. 12 KiBV (Entwurf)",
+      "erfuellt": "Ihre Gemeinde hat Sie vom Mindest-Beschäftigungsgrad entbunden. Der Beschäftigungsgrad gilt deshalb als erfüllt."
+    },
+    "kibg_alter_erfuellt": {
+      "artikel": "Art. 4 Abs. 3 KiBG",
+      "erfuellt": "{kind} ist mindestens 3 Monate alt und hat die Primarschule noch nicht abgeschlossen.",
+      "nicht_erfuellt": "Beiträge gibt es für Kinder ab 3 Monaten bis zum Abschluss der Primarschule. {kind} erfüllt das im gewählten Monat nicht."
+    },
+    "kibg_einrichtung_berechtigt": {
+      "artikel": "Art. 3 Abs. 1 KiBG",
+      "erfuellt": "Die Einrichtung ist anerkannt und für Beiträge angemeldet.",
+      "nicht_erfuellt": "Beiträge gibt es nur für die Betreuung in einer anerkannten und beim Kanton angemeldeten Einrichtung: Kita, Tagesfamilie oder schulergänzende Betreuung."
+    }
+  },
+
+  "rechenweg": {
+    "titel": "So wird der Beitrag für {kind} berechnet",
+    "wann": "kibg_anspruch = ja und kibg_beitrag_total > 0",
+    "schritte": [
+      {
+        "text": "Der höchste Beitrag für {kibg_altersstufe} in {kibg_einrichtungstyp} beträgt Fr. {kibg_hoechstbeitrag} pro Betreuungsstunde.",
+        "artikel": "Art. 14 KiBV (Entwurf)"
+      },
+      {
+        "text": "Ihr massgebendes Einkommen und Vermögen beträgt Fr. {kibg_massgebendes_einkommen}.",
+        "artikel": "Art. 5 KiBG, Art. 8 KiBV (Entwurf)"
+      },
+      {
+        "text": "Bis Fr. 40'000 gibt es den höchsten Beitrag, ab Fr. 154'000 keinen. Dazwischen sinkt er gleichmässig. Mit Ihrem Einkommen erhalten Sie {kibg_einkommensfaktor} des höchsten Beitrags.",
+        "artikel": "Art. 15 und Anhang KiBV (Entwurf)"
+      },
+      {
+        "text": "Das ergibt Fr. {kibg_mindestbeitrag_pro_stunde} pro Betreuungsstunde.",
+        "artikel": "Art. 13 und Anhang KiBV (Entwurf)"
+      },
+      {
+        "wann": "kibg_subventionierte_stunden < betreuungsstunden",
+        "text": "Berücksichtigt werden höchstens 12 Stunden pro Betreuungstag. Von Ihren {betreuungsstunden} Stunden zählen deshalb {kibg_subventionierte_stunden}.",
+        "artikel": "Art. 14 Abs. 4 KiBV (Entwurf)"
+      },
+      {
+        "text": "Für {kibg_subventionierte_stunden} Stunden im Monat ergibt das, auf 5 Rappen gerundet, Fr. {kibg_mindestbeitrag}.",
+        "artikel": "Art. 6 Abs. 1 KiBG"
+      },
+      {
+        "wann": "kibg_beitrag_total = kibg_betreuungskosten",
+        "text": "Der Beitrag darf Ihre Kosten nicht übersteigen. Er beträgt deshalb Fr. {kibg_beitrag_total}.",
+        "artikel": "Art. 6 Abs. 2 und Art. 20 Abs. 3 KiBG"
+      }
+    ]
+  },
+
+  "hinweise": {
+    "titel": "Gut zu wissen",
+    "altersgrenze_18_monate": {
+      "wann": "kibg_anspruch = ja und kibg_altersstufe = unter_18_monate",
+      "text": "Sobald {kind} 18 Monate alt ist, gilt ein tieferer höchster Beitrag. Der Beitrag sinkt dann.",
+      "artikel": "Art. 14 Abs. 1 und 2 KiBV (Entwurf)"
+    },
+    "neuberechnung_25_prozent": {
+      "wann": "kibg_anspruch = ja",
+      "text": "Ändert sich Ihre wirtschaftliche Lage während der Beitragsverfügung um mindestens 25 %, können Sie bei Ihrer Gemeinde eine Neuberechnung beantragen.",
+      "artikel": "Art. 11 Abs. 3 KiBV (Entwurf)"
+    },
+    "entbindung_moeglich": {
+      "wann": "kibg_beschaeftigung_erfuellt = nein und kibg_ausnahme_bewilligt = nein",
+      "text": "In begründeten Fällen kann Ihre Gemeinde Sie vom Mindest-Beschäftigungsgrad entbinden, etwa bei Stellensuche, Aus- oder Weiterbildung, familiären Belastungen oder besonderem Förderbedarf Ihres Kindes. Das entscheidet die zuständige Stelle Ihrer Gemeinde.",
+      "artikel": "Art. 4 Abs. 2 KiBG, Art. 12 KiBV (Entwurf)"
+    },
+    "partner_einkommen_zaehlt": {
+      "wann": "Partnerin oder Partner im Haushalt und kibg_einkommen_zaehlt_lit_b = ja für diese Person",
+      "text": "Das Einkommen Ihrer Partnerin oder Ihres Partners zählt mit, weil Sie verheiratet sind, in eingetragener Partnerschaft leben oder seit mindestens zwei Jahren einen gemeinsamen Haushalt führen.",
+      "artikel": "Art. 8 Abs. 1 lit. b und Abs. 2 KiBV (Entwurf)"
+    },
+    "partner_einkommen_zaehlt_nicht": {
+      "wann": "Partnerin oder Partner im Haushalt und kibg_einkommen_zaehlt_lit_b = nein für diese Person",
+      "text": "Das Einkommen Ihrer Partnerin oder Ihres Partners zählt noch nicht mit. Es zählt, sobald Sie verheiratet sind, in eingetragener Partnerschaft leben oder seit mindestens zwei Jahren einen gemeinsamen Haushalt führen. Melden Sie das Ihrer Gemeinde.",
+      "artikel": "Art. 8 Abs. 1 lit. b und Abs. 2 KiBV (Entwurf)"
+    },
+    "gesuchsfrist_30_tage": {
+      "wann": "kibg_anspruch = ja",
+      "text": "Reichen Sie das Gesuch bei Ihrer Gemeinde innert 30 Tagen nach Beginn der Betreuung ein. Dann erhalten Sie den Beitrag rückwirkend ab Betreuungsbeginn, sonst erst ab dem Tag des Gesuchs.",
+      "artikel": "Art. 9 Abs. 2 KiBG"
+    },
+    "meldepflicht": {
+      "wann": "kibg_anspruch = ja",
+      "text": "Melden Sie Änderungen bei Einkommen, Pensum, Wohnsitz oder Betreuung umgehend Ihrer Gemeinde. Zu Unrecht bezogene Beiträge können innert fünf Jahren zurückgefordert werden.",
+      "artikel": "Art. 14 Abs. 2 und Art. 13 KiBG"
+    }
+  },
+
+  "fester_hinweis": "Dies ist eine unverbindliche Schätzung. Massgebend ist die Verfügung Ihrer Gemeinde, die jedes Gesuch prüft. Die Beträge stammen aus dem Entwurf der Verordnung (Vernehmlassung bis 15. November 2026) und können sich noch ändern. Zusatzbeiträge Ihrer Gemeinde sind nicht berücksichtigt; fragen Sie Ihre Gemeinde. Der Rechner speichert Ihre Angaben nicht; sie werden nur für die Berechnung verwendet."
+}
