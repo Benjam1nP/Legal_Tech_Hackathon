@@ -392,5 +392,121 @@
       "artikel": "Art. 11 Abs. 2 KiBG, Art. 16 Abs. 1, 2 und 4 KiBV (Entwurf)"
     }
   },
-  "fester_hinweis": "Dies ist eine unverbindliche Schätzung. Massgebend ist die Verfügung Ihrer Gemeinde, die jedes Gesuch prüft. Die Beträge stammen aus dem Entwurf der Verordnung (Vernehmlassung bis 15. November 2026) und können sich noch ändern. Zusatzbeiträge Ihrer Gemeinde sind nicht berücksichtigt; fragen Sie Ihre Gemeinde. Der Rechner speichert Ihre Angaben nicht; sie werden nur für die Berechnung verwendet."
+  "fester_hinweis": "Dies ist eine unverbindliche Schätzung. Massgebend ist die Verfügung Ihrer Gemeinde, die jedes Gesuch prüft. Die Beträge stammen aus dem Entwurf der Verordnung (Vernehmlassung bis 15. November 2026) und können sich noch ändern. Zusatzbeiträge Ihrer Gemeinde sind nicht berücksichtigt; fragen Sie Ihre Gemeinde. Der Rechner speichert Ihre Angaben nicht; sie werden nur für die Berechnung verwendet.",
+  "dashboard": {
+    "titel": "Mehr arbeiten: Welche Betreuung, was bleibt?",
+    "einleitung": "Verändern Sie das Pensum einer erziehungsberechtigten Person und vergleichen Sie Betreuungsformen. Sie sehen, wie sich Beitrag und Restkosten verändern und was vom zusätzlichen Lohn bleibt. Die Beispielwerte sind vorausgefüllt; passen Sie sie an Ihre Familie an.",
+    "abschnitt_familie": "Ihre Familie",
+    "abschnitt_vergleich": "Vergleich einstellen",
+    "abschnitt_betreuung": "Betreuung je Pensum",
+    "abschnitt_ergebnis": "Ergebnis",
+    "monat": {
+      "frage": "Für welchen Monat rechnen?",
+      "hilfe": "Die neuen Regeln gelten im Rechner ab August 2028 (Platzhalter)."
+    },
+    "anzahl_eltern": {
+      "frage": "Wie viele erziehungsberechtigte Personen leben im Haushalt?",
+      "eins": "Eine (alleinerziehend)",
+      "zwei": "Zwei (gemeinsamer Haushalt)"
+    },
+    "person": "Person {nr}",
+    "pensum": {
+      "frage": "Heutiges Pensum",
+      "hilfe": "Beschäftigungsgrad in Prozent (Art. 4 Abs. 1 KiBG)."
+    },
+    "einkommen": {
+      "frage": "Massgebendes Einkommen und Vermögen",
+      "hilfe": "Gemäss letzter definitiver Steuerveranlagung (Art. 5 Abs. 3 KiBG)."
+    },
+    "kind": "Kind {nr}",
+    "kind_hinzufuegen": "Weiteres Kind hinzufügen",
+    "kind_entfernen": "Entfernen",
+    "geburtsdatum": {
+      "frage": "Geburtsdatum"
+    },
+    "eingeschult": {
+      "frage": "Besucht das Kind den Kindergarten oder die Schule?"
+    },
+    "form_heute": {
+      "frage": "Betreuung heute",
+      "keine": "Keine (die Eltern betreuen selbst)"
+    },
+    "preis": {
+      "frage": "Preis pro Stunde: {form}",
+      "hilfe": "Tarif der Einrichtung in Franken pro Stunde."
+    },
+    "stunden": {
+      "frage": "Stunden pro Betreuungstag: {form}",
+      "hilfe": "Bei schulergänzender Betreuung nur die Zeit ausserhalb der Schule."
+    },
+    "variiert": {
+      "frage": "Wessen Pensum verändern?"
+    },
+    "lohn100": {
+      "frage": "Lohn dieser Person bei 100 %, brutto pro Monat",
+      "hilfe": "Daraus ergibt sich der zusätzliche Lohn bei einem höheren Pensum. Steuern und Sozialabgaben sind nicht berücksichtigt."
+    },
+    "vergleich_kind": {
+      "frage": "Betreuungsformen vergleichen für"
+    },
+    "betreuung_hinweis": "Vorschlag: Betreuung an jedem Arbeitstag (100 % = 5 Tage). Bei zwei Eltern an den Arbeitstagen der Person, die weniger arbeitet. Arbeiten Sie an verschiedenen Tagen, helfen Grosseltern oder arbeiten Sie im Homeoffice, passen Sie die Tage an.",
+    "betreuung_spalte_pensum": "Pensum",
+    "betreuung_spalte_kind": "{kind}: Tage pro Woche",
+    "vorschlag_zuruecksetzen": "Vorschlag wiederherstellen",
+    "vergleichen": "Vergleichen",
+    "rechnet": "Rechnet …",
+    "veraltet": "Die Angaben wurden geändert. Klicken Sie auf «Vergleichen», um neu zu rechnen.",
+    "fehlt": "Bitte ergänzen Sie die markierten Angaben.",
+    "pflicht": "Bitte ausfüllen.",
+    "kleinkind_eingeschult": "Ein Kind unter 18 Monaten kann noch nicht eingeschult sein.",
+    "ansicht": {
+      "frage": "Ansicht",
+      "kurz": "Kurzfristig",
+      "lang": "Längerfristig",
+      "kurz_text": "Das massgebende Einkommen bleibt wie in der letzten Steuerveranlagung. Nur die Betreuung ändert sich (Art. 5 Abs. 3 KiBG).",
+      "lang_text": "Der zusätzliche Jahreslohn fliesst in das massgebende Einkommen ein, wie nach einer späteren Steuerveranlagung. Vereinfacht: In Wirklichkeit steigt es wegen Abzügen meist weniger."
+    },
+    "ziel": {
+      "frage": "Neues Pensum"
+    },
+    "kennzahlen": {
+      "heute": "Heute ({pensum} %)",
+      "neu": "Mit {pensum} %",
+      "beitrag": "Beitrag",
+      "restkosten": "Restkosten",
+      "mehrverdienst": "Zusätzlicher Lohn",
+      "mehrkosten": "Zusätzliche Restkosten",
+      "bleibt": "Es bleibt",
+      "guenstigste": "Günstigste Betreuung",
+      "pro_monat": "pro Monat"
+    },
+    "chart_restkosten": {
+      "titel": "Restkosten für die Eltern nach Pensum",
+      "y": "Fr. pro Monat",
+      "x": "Pensum von {person}"
+    },
+    "chart_bleibt": {
+      "titel": "Was vom zusätzlichen Lohn bleibt",
+      "text": "Gegenüber heute: Veränderung des Lohns minus Veränderung der Restkosten, vor Steuern. Über dem heutigen Pensum zeigt ein Balken unter null, dass sich mehr arbeiten finanziell nicht lohnt; unter dem heutigen Pensum, wie viel weniger bleibt.",
+      "form": "Betreuung"
+    },
+    "schwelle_a": "unter 20 %: kein Anspruch (Art. 4 Abs. 1 lit. a KiBG)",
+    "schwelle_b": "zusammen unter 120 %: kein Anspruch (Art. 4 Abs. 1 lit. b KiBG)",
+    "tabelle": {
+      "titel": "Restkosten je Pensum und Betreuungsform",
+      "pensum": "Pensum",
+      "heute": "heute",
+      "kein_anspruch": "kein Anspruch",
+      "guenstigste": "günstigste"
+    },
+    "hinweise": {
+      "titel": "Gut zu wissen",
+      "schwelle_20": "Unter 20 % Pensum besteht kein Anspruch. Die Betreuung kostet dann den vollen Preis (Art. 4 Abs. 1 lit. a KiBG).",
+      "schwelle_120": "Leben zwei Eltern im gleichen Haushalt, müssen sie zusammen mindestens 120 % arbeiten. Darunter besteht kein Anspruch (Art. 4 Abs. 1 lit. b KiBG).",
+      "einkommen": "Der Beitrag richtet sich nach der letzten definitiven Steuerveranlagung. Ein höherer Lohn senkt den Beitrag deshalb meist erst später. Verändert sich Ihr Einkommen um mindestens 25 %, kann die Gemeinde es auf Antrag neu bemessen (Art. 5 Abs. 4 KiBG, Art. 11 KiBV (Entwurf)).",
+      "ausnahme": "Bei Stellensuche, Aus- oder Weiterbildung kann die Gemeinde vom Mindest-Beschäftigungsgrad entbinden (Art. 4 Abs. 2 KiBG, Art. 12 KiBV (Entwurf)).",
+      "zwoelf_stunden": "Pro Betreuungstag werden höchstens 12 Stunden subventioniert (Art. 14 Abs. 4 KiBV (Entwurf))."
+    },
+    "annahmen": "Annahmen: Wohnsitz im Kanton St. Gallen, Einrichtung anerkannt und angemeldet, Gesuch rechtzeitig gestellt, keine Zusatzbeiträge der Gemeinde, ohne Steuern und Sozialabgaben. Bei zwei Eltern stellt Person 1 das Gesuch. Dies ist eine unverbindliche Schätzung; massgebend ist die Verfügung Ihrer Gemeinde."
+  }
 }
