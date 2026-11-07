@@ -13,7 +13,7 @@ Text sie anwendet:
   Kostenanteil hinaus» aufstockt, also B minus Mindestbeitrag.
 """
 
-from numpy import maximum, minimum, select
+from numpy import minimum, select
 from openfisca_core.indexed_enums import Enum
 from openfisca_core.periods import MONTH
 from openfisca_core.variables import Variable
@@ -193,25 +193,6 @@ class kibg_mindestbeitrag(Variable):
         return minimum(beitrag, kosten)
 
 
-class kibg_zusatzbeitrag(Variable):
-    value_type = float
-    entity = Person
-    definition_period = MONTH
-    label = "Zusatzbeitrag der Gemeinde im Monat"
-    reference = ("Art. 20 Abs. 2 und 3 KiBG", "Art. 24 KiBV (Entwurf)")
-
-    def formula_2028_08(person, period, parameters):
-        rundung = parameters(period).kibg.rundung
-        je_stunde = person("kibg_zusatzbeitrag_pro_stunde", period)
-        stunden = person("kibg_subventionierte_stunden", period)
-        kosten = person("kibg_betreuungskosten", period)
-        mindestbeitrag = person("kibg_mindestbeitrag", period)
-        beitrag = auf_rappen_runden(je_stunde * stunden, rundung)
-        # Mindest- und Zusatzbeitrag zusammen höchstens die Kosten
-        # (Art. 20 Abs. 3 KiBG); gekürzt wird der Zusatzbeitrag (A2).
-        return minimum(beitrag, maximum(kosten - mindestbeitrag, 0))
-
-
 class kibg_beitrag_total(Variable):
     value_type = float
     entity = Person
@@ -220,9 +201,31 @@ class kibg_beitrag_total(Variable):
     reference = "Art. 20 Abs. 3 KiBG"
 
     def formula_2028_08(person, period, parameters):
+        rundung = parameters(period).kibg.rundung
         mindestbeitrag = person("kibg_mindestbeitrag", period)
-        zusatzbeitrag = person("kibg_zusatzbeitrag", period)
-        return mindestbeitrag + zusatzbeitrag
+        je_stunde = person("kibg_zusatzbeitrag_pro_stunde", period)
+        stunden = person("kibg_subventionierte_stunden", period)
+        kosten = person("kibg_betreuungskosten", period)
+        zusatzbeitrag = auf_rappen_runden(je_stunde * stunden, rundung)
+        # Art. 20 Abs. 3 KiBG: «Die Summe aus einem Mindestbeitrag und einem
+        # allfälligen Zusatzbeitrag darf die Kosten ... nicht übersteigen.»
+        # (Der Mindestbeitrag allein ist schon nach Art. 6 Abs. 2 KiBG begrenzt.)
+        return minimum(mindestbeitrag + zusatzbeitrag, kosten)
+
+
+class kibg_zusatzbeitrag(Variable):
+    value_type = float
+    entity = Person
+    definition_period = MONTH
+    label = "Zusatzbeitrag der Gemeinde im Monat"
+    reference = ("Art. 20 Abs. 2 und 3 KiBG", "Art. 24 KiBV (Entwurf)")
+
+    def formula_2028_08(person, period, parameters):
+        # Was nach Art. 20 Abs. 3 KiBG über dem Mindestbeitrag bleibt: Muss
+        # gekürzt werden, wird zuerst der Zusatzbeitrag gekürzt (Annahme A2).
+        beitrag_total = person("kibg_beitrag_total", period)
+        mindestbeitrag = person("kibg_mindestbeitrag", period)
+        return beitrag_total - mindestbeitrag
 
 
 class kibg_restkosten_eltern(Variable):

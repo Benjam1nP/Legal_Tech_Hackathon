@@ -87,6 +87,11 @@ Jede Bestimmung des Gesetzes (KiBG, `Gesetz.pdf`) und der Verordnung (KiBV, `Ver
 | `beginn_gemeinsamer_haushalt` | Haushalt | ETERNITY | Eingabe | Datum | KiBV 8.2b |
 | `kibg_gefestigte_lebensgemeinschaft` | Haushalt | MONTH | Formel | ja/nein | KiBV 8.2 |
 | `kibg_antrag_aktuelle_gegebenheiten` | Haushalt | YEAR | Eingabe | ja/nein | KiBV 11.1 |
+| `kibg_einkommen_zaehlt_lit_a` | Person | MONTH | Formel | ja/nein | KiBV 8.1a: gemeinsamer Haushalt, beide Erziehungsberechtigten |
+| `kibg_einkommen_zaehlt_lit_b` | Person | MONTH | Formel | ja/nein | KiBV 8.1b: getrennter Haushalt, nur die antragstellende Person und Partner/in in gefestigter Lebensgemeinschaft |
+| `kibg_me_steuerveranlagung_haushalt` | Haushalt | MONTH | Formel | Fr. | KiBG 5.3, KiBV 8.1 |
+| `kibg_me_aktuell_haushalt` | Haushalt | MONTH | Formel | Fr. | KiBG 5.4, KiBV 8.1 |
+| `kibg_abweichung_wesentlich` | Haushalt | MONTH | Formel | ja/nein | KiBV 11.2: wenigstens 25 % zum Zeitpunkt der Gesuchstellung |
 | `kibg_massgebendes_einkommen` | Haushalt | MONTH | Formel (Summe der Eingaben) | Fr. | KiBG 5, KiBV 8–11. Monatlich, weil sich der Haushalt (Partner/in) im Jahr ändern kann; die Einkommen selbst sind Jahreswerte |
 | `kibg_einkommensfaktor` | Haushalt | MONTH | Formel | Anteil 0–1 | KiBV 15, Anhang |
 | `wohngemeinde` | Haushalt | MONTH | Eingabe | Kategorie | KiBV 2 |

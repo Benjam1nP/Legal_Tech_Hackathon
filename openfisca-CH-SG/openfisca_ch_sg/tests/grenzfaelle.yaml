@@ -930,6 +930,9 @@
       lina: *p1_lina
   output:
     household:
+      kibg_me_steuerveranlagung_haushalt: 100000
+      kibg_me_aktuell_haushalt: 75000
+      kibg_abweichung_wesentlich: true
       kibg_massgebendes_einkommen: 75000
 
 - name: G46 Aktuelles Einkommen nur 24 % tiefer, Steuerveranlagung gilt (Art. 11 Abs. 2 KiBV)
@@ -945,6 +948,8 @@
       lina: *p1_lina
   output:
     household:
+      kibg_me_aktuell_haushalt: 76000
+      kibg_abweichung_wesentlich: false
       kibg_massgebendes_einkommen: 100000
 
 - name: G47 Aktuelles Einkommen 30 % tiefer, aber ohne Antrag (Art. 11 Abs. 1 KiBV)
@@ -1429,3 +1434,31 @@
         eingeschult: true
         kibg_einrichtungstyp: sonderschule
   output: *satz_5_50
+
+- name: Zusatzfall getrennter Haushalt, nur das Einkommen der antragstellenden Person zählt (Art. 8 Abs. 1 lit. b KiBV)
+  period: 2028-09
+  absolute_error_margin: 0.01
+  input:
+    household:
+      erziehungsberechtigte: [vater, mutter]
+      kinder: [jonas]
+      gemeinsamer_haushalt: false
+    persons:
+      vater:
+        <<: *p7_vater
+        kibg_gesuchstellend: true
+      mutter:
+        wohnsitz_kanton_sg: true
+        beschaeftigungsgrad: 1.0
+        me_steuerveranlagung: {2028: 80000}
+      jonas: *p7_jonas
+  output:
+    household:
+      kibg_me_steuerveranlagung_haushalt: 51400
+      kibg_massgebendes_einkommen: 51400
+    persons:
+      vater:
+        kibg_einkommen_zaehlt_lit_a: false
+        kibg_einkommen_zaehlt_lit_b: true
+      mutter:
+        kibg_einkommen_zaehlt_lit_b: false
