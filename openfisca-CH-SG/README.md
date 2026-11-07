@@ -1,30 +1,35 @@
 # OpenFisca model for Sankt Gallen Canton (Switzerland)
 
-The country whose law is modelled here has a very simple tax and benefit
-system.
+Rules as Code for the contributions to family- and school-based childcare in
+the Canton of St. Gallen: the law (KiBG, adopted 14 June 2026) and its
+implementing ordinance (KiBV, draft RRB 2026/733). All values apply from the
+placeholder start date **2028-08-01**, because the Vollzugsbeginn is not set
+yet.
 
-- It has a flat rate tax whose rates increase every year.
-- On the first of December, 2015, it introduced a basic income for all its
-  citizens of age who have no income.
-- On the first of December, 2016, it removed the income condition, providing
-  all its adult citizens with a basic income.
+All modelling happens in the `openfisca_ch_sg` folder:
 
-These elements are described in different folders. All the modelling happens
-within the `openfisca_ch_sg` folder.
+| Folder / file | Content |
+|---|---|
+| `entities.py` | Person and household of the applicant with the roles `erziehungsberechtigte`, `kinder` and `partner` |
+| `parameters/kibg/` | Fixed values of the text, each with its article (rates, income limits, thresholds) |
+| `variables/` | Inputs and formulas, one file per topic: `personen`, `haushalt`, `betreuung`, `anspruch`, `einkommen`, `beitrag` |
+| `tests/` | Hand-calculated cases from `challenge/szenarien.md`: `personas.yaml` (P1 to P7b), `grenzfaelle.yaml` (G, X, Q and E cases) |
+| `situation_examples/` | Example family P1 for the Web API |
 
-- The rates are in the `parameters` folder.
-- The formulas are in the `variables` folder.
-- This country package comes also with *reforms* in the `reforms` folder. This
-  is optional: your country may exist without defining any reform.
-  - In this country, there is
-    [a reform project](./openfisca_ch_sg/reforms/modify_social_security_taxation.py)
-    aiming to modify the social security taxation, deleting the first bracket,
-    raising the intermediary ones and adding a new bracket with a higher tax
-    rate of `40 %` for people earning more than `40000`. This reform project
-    would apply starting from `2017-01-01`.
+Calculation chain per child and month: entitlement (`kibg_anspruch`), income
+(`kibg_massgebendes_einkommen`, `kibg_einkommensfaktor`), maximum rate
+(`kibg_hoechstbeitrag`), contribution per hour (`kibg_beitrag_pro_stunde`),
+subsidised hours, monthly contribution capped at the costs
+(`kibg_beitrag_total`), parents' remaining costs and the shares of canton and
+municipality.
 
-The files that are outside from the `openfisca_ch_sg` folder are
-used to set up the development environment.
+Sources of the rules: `../challenge/line-to-line-rules.md`. Conventions and
+checks: `../RULEBOOK.md`. Decisions: `../docs/CHANGELOG_DECISIONS.md`.
+
+```bash
+make test          # run all test cases
+make serve-local   # Web API on http://127.0.0.1:5000
+```
 
 ## Packaging your Country Package for Distribution
 
