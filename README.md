@@ -40,9 +40,9 @@ This is the situation our tool is built for. A family is about to apply, or is s
 
 ## 2. Our solution
 
-The project follows the idea of Rules as Code. We wrote the legal rules down a second time, as program code that sits next to the text. People can read that code and software can run it, while our tests check it against the law.
+Our approach is Rules as Code. Next to the legal text, we wrote the same rules a second time as program code, which software can run and our tests check against the law.
 
-The real gain is reuse. Once the rules are encoded and tested, other applications can build on the same model instead of working through the law again. Our website is the first of them. A municipality's case software could be another, or a budget simulation for the canton, or a French version of the site. All of them would give the same answer. And when the law changes, the rules change in one place, and the tests show straight away whether everything still holds.
+Reuse is the main benefit. Once the rules are encoded and tested, other applications can build on the same model without going through the law again, and our website happens to be the first. A municipality could plug the model into its case software. The canton could run budget simulations with it, and a French version of the site would use it too. The answer would be the same everywhere. When the law changes, the rules change in one place, and the tests show straight away whether everything still holds.
 
 The website is in German and has four tabs:
 
@@ -53,7 +53,7 @@ The website is in German and has four tabs:
 | Überblick | The way to the contribution in six steps: what parents do, what happens without them, and the 30-day deadline on a timeline |
 | Gesetzgebung | Full text of the KiBG and the KiBV draft. Every article reference on the site jumps to the exact paragraph |
 
-We built it mainly for families who have not applied yet. Municipalities could use the same model to check applications and explain their decisions. The canton could use it during the consultation, and later for budget simulations (Art. 17 KiBG).
+We had families in mind who have not applied yet. Municipalities could use the same model to check applications and explain their decisions; the canton could use it in the consultation and later for budget simulations (Art. 17 KiBG).
 
 ## 3. Legal basis and scope
 
