@@ -277,14 +277,14 @@ Several extensions would make sense. Each municipality could enter its own suppl
 
 ## 11. Team, AI use and open source
 
-Two of us study computer science and two study law, and we divided the work along that line. Benjamin and Karla wrote the rules in code and built both the backend (the OpenFisca model) and the frontend (the website). Rea and Julian analysed the law and, using the concepts of Rules as Code, mapped it at a high level. They also settled every open legal question: what is unclear in the texts, how to interpret it, and which assumptions to make.
+Two of us study computer science and two study law, and we divided the work along that line. Benjamin and Karla wrote the rules in code and built both the backend (the OpenFisca model) and the frontend (the website). Rea and Julian analysed the law and, using the concepts of Rules as Code, mapped it at a high level. They also settled every open legal question: what is unclear in the texts, how to interpret it, and which assumptions to make. Julian presents the project in the pitch, with Benjamin supporting the presentation, and Karla and Rea wrote the README and the full report.
 
 | Member | Main contributions |
 |---|---|
-| Karla Ruggaber | Line-to-line rule inventory and hand-calculated scenario catalogue, date rules, comparison tool, legislation tab, frontend tests |
-| Benjamin Pfister | Rulebook, checker and automated checks, core model, duration of decisions, tests from the catalogue, output concept, calculator interface and design |
-| Rea Graf | Legal analysis of KiBG and KiBV, high-level mapping of the law, all open legal questions: interpretations O1–O12, assumptions A1–A12 and unclear provisions U1–U24 with their legal reasoning |
-| Julian Böhi | Legal analysis of KiBG and KiBV, high-level mapping of the law, all open legal questions: interpretations O1–O12, assumptions A1–A12 and unclear provisions U1–U24 with their legal reasoning |
+| Karla Ruggaber | Initial GitHub setup (forking the repository, uploading all relevant files), line-to-line rule inventory and hand-calculated scenario catalogue, date rules, comparison tool, legislation tab, frontend tests, README and full report (with Rea) |
+| Benjamin Pfister | Rulebook, checker and automated checks, core model, duration of decisions, tests from the catalogue, output concept, calculator interface and design, support for the presentation |
+| Rea Graf | Legal analysis of KiBG and KiBV, high-level mapping of the law, all open legal questions: interpretations O1–O12, assumptions A1–A12 and unclear provisions U1–U24 with their legal reasoning, README and full report (with Karla) |
+| Julian Böhi | Legal analysis of KiBG and KiBV, high-level mapping of the law, all open legal questions: interpretations O1–O12, assumptions A1–A12 and unclear provisions U1–U24 with their legal reasoning, presentation and pitch |
 
 **Statement of Author Contribution and AI Use.** All four of us are responsible for the whole project, and each of us can explain every part of it, including the parts where AI was used. We used one AI tool, Claude (Anthropic), mostly as Claude Code inside the repository. Every single use is recorded in the commit messages and listed in Section 6 of [`docs/CHANGELOG_DECISIONS.md`](docs/CHANGELOG_DECISIONS.md). In summary:
 
