@@ -5,13 +5,13 @@
 Team Ctrl+Alt+Elite: Karla Ruggaber, Benjamin Pfister, Rea Graf, Julian Böhi
 Legal Hackathon 2026, challenge "Making childcare support understandable with OpenFisca" (Law & Tech Entrepreneurs, University of St. Gallen)
 
-Parents in St. Gallen who need childcare all have the same three questions: Do we get money? How much? And why? The new childcare law (KiBG) and its draft ordinance (KiBV) contain the answers, but spread over fifteen pages, a formula with six variables and a 30-day deadline. We wrote the rules of both texts in OpenFisca, line by line, and checked them with tests that we calculated by hand. On top of this model we built a website that asks a family a few questions and explains the result with the relevant articles.
+Sooner or later, every parent in St. Gallen who needs childcare asks the same things. Do we get money? How much? And why? The answers are in the new childcare law (KiBG) and its draft ordinance (KiBV), spread over fifteen pages, a formula with six variables and a 30-day deadline. We wrote the rules of both texts in OpenFisca, line by line, and tested them against cases we had worked out by hand first. The website sits on top of that model. It asks a family a few questions and explains the result with the articles behind it.
 
-Example: the Keller family (parents working 100 % and 40 %, relevant income Fr. 97'000, a one-year-old in a Kita for 80 hours a month at Fr. 1'040) receives **Fr. 440 per month**. Canton and municipality each pay half, and the parents still pay Fr. 600.
+Take the Keller family. One parent works 100 %, the other 40 %, their relevant income is Fr. 97'000, and their one-year-old spends 80 hours a month in a Kita that costs Fr. 1'040. They receive **Fr. 440 per month**, half from the canton and half from the municipality. The parents still pay Fr. 600.
 
 ![Result for the Keller family](docs/screenshots/02_rechner_ergebnis.png)
 
-This README gives a short overview. The full legal and technical report, with all details, the complete reasoning behind our assumptions and screenshots of every tab, is in [`docs/KiBG-Calculator_Report.md`](docs/KiBG-Calculator_Report.md) (also as a [Word file](docs/KiBG-Calculator_Report.docx)).
+This README is the short version. For the details, including the complete reasoning behind our assumptions and a screenshot of every tab, see the full legal and technical report in [`docs/KiBG-Calculator_Report.md`](docs/KiBG-Calculator_Report.md) (also available as a [Word file](docs/KiBG-Calculator_Report.docx)).
 
 ## Contents
 
@@ -40,9 +40,11 @@ This is the situation our tool is built for. A family is about to apply, or is s
 
 ## 2. Our solution
 
-The project is built on the idea of Rules as Code. The legal rules are written down a second time as program code, next to the text, so that people can read them, software can run them and tests can check them. Once the rules are encoded and tested, other applications can use the same model without rebuilding the law. Our website is one of them. A municipality's case software, a budget simulation for the canton or a French version of the website could be others, and they would all give the same answer. When the law changes, the rules change in one place and the tests show right away whether everything still fits.
+The project follows the idea of Rules as Code. We wrote the legal rules down a second time, as program code that sits next to the text. People can read that code and software can run it, while our tests check it against the law.
 
-The website (in German) has four tabs:
+What makes this worthwhile is reuse. Once the rules are encoded and tested, other applications can build on the same model instead of working through the law again. Our website is the first of them. A municipality's case software could be another, or a budget simulation for the canton, or a French version of the site. All of them would give the same answer. And when the law changes, the rules change in one place, and the tests show straight away whether everything still holds.
+
+The website is in German and has four tabs:
 
 | Tab | What it does |
 |---|---|
@@ -51,7 +53,7 @@ The website (in German) has four tabs:
 | Überblick | The way to the contribution in six steps: what parents do, what happens without them, and the 30-day deadline on a timeline |
 | Gesetzgebung | Full text of the KiBG and the KiBV draft. Every article reference on the site jumps to the exact paragraph |
 
-The main users are families before they apply. Municipalities could use the same model to check applications and explain their decisions, and the canton could use it in the consultation and later for budget simulations (Art. 17 KiBG).
+We built it mainly for families who have not applied yet. Municipalities could use the same model to check applications and explain their decisions. The canton could use it during the consultation, and later for budget simulations (Art. 17 KiBG).
 
 ## 3. Legal basis and scope
 
@@ -60,14 +62,11 @@ The main users are families before they apply. Municipalities could use the same
 | KiBG (Gesetz über Beiträge für familien- und schulergänzende Kinderbetreuung) | [`challenge/Gesetz.pdf`](challenge/Gesetz.pdf), text after the first reading of 16 Sept 2025 | Adopted 14 June 2026, start date not set yet |
 | KiBV (Verordnung) | [`challenge/Verordnung.pdf`](challenge/Verordnung.pdf), RRB 2026/733 | Draft, consultation until 15 Nov 2026 |
 
-Since nothing is in force yet, we use **1 August 2028** as a placeholder start date, since this is the current planned start date. Every reference to the ordinance in the code says "(Entwurf)". Where the text is unclear or silent, we mark our own choices:
+None of this is in force yet. We therefore use **1 August 2028** as a placeholder start date, because that is the date currently planned. Every reference to the ordinance in the code carries the label "(Entwurf)".
 
-- **Law / ordinance (draft):** the text says so.
-- **Interpretation (O1–O12):** the wording allows more than one reading, and we chose one with reasons.
-- **Assumption (A1–A12):** the text says nothing, so we filled the gap ourselves.
-- **Discretion:** a person at the municipality decides. In the model this is always an input, never a formula.
+Where the text is unclear or silent, we label our own choices. There are four labels. "Law / ordinance (draft)" means the text itself says so. An interpretation (O1–O12) means the wording allows more than one reading and we picked one, with reasons. An assumption (A1–A12) fills a gap where the text says nothing. Discretion means a person at the municipality decides; in the model, that is always an input and never a formula.
 
-We went through every article, paragraph and letter of both acts and put each one into one of four groups. The full list is in the rule inventory [`challenge/line-to-line-rules.md`](challenge/line-to-line-rules.md).
+We went through both acts article by article, down to every paragraph and letter, and sorted each provision into one of four groups. The complete list is in the rule inventory [`challenge/line-to-line-rules.md`](challenge/line-to-line-rules.md).
 
 | Group | Examples |
 |---|---|
@@ -84,19 +83,19 @@ SvelteKit website  ── POST /calculate ──▶  OpenFisca Web API
  explanations)                               variables, 125 tests)
 ```
 
-All legal logic lives in the OpenFisca model. The website builds an OpenFisca "situation" from the form on its server, sends it to `/calculate` and turns the numbers it gets back into sentences. Nothing is stored.
+All of the legal logic lives in the OpenFisca model. The website itself does very little: on its server, it turns the form into an OpenFisca "situation", sends it to `/calculate` and puts the numbers that come back into sentences. Nothing is stored.
 
-For each child and month the model goes through these steps:
+For every child and every month, the model works through seven steps:
 
-1. **Entitlement:** the applicant lives in the canton, each parent works at least 20 % and, in a shared household, both together at least 120 % (or the municipality granted an exception), the child is between 3 months old and the end of primary school, and the facility is recognised and registered.
-2. **Relevant income:** both parents' incomes in a shared household; with separated parents the applicant's income plus that of a partner in a "gefestigte Lebensgemeinschaft".
-3. **Maximum rate per hour** by age and type of care (Fr. 11.00 for a Kita under 18 months, then Fr. 7.50, and so on).
-4. **Contribution per hour:** maximum rate × income factor. The factor is 1 up to Fr. 40'000 and drops in a straight line to 0 at Fr. 154'000.
-5. **Subsidised hours:** at most 12 per care day.
-6. **Cost cap:** never more than the actual costs.
-7. **Split:** canton and municipality pay half each; the parents pay the rest.
+1. Entitlement. The applicant lives in the canton. Each parent works at least 20 % and, in a shared household, both together at least 120 % (unless the municipality granted an exception). The child is between 3 months old and the end of primary school, and the facility is recognised and registered.
+2. Relevant income. In a shared household, both parents' incomes. With separated parents, the applicant's income plus that of a partner in a "gefestigte Lebensgemeinschaft".
+3. Maximum rate per hour, by age and type of care (Fr. 11.00 for a Kita under 18 months, then Fr. 7.50, and so on).
+4. Contribution per hour: maximum rate × income factor. The factor is 1 up to Fr. 40'000 and falls in a straight line to 0 at Fr. 154'000.
+5. Subsidised hours: at most 12 per care day.
+6. Cost cap: never more than the actual costs.
+7. Split: canton and municipality pay half each, and the parents pay the rest.
 
-The Keller family step by step:
+Here is the Keller family again, step by step:
 
 | Step | Calculation | Result |
 |---|---|---|
@@ -107,13 +106,13 @@ The Keller family step by step:
 | Per month | 5.50 × 80 hours | **Fr. 440** |
 | Parents pay | 1'040 − 440 | **Fr. 600** |
 
-The model has 65 variables (37 formulas and 28 inputs) and 23 parameters. Each one carries the article it comes from.
+In total the model has 65 variables (37 formulas and 28 inputs) and 23 parameters, and each of them carries the article it comes from.
 
-**Missing or impossible information.** Some answers are needed to apply the law at all: the child's date of birth, the start of care, the application date and the relevant income. If one of them is missing, the model stops with an error that names the field, and the website asks for the answer instead of showing an amount. Impossible combinations, such as care hours without care days or a baby marked as being at school, stop the calculation in the same way. Decisions that belong to the authorities, like an exception from the minimum workload or the recognition of a facility, are always asked as inputs and never guessed.
+What happens when information is missing, or impossible? Some answers are needed before the law can be applied at all: the child's date of birth, the start of care, the application date and the relevant income. If one of them is missing, the model stops with an error that names the field, and the website asks for it instead of showing an amount. Impossible combinations stop the calculation the same way, for instance care hours without any care days, or a baby marked as being at school. Decisions that belong to the authorities, such as an exception from the minimum workload or the recognition of a facility, are always asked as inputs. The model never guesses them.
 
 ## 5. Getting started
 
-You need `git`, `bash`, [uv](https://docs.astral.sh/uv/) and Node.js 22. These are the versions we used:
+You need `git`, `bash`, [uv](https://docs.astral.sh/uv/) and Node.js 22. We worked with these versions:
 
 | Tool | Purpose | Version |
 |---|---|---|
@@ -135,14 +134,14 @@ cd openfisca-CH-SG && make serve-local
 cd frontend && npm install && npm run dev
 ```
 
-On macOS, port 5000 is often taken by AirPlay. In that case start the API on another port and tell the website where it is:
+On macOS, port 5000 is often taken by AirPlay. If that happens, start the API on a different port and tell the website where to find it:
 
 ```bash
 cd openfisca-CH-SG && uv run openfisca serve --country-package openfisca_ch_sg --port 5001
 cd frontend && OPENFISCA_URL=http://127.0.0.1:5001 npm run dev
 ```
 
-You can also ask the API directly with the Keller family:
+To query the API directly with the Keller family:
 
 ```bash
 curl -X POST -H "Content-Type: application/json" \
@@ -157,7 +156,7 @@ cd openfisca-CH-SG && make test     # 125 OpenFisca tests
 cd frontend && npm test             # 27 website tests (14 of them need the API running)
 ```
 
-We calculated the expected amounts by hand from the law before writing the code, so the tests check the code against the law and not against itself. The cases come from the scenario catalogue [`challenge/szenarien.md`](challenge/szenarien.md):
+The expected amounts were calculated by hand, from the law, before any code existed. That way the tests compare the code with the law and not with itself. The cases are taken from the scenario catalogue [`challenge/szenarien.md`](challenge/szenarien.md):
 
 | File | Content |
 |---|---|
@@ -167,7 +166,7 @@ We calculated the expected amounts by hand from the law before writing the code,
 | `tests/test_eingabefehler.py` | Inputs that must stop the calculation, e.g. a missing date of birth |
 | `tests/test_vollzugsbeginn.py` | The placeholder start date is the same everywhere |
 
-On every commit `ruff` and `yamllint` run; on every push also all OpenFisca tests and our own checker (`tools/check_openfisca.py`). The checker warns, for example, when a rule has no article reference or a KiBV reference lacks "(Entwurf)". GitHub Actions runs the same checks again. All tests passed on 8 November 2026 (OpenFisca Core 44.7.1, Node 22).
+`ruff` and `yamllint` run on every commit. Every push adds all OpenFisca tests and our own checker (`tools/check_openfisca.py`), which warns, for example, when a rule has no article reference or a KiBV reference is missing "(Entwurf)". GitHub Actions then runs the same checks once more. On 8 November 2026 all tests passed (OpenFisca Core 44.7.1, Node 22).
 
 ## 7. Repository structure
 
@@ -190,19 +189,19 @@ RULEBOOK.md           how we write the rules in code and what is checked
 
 ## 8. From law to code
 
-**One provision, one element.** We followed OpenFisca's "line-to-line" principle: each condition or value in the text is its own variable or parameter, named with the German legal term and referenced to its article. Where the law states the same rule twice (the cost cap in Art. 6 Abs. 2 and Art. 20 Abs. 3 KiBG), the code does too. Lawyers on the team could put the code next to the text and tick off each line.
+We followed OpenFisca's "line-to-line" principle: one provision, one element. Every condition or value in the text became its own variable or parameter, named with the German legal term and linked to its article. Where the law says the same thing twice, as it does with the cost cap in Art. 6 Abs. 2 and Art. 20 Abs. 3 KiBG, the code says it twice as well. That way the lawyers on the team could put code and text side by side and tick off each line.
 
-**Our process:**
+Our process had seven steps:
 
-1. Read KiBG and KiBV in full and narrow the focus to what affects a family: entitlement, amount and deadlines.
+1. Read KiBG and KiBV in full, then narrow the focus to what affects a family: entitlement, amount and deadlines.
 2. Assign every paragraph to an OpenFisca building block in the rule inventory, or mark it as input only or not encoded, with a reason.
 3. Decide openly where the text is unclear (interpretations O) or silent (assumptions A).
 4. Calculate example families and edge cases by hand. These became the tests.
 5. Write the model in OpenFisca.
 6. Build the website that asks the questions and explains the answer.
-7. Check code and texts against the law once more. Every decision is in a commit message and ends up in the decision log.
+7. Check code and texts against the law one last time. Every decision is recorded in a commit message and ends up in the decision log.
 
-**Interpretations and assumptions.** An interpretation (O) was needed where the wording allows more than one reading; we chose one and gave reasons. An assumption (A) was needed where the text says nothing; we filled the gap ourselves. Each one is a test case. The reasoning is in the rule inventory (O) and the scenario catalogue (A).
+Interpretations and assumptions are not the same thing. We needed an interpretation (O) wherever the wording allows more than one reading; we chose one and gave our reasons. We needed an assumption (A) wherever the text says nothing, and then we filled the gap ourselves. Each of them is also a test case. The reasoning for O is in the rule inventory, for A in the scenario catalogue.
 
 | No. | Question | Our decision |
 |---|---|---|
@@ -219,7 +218,7 @@ RULEBOOK.md           how we write the rules in code and what is checked
 | O11 | Which rate for private special schools? | The rate of the form of care (after-school care) |
 | O12 | Does the 25 % income change also count upwards? | Yes, in both directions |
 
-O3 has the biggest effect. Without it, a couple with 120 % and 0 % would be entitled. We read both letters together because the wording requires each parent to work, because 120 % builds on the 20 % minimum, because couples should not face a lower threshold than single parents (Art. 8 BV), and because a parent who does not work at all can usually look after the child.
+O3 has the biggest effect. Read the other way, a couple working 120 % and 0 % would be entitled. We read lit. a and b together for four reasons. The wording requires each parent to work. The 120 % builds on the 20 % minimum. Couples should not face a lower threshold than single parents (Art. 8 BV). And a parent who does not work at all can usually look after the child.
 
 | No. | Assumption |
 |---|---|
@@ -236,9 +235,9 @@ O3 has the biggest effect. Without it, a couple with 120 % and 0 % would be enti
 | A11 | The decision starts when the contributions start (provisional) |
 | A12 | If a decision ends mid-month, only care days up to that date are entered (provisional) |
 
-**Discretion stays with people.** Whether a family gets an exception from the minimum workload, whether a facility is recognised and what the relevant income is are decided by authorities. The calculator asks for them and never guesses.
+Some questions are not ours to answer. Whether a family gets an exception from the minimum workload, whether a facility is recognised, what the relevant income is: the authorities decide these. The calculator asks for them and never guesses.
 
-**What we found in the texts.** Coding the rules showed us 24 places where the law or the draft is unclear or inconsistent. Seven of them matter most for families, and each could be fixed with one sentence in the ordinance:
+Writing the rules as code also exposed weak spots in the texts themselves. We found 24 places where the law or the draft is unclear or inconsistent. Seven of them matter most for families, and each could be fixed with a single sentence in the ordinance:
 
 | No. | Provision | Issue | Effect (example) |
 |---|---|---|---|
@@ -250,38 +249,29 @@ O3 has the biggest effect. Without it, a couple with 120 % and 0 % would be enti
 | U7 | Art. 8 KiBV | Single parent without a second parent: does a partner's income count? | Fr. 270 vs. Fr. 486 |
 | U9 | Art. 4 Abs. 2 KiBG / Art. 12 KiBV | Ordinance allows exceptions for people without any job, the law does not clearly | Fr. 594 vs. nothing |
 
-The full list with examples is in Part 7 of the scenario catalogue. We think these points are worth submitting in the consultation.
+The full list, with examples, is in Part 7 of the scenario catalogue. We think these points belong in the consultation.
 
 ## 9. Responsible design
 
-**Data.** The calculator asks only what the calculation needs: no names (children are "Kind 1", "Kind 2"), no address, no AHV number. Nothing is stored. We did not promise that no data is stored anywhere, because that depends on where the API will be hosted and what its server logs.
+The calculator only asks what the calculation needs. No names (children are "Kind 1", "Kind 2"), no address, no AHV number. Nothing is stored. We did stop short of promising that no data is stored anywhere, because that depends on where the API will be hosted and what its server logs.
 
-**No chatbot.** We thought about adding a chatbot for follow-up questions and decided against it. The data a family enters is sensitive: income, work, separation, custody, sometimes the reason for an exception. A useful chatbot would need this data and would send it to an external AI provider. We did not want that, and we don't think users would either.
+At one point we considered a chatbot for follow-up questions, and decided against it. What a family enters is sensitive: income, work, separation, custody, sometimes the reason for an exception. A chatbot would only be useful with that data, and it would send it to an external AI provider. We did not want that, and we doubt users would.
 
-**Security and accountability.** No login, no accounts, no database. The OpenFisca API is only called from the website's server, and wrong or impossible inputs stop the calculation instead of producing a number. The binding decision stays with the municipality (Art. 11 KiBG), and every result says so. Every rule has its article and every decision its reason and author in the decision log.
+There is no login, no account and no database. Only the website's server calls the OpenFisca API, and wrong or impossible inputs stop the calculation instead of producing a number. The binding decision remains with the municipality (Art. 11 KiBG), and every result says so. For accountability, every rule has its article, and every decision has its reason and its author in the decision log.
 
-**Transparency.** The legal status is visible (draft ordinance, placeholder start date), every result shows its conditions and calculation, and the article links lead to the exact paragraph.
+The legal status is always visible, from the draft ordinance to the placeholder start date. Each result shows its conditions and its calculation, and the article links lead to the exact paragraph.
 
-**Fairness.** We checked whether our simplifications put certain groups at a disadvantage. Where the text leaves a group unclear, such as single parents without a second parent (U7), we raise the question openly instead of quietly choosing the reading that pays less. The website uses plain language and polite "Sie". The 30-day deadline, the rule most likely to cost a family money without anyone noticing, is shown in the result and on a timeline in the overview. When the calculator says "no", it names the condition that failed, and if it is the workload, it points to the exception the municipality can grant.
+We also checked whether our simplifications put certain groups at a disadvantage. Where the text leaves a group unclear, such as single parents without a second parent (U7), we raise the question openly. Quietly choosing the reading that pays less was not an option for us. The website uses plain language and the polite "Sie". The 30-day deadline is the rule most likely to cost a family money without anyone noticing, so it appears in the result and again on a timeline in the overview. When the calculator says "no", it names the condition that failed. If that condition is the workload, it points to the exception the municipality can grant.
 
-**Known limits.** The five-days-a-week limit is not checked, the reference date for the child's age is the first of the month, the income is typed in by the family, one form of care per child and month, and all amounts may change after the consultation.
+Some limits remain. The five-days-a-week limit is not checked. The child's age is taken on the first of the month. The family types in its income itself, and each child has one form of care per month. All amounts may still change after the consultation.
 
 ## 10. Limitations and next steps
 
-Open points:
+A few points are still open. Our law PDF is the first-reading text, so it has to be compared with the version adopted on 14 June 2026. Hosting, logging and a security review are still missing. Once the start date is fixed, it has to be changed in three places in the code; a test checks that they match.
 
-- The law PDF is the first-reading text. It has to be compared with the adopted version of 14 June 2026.
-- Hosting, logging and a security review are still missing.
-- Once the start date is set, it has to be changed in three places in the code (a test checks that they match).
-- Once the ordinance (KiBV) is adopted after the consultation, the rules in the model have to be adapted to whatever has changed compared with the draft. Since every value is a parameter with its article and every rule has its tests, the changes can be made in one place and checked right away.
+The larger task comes once the ordinance (KiBV) is adopted after the consultation. Whatever changed compared with the draft then has to go into the model. Because every value is a parameter with its article, and every rule has its tests, those changes can be made in one place and checked right away.
 
-Possible extensions:
-
-- Municipal supplements Z1 and Z2 per municipality
-- Relevant income calculated from tax data
-- Budget simulation for the 20 million francs of Art. 17 KiBG
-- Recalculation during a running decision
-- English, French and Italian versions of the website. All texts are in separate files, so the model would not change.
+There is room to extend the project. Municipal supplements Z1 and Z2 could be added for each municipality, and the relevant income could be calculated from tax data. A budget simulation for the 20 million francs of Art. 17 KiBG would help the canton. So would recalculation during a running decision. English, French and Italian versions of the website would not touch the model at all, since all texts sit in separate files.
 
 ## 11. Team, AI use and open source
 
@@ -292,7 +282,7 @@ Possible extensions:
 | Rea Graf | [to be completed] Assumptions A1–A12 and their legal reasoning, … |
 | Julian Böhi | [to be completed] |
 
-**Statement of Author Contribution and AI Use.** All four of us are responsible for the whole project and can explain every part of it, including the parts where AI was used. We used one AI tool, Claude (Anthropic), mostly as Claude Code inside the repository. Every single use is recorded in the commit messages and listed in Section 6 of [`docs/CHANGELOG_DECISIONS.md`](docs/CHANGELOG_DECISIONS.md). In summary:
+**Statement of Author Contribution and AI Use.** All four of us are responsible for the whole project, and each of us can explain every part of it, including the parts where AI was used. We used one AI tool, Claude (Anthropic), mostly as Claude Code inside the repository. Every single use is recorded in the commit messages and listed in Section 6 of [`docs/CHANGELOG_DECISIONS.md`](docs/CHANGELOG_DECISIONS.md). In summary:
 
 | Purpose | Specific uses |
 |---|---|
@@ -305,9 +295,9 @@ Possible extensions:
 | Full report | Drafted the full report in English from our repository, decision log, rule inventory and scenario catalogue; the team then reviewed and edited it |
 | This README | Drafted this README from the report and the repository; the team then reviewed and edited it |
 
-The legal analysis is our own work: the classification of every provision in the rule inventory, the hand calculations in the scenario catalogue, all interpretations (O1–O12) and assumptions (A1–A12), and the list of unclear provisions. Where the AI proposed an interpretation, it was marked as provisional and only became final after a team decision. Code was only accepted when it passed the tests, and the expected values in those tests were calculated by hand before the code existed.
+The legal analysis is our own. That covers the classification of every provision in the rule inventory, the hand calculations in the scenario catalogue, all interpretations (O1–O12) and assumptions (A1–A12), and the list of unclear provisions. When the AI proposed an interpretation, it was marked as provisional and only became final after a team decision. Code was accepted only once it passed the tests, and the expected values in those tests had been calculated by hand before the code existed.
 
-**Open source and external resources:**
+Open source and external resources we used:
 
 | Resource | Use | Licence |
 |---|---|---|
@@ -321,7 +311,7 @@ The legal analysis is our own work: the classification of every provision in the
 
 ## 12. Further documentation
 
-The most complete document is the full report. The other files are the working documents we built the project with.
+The full report is the most complete document. The other files are the working documents we actually built the project with.
 
 | File | Content |
 |---|---|
