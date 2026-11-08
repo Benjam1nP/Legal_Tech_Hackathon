@@ -42,7 +42,7 @@ This is the situation our tool is built for. A family is about to apply, or is s
 
 Our approach is Rules as Code. Next to the legal text, we wrote the same rules a second time as program code, which software can run and our tests check against the law.
 
-Reuse is the main benefit. Once the rules are encoded and tested, other applications and use cases can build on the same model without going through the law again, and our website happens to be the first. A municipality could plug the model into its case software. The canton could run budget simulations with it, and a French version of the site would use it too. The answer would be the same everywhere. When the law changes, the rules change in one place, and the tests show straight away whether everything still holds.
+Reuse is the main benefit. Once the rules are encoded and tested, other applications and use cases can build on the same model without going through the law again. A municipality could plug the model into its case software. The canton could run budget simulations with it, and a French version of the site would use it too. The answer would be the same everywhere. When the law changes, the rules change in one place, and the tests show straight away whether everything still holds.
 
 The website is in German and has four tabs:
 
