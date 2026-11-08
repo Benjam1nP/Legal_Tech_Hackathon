@@ -296,8 +296,8 @@ Two of us study computer science and two study law, and we divided the work alon
 | Reviewing code against the text | Compared Art. 5, 8 and 11 with the wording and flagged deviations, which we then decided on |
 | Options for decisions | Prepared options for the output concept (points 7 to 13); the team chose |
 | Texts and interface | Drafted the interface texts from our output concept (then revised by the team); drafted the legal design document from our rule inventory and scenarios (checked by the team); built the SvelteKit interface and the overview tab from the team's content; tested pages in a headless browser |
-| Full report | Drafted the full report in English from our repository, decision log, rule inventory and scenario catalogue; the team then reviewed and edited it |
-| This README | Drafted this README from the report and the repository; the team then reviewed and edited it |
+| Full report | Drafted the full report in English from our repository, decision log, rule inventory and scenario catalogue; the team then worked through the entire draft, edited it and verified that all of its content is correct |
+| This README | Served as guidance for the structure and helped us make sure that all requirements of the syllabus are met; drafted parts of this README from the report and the repository, which the team then rewrote, reviewed and edited |
 
 The legal analysis is our own. That covers the classification of every provision in the rule inventory, the hand calculations in the scenario catalogue, all interpretations (O1–O12) and assumptions (A1–A12), and the list of unclear provisions. When the AI proposed an interpretation, it was marked as provisional and only became final after a team decision. Code was accepted only once it passed the tests, and the expected values in those tests had been calculated by hand before the code existed.
 
