@@ -62,11 +62,11 @@ We had families in mind who have not applied yet. Municipalities could use the s
 | KiBG (Gesetz über Beiträge für familien- und schulergänzende Kinderbetreuung) | [`challenge/Gesetz.pdf`](challenge/Gesetz.pdf), text after the first reading of 16 Sept 2025 | Adopted 14 June 2026, start date not set yet |
 | KiBV (Verordnung) | [`challenge/Verordnung.pdf`](challenge/Verordnung.pdf), RRB 2026/733 | Draft, consultation until 15 Nov 2026 |
 
-The revision of the legislation is not in force yet. The official website of the Canton of St. Gallen states that, from 1 August 2028, families will receive a minimum subsidy across the canton under the new Childcare Act. The Government has put the related ordinance out for consultation. 
+The revision of the legislation is not in force yet. The official website of the Canton of St. Gallen states that, from 1 August 2028, families will receive a minimum subsidy across the canton under the new Childcare Act. The Government has put the related ordinance out for consultation. Until the date is officially set, we use 1 August 2028 as a placeholder, and every reference to the ordinance in the code carries the label "(Entwurf)".
 
-Whenever the legal text left room for discretionary scope we sat down in the team and discussed potential questions. There are four labels. "Law / ordinance (draft)" means the text itself gives answer to the question. An interpretation (O1–O12) means the wording allows more than one reading. In these cases we chose the one that seemed the most convincing to us and reasoned our personal reflections. An assumption (A1–A12) fills a gap where the text says nothing. Discretion means a person at the municipality decides; in the model, that is always an input and never a formula.
+Whenever the legal text left room for more than one answer, we sat down in the team and discussed potential questions. We use four labels to show where an answer comes from. "Law / ordinance (draft)" means the text itself answers the question. An interpretation (O1–O12) means the wording allows more than one reading. In these cases we chose the one that seemed the most convincing to us and gave our reasons. An assumption (A1–A12) fills a gap where the text says nothing. Discretion means a person at the municipality decides; in the model, that is always an input and never a formula.
 
-We went through both acts article by article, down to every paragraph and letter, and sorted each provision into one of four groups. The complete can be found in the rule inventory [`challenge/line-to-line-rules.md`](challenge/line-to-line-rules.md).
+We went through both acts article by article, down to every paragraph and letter, and sorted each provision into one of four groups. The complete list can be found in the rule inventory [`challenge/line-to-line-rules.md`](challenge/line-to-line-rules.md).
 
 | Group | Examples |
 |---|---|
