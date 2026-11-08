@@ -267,11 +267,11 @@ Some limits remain. The five-days-a-week limit is not checked. The child's age i
 
 ## 10. Limitations and next steps
 
-A few points are still open. Our law PDF is the first-reading text, so it has to be compared with the version adopted on 14 June 2026. Hosting, logging and a security review are still missing. Once the start date is fixed, it has to be changed in three places in the code; a test checks that they match.
+Some work is still open. The law PDF we used is the text after the first reading; it still has to be compared with the version adopted on 14 June 2026. We have not yet decided on hosting or logging, and no security review has been done. When the start date is officially set, it has to be updated in three places in the code, and a test makes sure all three match.
 
-The larger task comes once the ordinance (KiBV) is adopted after the consultation. Whatever changed compared with the draft then has to go into the model. Because every value is a parameter with its article, and every rule has its tests, those changes can be made in one place and checked right away.
+The adoption of the ordinance (KiBV) after the consultation will mean more work. Whatever differs from the draft has to be carried into the model. Since each value is stored once as a parameter with its article, this should mostly be a matter of editing parameter files and running the tests again.
 
-There is room to extend the project. Municipal supplements Z1 and Z2 could be added for each municipality, and the relevant income could be calculated from tax data. A budget simulation for the 20 million francs of Art. 17 KiBG would help the canton. So would recalculation during a running decision. English, French and Italian versions of the website would not touch the model at all, since all texts sit in separate files.
+Several extensions would make sense. Each municipality could enter its own supplements Z1 and Z2. The relevant income could be calculated from tax data instead of being typed in by the family. For the canton, a budget simulation for the 20 million francs of Art. 17 KiBG would be useful, and for families, a recalculation during a running decision. Versions of the website in English, French and Italian would not require any change to the model, because all texts are kept in separate files.
 
 ## 11. Team, AI use and open source
 
