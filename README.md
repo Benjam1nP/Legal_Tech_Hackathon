@@ -30,6 +30,8 @@ This README gives a short overview. The full legal and technical report, with al
 
 ## 1. The problem
 
+Laws are hard to understand for the people they apply to: the rules are scattered over several acts and ordinances, full of cross-references and legal terms, and often still changing, so many people cannot tell what they are entitled to without help.
+
 On 14 June 2026 the voters of St. Gallen accepted the fully revised law on contributions for family- and school-based childcare (KiBG) with 57.8 % yes. Instead of lump sums to the municipalities, families will now get a contribution per child and hour of care, calculated the same way everywhere in the canton. Most of the details are in the ordinance (KiBV), which is still a draft and open for comments until 15 November 2026. The new system is planned to start in 2028.
 
 For a family the rules are hard to apply. Whether they get anything depends on the workload of both parents, where they live, the age of the child and the type of facility. The amount depends on the "massgebendes Einkommen", which is defined in yet another ordinance, on seven different hourly rates and on the formula in the annex of the KiBV. And if the application is filed more than 30 days after care starts, the money is not paid retroactively.
