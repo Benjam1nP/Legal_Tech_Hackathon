@@ -473,14 +473,14 @@ Every commit runs `ruff` (Python lint and formatting) and `yamllint`. Every push
 
 ### 9.1 Contributions
 
-[To be completed and confirmed by the team. The git history shows 34 commits by Karla Ruggaber, 33 by Benjamin Pfister and 2 under the account JB-SG-42; legal analysis, review and design work done outside git are not visible there.]
+Two of us study computer science and two study law, and we divided the work along that line. Karla Ruggaber and Benjamin Pfister wrote the rules in code and built both the backend (the OpenFisca model) and the frontend (the website). Rea Graf and Julian Böhi analysed the law and, using the concepts of Rules as Code, mapped it at a high level. They also settled every open legal question: what is unclear in the texts, how to interpret it, and which assumptions to make. Their work happened mostly in discussions and documents outside git, so it is hardly visible in the commit history.
 
 | Member | Focus | Main contributions |
 |---|---|---|
-| Karla Ruggaber | Law and model | Set up the repository and the OpenFisca fork; wrote the line-to-line rule inventory and the scenario catalogue, including the unclear provisions (Part 7); led the interpretation decisions (O2, O3, O4, O8, O12) and assumptions; encoded the date rules; built the comparison tool (Vergleichstool) and the legislation tab; wrote the frontend tests |
-| Benjamin Pfister | Technology and design | Wrote the rulebook, checker and automated checks; encoded the core model (entities, parameters, variables) and the duration of decisions; turned the catalogue into tests; drafted the output concept; built the calculator interface and its design |
-| Rea Graf | [Legal design / legal analysis] | [e.g. texts for families (Für Familien), application process, review of the rule table, pitch] |
-| Julian Böhi | [Legal design / legal analysis] | [e.g. legal design document, six-step overview, review of the texts, pitch] |
+| Karla Ruggaber | Computer science: rules and implementation | Set up the repository and the OpenFisca fork; wrote the line-to-line rule inventory and the hand-calculated scenario catalogue; encoded the date rules; built the comparison tool (Vergleichstool) and the legislation tab; wrote the frontend tests |
+| Benjamin Pfister | Computer science: rules and implementation | Wrote the rulebook, checker and automated checks; encoded the core model (entities, parameters, variables) and the duration of decisions; turned the catalogue into tests; drafted the output concept; built the calculator interface and its design |
+| Rea Graf | Law: legal analysis | Analysed KiBG and KiBV; mapped the law at a high level using the concepts of Rules as Code; decided all open legal questions, i.e. the unclear provisions (U1–U24), the interpretations (O1–O12) and the assumptions (A1–A12), each with its legal reasoning |
+| Julian Böhi | Law: legal analysis | Analysed KiBG and KiBV; mapped the law at a high level using the concepts of Rules as Code; decided all open legal questions, i.e. the unclear provisions (U1–U24), the interpretations (O1–O12) and the assumptions (A1–A12), each with its legal reasoning |
 
 All four members reviewed the interpretation decisions together, and all of us can explain every part of the project.
 
