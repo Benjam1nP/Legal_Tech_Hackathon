@@ -62,11 +62,11 @@ We had families in mind who have not applied yet. Municipalities could use the s
 | KiBG (Gesetz über Beiträge für familien- und schulergänzende Kinderbetreuung) | [`challenge/Gesetz.pdf`](challenge/Gesetz.pdf), text after the first reading of 16 Sept 2025 | Adopted 14 June 2026, start date not set yet |
 | KiBV (Verordnung) | [`challenge/Verordnung.pdf`](challenge/Verordnung.pdf), RRB 2026/733 | Draft, consultation until 15 Nov 2026 |
 
-None of this is in force yet. We therefore use **1 August 2028** as a placeholder start date, because that is the date currently planned. Every reference to the ordinance in the code carries the label "(Entwurf)".
+The revision of the legislation is not in force yet. The official website of the Canton of St. Gallen states that, from 1 August 2028, families will receive a minimum subsidy across the canton under the new Childcare Act. The Government has put the related ordinance out for consultation. 
 
-Where the text is unclear or silent, we label our own choices. There are four labels. "Law / ordinance (draft)" means the text itself says so. An interpretation (O1–O12) means the wording allows more than one reading and we picked one, with reasons. An assumption (A1–A12) fills a gap where the text says nothing. Discretion means a person at the municipality decides; in the model, that is always an input and never a formula.
+Whenever the legal text left room for discretionary scope we sat down in the team and discussed potential questions. There are four labels. "Law / ordinance (draft)" means the text itself gives answer to the question. An interpretation (O1–O12) means the wording allows more than one reading. In these cases we chose the one that seemed the most convincing to us and reasoned our personal reflections. An assumption (A1–A12) fills a gap where the text says nothing. Discretion means a person at the municipality decides; in the model, that is always an input and never a formula.
 
-We went through both acts article by article, down to every paragraph and letter, and sorted each provision into one of four groups. The complete list is in the rule inventory [`challenge/line-to-line-rules.md`](challenge/line-to-line-rules.md).
+We went through both acts article by article, down to every paragraph and letter, and sorted each provision into one of four groups. The complete can be found in the rule inventory [`challenge/line-to-line-rules.md`](challenge/line-to-line-rules.md).
 
 | Group | Examples |
 |---|---|
