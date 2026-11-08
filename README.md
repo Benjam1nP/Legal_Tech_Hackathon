@@ -30,13 +30,13 @@ This README gives a short overview. The full legal and technical report, with al
 
 ## 1. The problem
 
-Law is written by lawyers, for lawyers. Everyone else gets a pile of PDFs that keep pointing at each other.
+Legal rules are rarely written with the people they affect in mind. They are spread over several acts, refer to one another constantly and use terms that mostly make sense to lawyers.
 
-St. Gallen's new childcare law is a good example. On 14 June 2026 the voters accepted the fully revised KiBG with 57.8 % yes, and the idea behind it is simple enough: no more lump sums to the municipalities, instead every family gets a contribution per child and per hour of care, calculated the same way everywhere in the canton. Simple on paper. The details sit in the ordinance (KiBV), which is still a draft (open for comments until 15 November 2026), and the whole thing is supposed to start in 2028.
+The new childcare law of St. Gallen shows this well. On 14 June 2026 the voters accepted the fully revised KiBG with 57.8 % yes. The principle is straightforward: instead of lump sums to the municipalities, families receive a contribution per child and per hour of care, calculated the same way across the canton. The details are another matter. They are in the ordinance (KiBV), which is still a draft and open for consultation until 15 November 2026. The new system is planned to start in 2028.
 
-Now try to apply it as a parent. Do you get anything at all? Depends on how much both of you work, where you live, how old the child is and what kind of place it goes to. How much? Depends on the "massgebendes Einkommen", which is defined in yet another ordinance, on seven different hourly rates, and on a formula hidden in the annex of the KiBV. File the application more than 30 days after care has started and the first weeks are simply not paid. Nobody reads fifteen pages of legal text to find that out. We wouldn't either.
+For parents, applying these rules is hard. Whether they are entitled at all depends on how much both of them work, where they live, the age of the child and the type of care. The amount then depends on the "massgebendes Einkommen", which is defined in yet another ordinance, on seven different hourly rates and on a formula in the annex of the KiBV. One detail is easy to miss and costly: if the application is filed more than 30 days after care begins, the first weeks are not paid. Few parents will work through fifteen pages of legal text to find this out.
 
-That is the family we built this for. They are about to apply, or still deciding whether to take the Kita place at all, and before they sign anything they want to know if they are entitled, how much they will get, why, and what they have to do next.
+This is the situation our tool is built for. A family is about to apply, or is still deciding whether to take a Kita place. Before committing, they want to know whether they are entitled, how much they will receive and why, and what they need to do next.
 
 ## 2. Our solution
 
