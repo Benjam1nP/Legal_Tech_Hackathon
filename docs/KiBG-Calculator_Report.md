@@ -24,7 +24,7 @@ For our reference family (the Kellers: two parents at 100 % and 40 %, a relevant
 
 Put in one sentence: we took the question that families actually have, "Do we get money, how much, and why?", translated the law behind it into code that can be checked, and built a website that answers it.
 
-As for the legal status, the KiBG has been adopted but its start date (Vollzugsbeginn) has not been set, and the KiBV is still a draft. We use 1 August 2028 as a placeholder start date.
+As for the legal status, the KiBG has been adopted but its start date (Vollzugsbeginn) has not been set, and the KiBV is still a draft. The canton's official website names 1 August 2028, and until the date is formally set we use it as a placeholder start date.
 
 ---
 
@@ -32,11 +32,13 @@ As for the legal status, the KiBG has been adopted but its start date (Vollzugsb
 
 ### 1.1 The revision of the KiBG
 
-Under the previous law of 29 November 2020, the canton paid its money to the municipalities according to their share of children aged 0 to 12, and each municipality decided how to pass it on to parents. What a family received therefore depended a good deal on where it lived. The revised Gesetz über Beiträge für familien- und schulergänzende Kinderbetreuung (KiBG) replaces this with a contribution per child and per hour of care, calculated the same way everywhere in the canton. The Kantonsrat passed the law, a parliamentary referendum was requested, and on 14 June 2026 the voters accepted it with 57.8 % yes. The government has not yet fixed the start date; the canton has said it plans to introduce the new system in 2028.
+Under the previous law of 29 November 2020, the canton paid its money to the municipalities according to their share of children aged 0 to 12, and each municipality decided how to pass it on to parents. What a family received therefore depended a good deal on where it lived. The revised Gesetz über Beiträge für familien- und schulergänzende Kinderbetreuung (KiBG) replaces this with a contribution per child and per hour of care, calculated the same way everywhere in the canton. The Kantonsrat passed the law, a parliamentary referendum was requested, and on 14 June 2026 the voters accepted it with 57.8 % yes. The government has not yet formally fixed the start date, but the official website of the Canton of St. Gallen states that, from 1 August 2028, families will receive a minimum subsidy across the canton under the new law.
 
 Most of the numbers are not in the law itself. The Verordnung (KiBV) sets the maximum rates per hour, the income limits, the formula, the cap of 12 hours per day, and the procedure. The draft ordinance was published in October 2026 and is open for comments until 15 November 2026.
 
 ### 1.2 Why this is hard for families and municipalities
+
+When legal rules are written down, the language is rarely adapted to the people affected. Most of them are laypeople who are not used to legal language, while legislation is often spread over several acts whose rules refer to one another constantly and use terms that mostly make sense to qualified lawyers. The KiBG and the KiBV are no exception.
 
 The basic idea of the law is easy to explain: the lower the income and the younger the child, the higher the contribution. But before parents know what this means for their own family, they have to work out quite a lot:
 
@@ -76,7 +78,7 @@ The official collection of laws (sGS 221.1) still shows the old law of 29 Novemb
 
 ### 2.2 Keeping law, draft and our own choices apart
 
-The challenge explicitly asked teams to distinguish rules in force from other rules. In our case nothing is strictly in force yet, so we used five labels instead of two, both in the rule inventory and in our legal design document ([`docs/legal-design.md`](https://github.com/Benjam1nP/Legal_Tech_Hackathon/blob/main/docs/legal-design.md)):
+The challenge explicitly asked teams to distinguish rules in force from other rules. Whenever the text left room for more than one answer, we sat down as a team and discussed the question. In our case nothing is strictly in force yet, so we used five labels instead of two, both in the rule inventory and in our legal design document ([`docs/legal-design.md`](https://github.com/Benjam1nP/Legal_Tech_Hackathon/blob/main/docs/legal-design.md)):
 
 | Label | Meaning |
 |---|---|
@@ -368,7 +370,9 @@ Two smaller points belong to the canton rather than the consultation: Art. 18 Ab
 
 ### 7.1 Data protection and data minimisation
 
-The calculator asks only what the calculation needs. It does not ask for names (children are "1. Kind", "2. Kind"), addresses or AHV numbers. Compare this with what the cantonal platform will process under Art. 21 KiBV: AHV numbers, tax data, information on social assistance, and a list that is still marked as "to be specified". The calculator also does not store anything: the website passes the data to OpenFisca and returns the result, and there is no database behind either of them.
+The calculator asks only what the calculation needs. It does not ask for names (children are "Kind 1", "Kind 2"), addresses or AHV numbers. Compare this with what the cantonal platform will process under Art. 21 KiBV: AHV numbers, tax data, information on social assistance, and a list that is still marked as "to be specified". The calculator also does not store anything: the website passes the data to OpenFisca and returns the result, and there is no database behind either of them.
+
+The canton's own data processing is governed by Art. 8 KiBG. The responsible cantonal and municipal bodies may process personal data, including particularly sensitive personal data and personality profiles, via the platform, and disclose it to one another and to the facilities, insofar as this is necessary for the implementation of the law (Art. 8 Abs. 1 KiBG).
 
 We were careful with the wording of the privacy notice. The current text says the calculator does not store the data and uses it only for the calculation. We did not write the stronger "no data is stored anywhere", because that depends on where the OpenFisca API is hosted and whether its server logs requests. Until that is clear, we did not want to promise something we had not checked.
 
@@ -376,7 +380,7 @@ We were careful with the wording of the privacy notice. The current text says th
 
 At one point we considered adding a chatbot to the website, so that parents could ask follow-up questions in their own words, for example "What happens if I change jobs in March?" It would have been an obvious addition, and many people now expect one. We decided against it because of data confidentiality.
 
-The information a family enters is sensitive: income and assets from the tax assessment, how much each parent works, whether the parents are separated or live with a new partner, custody arrangements, the age of the children, and possibly the reason for an exception, which can be unemployment, family strain or a child's special needs (Art. 12 KiBV). The KiBG itself recognises this: Art. 8 KiBG allows the authorities to process "besonders schützenswerte Personendaten" (particularly sensitive personal data) on the platform only as far as needed to apply the law. A chatbot would only give useful answers if it saw this information, which in practice means sending it to an external AI provider. We would then no longer control where the data is processed, how long it is kept or whether it is used for training, and our promise that the data is used only for the calculation would no longer be true. A chat window also invites people to type in more than we ask for, such as names or health details. Users would not want their data used that way, and we did not want to ask them to accept it.
+The information a family enters is sensitive: income and assets from the tax assessment, how much each parent works, whether the parents are separated or live with a new partner, custody arrangements, the age of the children, and possibly the reason for an exception, which can be unemployment, family strain or a child's special needs (Art. 12 KiBV). The KiBG itself recognises this: Art. 8 KiBG allows the authorities to process "besonders schützenswerte Personendaten" (particularly sensitive personal data) on the platform only as far as needed to apply the law. A chatbot would only give useful answers if it saw this information, which in practice means sending it to an external AI provider. We would then no longer control where the data is processed, how long it is kept or whether it is used for training, and our promise that the data is used only for the calculation would no longer be true. A chat window also invites people to type in more than we ask for, such as names or health details. Users would not want their data used that way, and we did not want to ask them to accept it. Even though our product is built around technology, it was important to us to keep it as human as possible and to stand by our beliefs.
 
 We put the effort into explanations that need no extra data instead: the step-by-step result with article references, the hints that depend on the situation, the six-step overview and the full legal text one click away. If the idea comes up again, a chatbot should either answer only general questions about the law without ever receiving a family's inputs, or run on infrastructure controlled by the canton under the data protection rules of the platform (Art. 19–23 KiBV).
 
@@ -498,7 +502,8 @@ We, the four members listed above, are jointly responsible for all of the work s
 | Reviewing code against the text | Compared Art. 5, 8 and 11 with the wording and flagged deviations, which we then decided on |
 | Options for decisions | Prepared options for the output concept (points 7 to 13); the team chose |
 | Texts and interface | Drafted the interface texts from our output concept (then revised by the team); drafted the legal design document from our rule inventory and scenarios (checked by the team); built the SvelteKit interface and the overview tab from the team's content; tested pages in a headless browser |
-| This report | Drafted this report in English from our repository, decision log, rule inventory and scenario catalogue; the team then reviewed and edited it |
+| This report | Drafted this report in English from our repository, decision log, rule inventory and scenario catalogue; the team then worked through the entire draft, edited it and verified that all of its content is correct |
+| README | Served as guidance for the structure and helped us make sure that all requirements of the syllabus are met; drafted parts of the README from this report and the repository, which the team then rewrote, reviewed and edited |
 
 **Our own work.** The legal analysis was done by us: the classification of every provision in the rule inventory, the hand calculations in the scenario catalogue, all interpretation decisions (O1–O12) and assumptions (A1–A12), and the list of unclear provisions. Where the AI proposed an interpretation, it was recorded as "provisional, legal team to confirm" and only became final after a team decision; several of these are visible in the decision log as "Confirmed by the team".
 
