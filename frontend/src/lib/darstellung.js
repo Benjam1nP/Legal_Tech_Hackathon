@@ -24,8 +24,29 @@ const FORMATE = {
 	prozent: (wert) => `${Number((Number(wert) * 100).toFixed(1))} %`,
 	stunden: (wert) => String(Number(Number(wert).toFixed(2))),
 	ganzzahl: (wert) => String(Math.round(Number(wert))),
-	datum: (wert) => wert.split('-').reverse().join('.')
+	// 97000 → 97'000 (Einkommen ohne Rappen)
+	franken_ganz: (wert) => tausender(String(Math.round(Number(wert)))),
+	// 2028-08-01 → 1. August 2028
+	datum: (wert) => {
+		const [jahr, monat, tag] = wert.split('-');
+		return `${Number(tag)}. ${MONATE[Number(monat) - 1]} ${jahr}`;
+	}
 };
+
+const MONATE = [
+	'Januar',
+	'Februar',
+	'März',
+	'April',
+	'Mai',
+	'Juni',
+	'Juli',
+	'August',
+	'September',
+	'Oktober',
+	'November',
+	'Dezember'
+];
 
 function formatieren(name, wert) {
 	const anzeige = texte.anzeigewerte[name];
@@ -54,14 +75,20 @@ export function ergebnisArt(kind) {
 /** Liste der Voraussetzungen mit «erfüllt» oder «nicht erfüllt». */
 export function voraussetzungen(kind, haushalt, angaben) {
 	const t = texte.voraussetzungen;
-	const zeile = (schluessel, erfuellt) => ({
+	// `endung` wählt eine Textvariante, z. B. «_einzeln» für eine einzige
+	// erziehungsberechtigte Person.
+	const zeile = (schluessel, erfuellt, endung = '') => ({
 		artikel: t[schluessel].artikel,
 		erfuellt,
-		text: erfuellt ? t[schluessel].erfuellt : t[schluessel].nicht_erfuellt
+		text: erfuellt ? t[schluessel][`erfuellt${endung}`] : t[schluessel][`nicht_erfuellt${endung}`]
 	});
 	const liste = [
 		zeile('kibg_wohnsitz_erfuellt', haushalt.kibg_wohnsitz_erfuellt),
-		zeile('kibg_beschaeftigung_lit_a_erfuellt', haushalt.kibg_beschaeftigung_lit_a_erfuellt)
+		zeile(
+			'kibg_beschaeftigung_lit_a_erfuellt',
+			haushalt.kibg_beschaeftigung_lit_a_erfuellt,
+			angaben.gemeinsam === true ? '' : '_einzeln'
+		)
 	];
 	if (angaben.gemeinsam === true) {
 		liste.push(
@@ -122,14 +149,17 @@ export function hinweise(kind, haushalt, angaben, partnerEinkommenZaehlt) {
 	) {
 		liste.push(h.beitragsbeginn_im_monat);
 	}
-	if (kind.kibg_gesuch_in_uebergangsfrist) liste.push(h.uebergangsfrist);
-	else if (kind.kibg_gesuch_innert_frist === false) liste.push(h.gesuch_zu_spaet);
+	const uebergang = kind.kibg_gesuch_in_uebergangsfrist === true;
+	const zuSpaet = !uebergang && kind.kibg_gesuch_innert_frist === false;
+	if (uebergang) liste.push(h.uebergangsfrist);
+	else if (zuSpaet) liste.push(h.gesuch_zu_spaet);
 	if (kind.kibg_einrichtung_teilnahmebeginn && !kind.kibg_einrichtung_berechtigt) {
 		liste.push(h.teilnahme_einrichtung);
 	}
 	if (kind.kibg_anspruch) liste.push(h.verfuegung_ende);
 	if (kind.kibg_anspruch) {
-		liste.push(h.gesuchsfrist_30_tage);
+		// Nicht neben «zu spät» oder der Übergangsfrist: Dort gilt etwas anderes.
+		if (!uebergang && !zuSpaet) liste.push(h.gesuchsfrist_30_tage);
 		liste.push(h.meldepflicht);
 	}
 	return liste;

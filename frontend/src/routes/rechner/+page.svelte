@@ -86,7 +86,8 @@
 	});
 
 	const leer = (wert) => wert === null || wert === '' || Number.isNaN(wert);
-	const kindName = (index) => `${index + 1}. Kind`;
+	// «Kind 1» wie «Person 1»: passt grammatisch in jeden Satz der Texte.
+	const kindName = (index) => `Kind ${index + 1}`;
 	const monatsname = (datum) =>
 		new Date(`${datum.slice(0, 7)}-01T00:00:00`).toLocaleDateString('de-CH', {
 			month: 'long',
@@ -149,7 +150,6 @@
 	// Formularfeld zuordnen und die verständliche Meldung aus texte.de.json nehmen.
 	const OPENFISCA_FELDER = {
 		gemeinsamer_haushalt: 'gemeinsam',
-		kibg_gesuchstellend: 'gesuchsteller',
 		betreuungstage_mit_obhut: 'tage',
 		kibg_gesuchsdatum: 'gesuchsdatum',
 		kibg_einrichtung_angemeldet: 'angemeldet',
@@ -162,7 +162,7 @@
 		for (const { pfad, meldung } of liste) {
 			const [, id, variable] = pfad.split('/');
 			const feld = OPENFISCA_FELDER[variable] ?? variable ?? '';
-			const schluessel = ['gemeinsam', 'gesuchsteller'].includes(feld) ? feld : `${id}.${feld}`;
+			const schluessel = feld === 'gemeinsam' ? feld : `${id}.${feld}`;
 			const kindIndex = id?.startsWith('kind_') ? Number(id.slice(5)) - 1 : 0;
 			// Zwei Prüfungen melden sich beim Feld der Betreuungstage: Tage fehlen
 			// (Art. 14 Abs. 4 KiBV) oder mehr Tage als ab dem Beitragsbeginn (A9).
@@ -242,7 +242,6 @@
 	function feldname(schluessel) {
 		if (schluessel === 'monat') return f.monat.frage;
 		if (schluessel === 'gemeinsam') return fb.haushalt.gemeinsamer_haushalt.frage;
-		if (schluessel === 'gesuchsteller') return fb.haushalt.kibg_gesuchstellend.frage;
 		const [wer, feld] = schluessel.split('.');
 		if (wer === 'partner') return `${f.partner_titel}: ${PARTNER_FRAGEN[feld]?.frage}`;
 		const nr = Number(wer.split('_')[1]) - 1;
@@ -507,14 +506,19 @@
 						bind:wert={kind.angemeldet}
 						fehler={fehler[`kind_${i + 1}.angemeldet`]}
 					/>
-					<Feld
-						id="bestaetigt-{kind.nr}"
-						typ="date"
-						label={fb.kind.kibg_einrichtung_bestaetigt_am.frage}
-						hilfe={fb.kind.kibg_einrichtung_bestaetigt_am.hilfe}
-						bind:wert={kind.bestaetigtAm}
-						fehler={fehler[`kind_${i + 1}.bestaetigtAm`]}
-					/>
+					<!-- Das Datum der Bestätigung kennen Eltern selten: eingeklappt,
+					     offen nur wenn ausgefüllt -->
+					<details class="weitere" open={!!kind.bestaetigtAm}>
+						<summary>{fb.kind.weitere_angaben}</summary>
+						<Feld
+							id="bestaetigt-{kind.nr}"
+							typ="date"
+							label={fb.kind.kibg_einrichtung_bestaetigt_am.frage}
+							hilfe={fb.kind.kibg_einrichtung_bestaetigt_am.hilfe}
+							bind:wert={kind.bestaetigtAm}
+							fehler={fehler[`kind_${i + 1}.bestaetigtAm`]}
+						/>
+					</details>
 				{/if}
 				<Feld
 					id="tage-{kind.nr}"
@@ -537,6 +541,7 @@
 				<Feld
 					id="kosten-{kind.nr}"
 					label={fb.kind.kibg_betreuungskosten.frage}
+					hilfe={fb.kind.kibg_betreuungskosten.hilfe}
 					einheit="Fr."
 					min="0"
 					bind:wert={kind.kosten}
@@ -633,7 +638,7 @@
 		color: var(--gruen-wappen);
 	}
 
-	/* Unterblöcke (Person 1, 1. Kind …) durch eine Linie getrennt */
+	/* Unterblöcke (Person 1, Kind 1 …) durch eine Linie getrennt */
 	.unterblock {
 		margin-top: 1.25rem;
 		padding-top: 1.25rem;
@@ -715,6 +720,23 @@
 
 	.link:hover {
 		text-decoration: underline;
+	}
+
+	/* Freiwillige Angaben, eingeklappt */
+	.weitere {
+		margin-bottom: 1rem;
+	}
+
+	.weitere summary {
+		cursor: pointer;
+		font-size: var(--text-sm);
+		color: var(--primary);
+		margin-bottom: 0.75rem;
+	}
+
+	.weitere summary:focus-visible {
+		outline: 3px solid var(--ring);
+		border-radius: var(--radius-md);
 	}
 
 	.hinweis-monat {
