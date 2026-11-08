@@ -4,6 +4,7 @@
 
 Team Ctrl+Alt+Elite: Karla Ruggaber, Benjamin Pfister, Rea Graf, Julian Böhi
 Legal Hackathon 2026, challenge "Making childcare support understandable with OpenFisca" (Law & Tech Entrepreneurs, University of St. Gallen)
+Repository link: https://github.com/Benjam1nP/Legal_Tech_Hackathon.git
 
 Sooner or later, every parent in St. Gallen who needs childcare asks the same things. Do we get money? How much? And why? The answers are in the new childcare law (KiBG) and its draft ordinance (KiBV), spread over fifteen pages, a formula with six variables and a 30-day deadline. We wrote the rules of both texts in OpenFisca, line by line, and tested them against cases we had worked out by hand first. The website sits on top of that model. It asks a family a few questions and explains the result with the articles behind it.
 
