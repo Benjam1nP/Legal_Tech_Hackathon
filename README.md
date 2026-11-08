@@ -42,7 +42,7 @@ This is the situation our tool is built for. A family is about to apply, or is s
 
 The project follows the idea of Rules as Code. We wrote the legal rules down a second time, as program code that sits next to the text. People can read that code and software can run it, while our tests check it against the law.
 
-What makes this worthwhile is reuse. Once the rules are encoded and tested, other applications can build on the same model instead of working through the law again. Our website is the first of them. A municipality's case software could be another, or a budget simulation for the canton, or a French version of the site. All of them would give the same answer. And when the law changes, the rules change in one place, and the tests show straight away whether everything still holds.
+The real gain is reuse. Once the rules are encoded and tested, other applications can build on the same model instead of working through the law again. Our website is the first of them. A municipality's case software could be another, or a budget simulation for the canton, or a French version of the site. All of them would give the same answer. And when the law changes, the rules change in one place, and the tests show straight away whether everything still holds.
 
 The website is in German and has four tabs:
 
