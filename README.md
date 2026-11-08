@@ -108,7 +108,7 @@ For the Keller family this looks as follows:
 
 The model has 65 variables (37 formulas and 28 inputs) and 23 parameters. Every one of them names the article it is based on.
 
-Four answers are needed before the law can be applied at all: the child's date of birth, the start of care, the application date and the relevant income. If one of them is missing, the model stops with an error that names the field, and the website asks for that answer instead of showing an amount. The same happens with combinations that cannot exist, such as care hours without care days or a baby marked as being at school. Decisions that belong to the authorities, for example an exception from the minimum workload or the recognition of a facility, are always asked as inputs and are not derived by the model.
+Of the 28 inputs mentioned above, four are indispensable: the child's date of birth (needed for steps 1 and 3), the relevant income (steps 2 and 4), and the start of care and the application date, which decide when contributions start (Art. 9 Abs. 2 KiBG). If one of them is missing, the model stops with an error that names the field, and the website asks for that answer instead of showing an amount. The same happens with combinations that cannot exist, such as care hours without care days or a baby marked as being at school. Decisions that belong to the authorities, for example an exception from the minimum workload or the recognition of a facility, are always asked as inputs and are not derived by the model.
 
 ## 5. Getting started
 
