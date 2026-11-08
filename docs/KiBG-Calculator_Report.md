@@ -473,7 +473,7 @@ Every commit runs `ruff` (Python lint and formatting) and `yamllint`. Every push
 
 ### 9.1 Contributions
 
-Two of us study computer science and two study law, and we divided the work along that line. Karla Ruggaber and Benjamin Pfister wrote the rules in code and built both the backend (the OpenFisca model) and the frontend (the website). Rea Graf and Julian Böhi analysed the law and, using the concepts of Rules as Code, mapped it accordingly. They also settled every open legal question: what is unclear in the texts, how to interpret it, and which assumptions to make. Their legal work happened mostly in discussions and documents outside git, so it is hardly visible in the commit history. Julian presents the project in the pitch, with Benjamin supporting the presentation, and Karla and Rea wrote the README and the full report.
+Two of us study computer science and two study law, and we divided the work along that line. Karla Ruggaber and Benjamin Pfister wrote the rules in code and built both the backend (the OpenFisca model) and the frontend (the website). They regularly reviewed each other's code changes, gave feedback and implemented missing parts, and this four-eyes principle worked very well for us. Rea Graf and Julian Böhi analysed the law and, using the concepts of Rules as Code, mapped it accordingly. They also settled every open legal question: what is unclear in the texts, how to interpret it, and which assumptions to make. Their legal work happened mostly in discussions and documents outside git, so it is hardly visible in the commit history. Julian presents the project in the pitch, with Benjamin supporting the presentation, and Karla and Rea wrote the README and the full report.
 
 | Member | Focus | Main contributions |
 |---|---|---|

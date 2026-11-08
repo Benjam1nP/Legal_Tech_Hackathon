@@ -277,7 +277,7 @@ Several extensions would make sense. Each municipality could enter its own suppl
 
 ## 11. Team, AI use and open source
 
-Two of us study computer science and two study law, and we divided the work along that line. Benjamin and Karla wrote the rules in code and built both the backend (the OpenFisca model) and the frontend (the website). Rea and Julian analysed the law and, using the concepts of Rules as Code, mapped it accordingly. They also settled every open legal question: what is unclear in the texts, how to interpret it, and which assumptions to make. Julian presents the project in the pitch, with Benjamin supporting the presentation, and Karla and Rea wrote the README and the full report.
+Two of us study computer science and two study law, and we divided the work along that line. Benjamin and Karla wrote the rules in code and built both the backend (the OpenFisca model) and the frontend (the website). They regularly reviewed each other's code changes, gave feedback and implemented missing parts, and this four-eyes principle worked very well for us. Rea and Julian analysed the law and, using the concepts of Rules as Code, mapped it accordingly. They also settled every open legal question: what is unclear in the texts, how to interpret it, and which assumptions to make. Julian presents the project in the pitch, with Benjamin supporting the presentation, and Karla and Rea wrote the README and the full report.
 
 | Member | Main contributions |
 |---|---|
