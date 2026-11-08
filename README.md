@@ -83,9 +83,9 @@ SvelteKit website  ── POST /calculate ──▶  OpenFisca Web API
  explanations)                               variables, 125 tests)
 ```
 
-All of the legal logic lives in the OpenFisca model. The website itself does very little: on its server, it turns the form into an OpenFisca "situation", sends it to `/calculate` and puts the numbers that come back into sentences. Nothing is stored.
+All legal logic sits in the OpenFisca model; the website only translates. On its server it builds an OpenFisca "situation" from the form, sends it to `/calculate` and writes the numbers that come back as sentences. Nothing is stored.
 
-For every child and every month, the model works through seven steps:
+The model calculates each child and month separately, in seven steps:
 
 1. Entitlement. The applicant lives in the canton. Each parent works at least 20 % and, in a shared household, both together at least 120 % (unless the municipality granted an exception). The child is between 3 months old and the end of primary school, and the facility is recognised and registered.
 2. Relevant income. In a shared household, both parents' incomes. With separated parents, the applicant's income plus that of a partner in a "gefestigte Lebensgemeinschaft".
@@ -95,7 +95,7 @@ For every child and every month, the model works through seven steps:
 6. Cost cap: never more than the actual costs.
 7. Split: canton and municipality pay half each, and the parents pay the rest.
 
-Here is the Keller family again, step by step:
+For the Keller family this looks as follows:
 
 | Step | Calculation | Result |
 |---|---|---|
@@ -106,9 +106,9 @@ Here is the Keller family again, step by step:
 | Per month | 5.50 × 80 hours | **Fr. 440** |
 | Parents pay | 1'040 − 440 | **Fr. 600** |
 
-In total the model has 65 variables (37 formulas and 28 inputs) and 23 parameters, and each of them carries the article it comes from.
+The model has 65 variables (37 formulas and 28 inputs) and 23 parameters. Every one of them names the article it is based on.
 
-What happens when information is missing, or impossible? Some answers are needed before the law can be applied at all: the child's date of birth, the start of care, the application date and the relevant income. If one of them is missing, the model stops with an error that names the field, and the website asks for it instead of showing an amount. Impossible combinations stop the calculation the same way, for instance care hours without any care days, or a baby marked as being at school. Decisions that belong to the authorities, such as an exception from the minimum workload or the recognition of a facility, are always asked as inputs. The model never guesses them.
+Four answers are needed before the law can be applied at all: the child's date of birth, the start of care, the application date and the relevant income. If one of them is missing, the model stops with an error that names the field, and the website asks for that answer instead of showing an amount. The same happens with combinations that cannot exist, such as care hours without care days or a baby marked as being at school. Decisions that belong to the authorities, for example an exception from the minimum workload or the recognition of a facility, are always asked as inputs and are not derived by the model.
 
 ## 5. Getting started
 
