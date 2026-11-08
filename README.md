@@ -277,12 +277,14 @@ Several extensions would make sense. Each municipality could enter its own suppl
 
 ## 11. Team, AI use and open source
 
+Two of us study computer science and two study law, and we divided the work along that line. Benjamin and Karla wrote the rules in code and built both the backend (the OpenFisca model) and the frontend (the website). Rea and Julian analysed the law and, using the concepts of Rules as Code, mapped it at a high level. They also settled every open legal question: what is unclear in the texts, how to interpret it, and which assumptions to make.
+
 | Member | Main contributions |
 |---|---|
-| Karla Ruggaber | Rule inventory and scenario catalogue incl. unclear provisions, interpretation decisions, date rules, comparison tool, legislation tab, frontend tests |
+| Karla Ruggaber | Line-to-line rule inventory and hand-calculated scenario catalogue, date rules, comparison tool, legislation tab, frontend tests |
 | Benjamin Pfister | Rulebook, checker and automated checks, core model, duration of decisions, tests from the catalogue, output concept, calculator interface and design |
-| Rea Graf | [to be completed] Assumptions A1–A12 and their legal reasoning, … |
-| Julian Böhi | [to be completed] |
+| Rea Graf | Legal analysis of KiBG and KiBV, high-level mapping of the law, all open legal questions: interpretations O1–O12, assumptions A1–A12 and unclear provisions U1–U24 with their legal reasoning |
+| Julian Böhi | Legal analysis of KiBG and KiBV, high-level mapping of the law, all open legal questions: interpretations O1–O12, assumptions A1–A12 and unclear provisions U1–U24 with their legal reasoning |
 
 **Statement of Author Contribution and AI Use.** All four of us are responsible for the whole project, and each of us can explain every part of it, including the parts where AI was used. We used one AI tool, Claude (Anthropic), mostly as Claude Code inside the repository. Every single use is recorded in the commit messages and listed in Section 6 of [`docs/CHANGELOG_DECISIONS.md`](docs/CHANGELOG_DECISIONS.md). In summary:
 
